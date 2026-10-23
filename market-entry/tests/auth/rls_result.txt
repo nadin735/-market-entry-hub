@@ -1,0 +1,21 @@
+INSERT 0 1
+INSERT 0 1
+B sees (expect only B row):
+               user_id                |             analyses             
+B update A row (expect UPDATE 0):
+UPDATE 0
+B delete A row (expect DELETE 0):
+DELETE 0
+B insert row as A (expect ERROR rls):
+psql:rls_two_users.sql:16: ERROR:  new row violates row-level security policy for table "user_data"
+ 
+psql:rls_two_users.sql:19: ERROR:  permission denied for table user_data
+             analyses             
+ [{"id": 1, "company": "A-Corp"}]
+ delete_my_account 
+ 
+ users | rows 
+     1 |    1
+ 
+psql:rls_two_users.sql:28: ERROR:  not authenticated
+CONTEXT:  PL/pgSQL function delete_my_account() line 3 at RAISE

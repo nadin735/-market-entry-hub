@@ -1,0 +1,12 @@
+{
+  "name": "portfolio",
+  "private": true,
+  "scripts": {
+    "fonts": "node scripts/fonts.mjs",
+    "build": "node scripts/fonts.mjs && rm -rf dist && mkdir dist && cp -r index.html impressum.html datenschutz.html demo fonts dist/"
+  },
+  "devDependencies": {
+    "@fontsource/inter": "^5.0.0",
+    "@fontsource/noto-sans-arabic": "^5.0.0"
+  }
+}

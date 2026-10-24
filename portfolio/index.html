@@ -495,6 +495,10 @@
   .lang-btn.active{ background:var(--champagne); color:var(--obsidian); }
 
 
+  .video-frame{ max-width:960px; border:1px solid var(--hairline-strong); background:var(--obsidian-2); padding:10px; }
+  .video-frame video{ display:block; width:100%; height:auto; background:#000; }
+  .video-note{ margin:10px 4px 2px; font-size:12.5px; color:var(--stone); }
+
   /* ---------- light theme ---------- */
   html[data-theme="light"]{
     --obsidian-2:#FFFFFF; --obsidian-3:#FBF9F4; --ivory:#14161C; --stone:#575C68; --stone-dim:#6A6F7C;
@@ -626,6 +630,23 @@
         <h4 data-i18n="ap6_h">Vernetzt</h4>
         <p data-i18n="ap6_p">GCC und Europa als ein zusammenhängender Wirtschaftsraum gedacht.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<section id="video">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow" data-i18n="vid_eyebrow">Das Programm im Überblick</span>
+      <h2 data-i18n="vid_h2">Eine Minute Market Entry.</h2>
+      <p data-i18n="vid_p">Vom Start ohne Login über die Bewertung bis zum Ergebnis, in beiden Tools und drei Sprachen.</p>
+    </div>
+    <div class="video-frame reveal">
+      <video controls preload="metadata" playsinline poster="demo/market-entry-demo.jpg" aria-describedby="vidDesc">
+        <source src="demo/market-entry-demo.webm" type="video/webm">
+        <source src="demo/market-entry-demo.mp4" type="video/mp4">
+      </video>
+      <p id="vidDesc" class="video-note" data-i18n="vid_note">Aufnahme der Live Demo mit Beispieldaten, ohne Ton.</p>
     </div>
   </div>
 </section>
@@ -1092,6 +1113,10 @@ const I18N = {
     "tool_cta": "Live Demo öffnen →",
     "tool_linktag": "Läuft im Browser, ohne Installation",
     "demo_eyebrow": "Zum Anfassen",
+    "vid_eyebrow": "Das Programm im Überblick",
+    "vid_h2": "Eine Minute Market Entry.",
+    "vid_p": "Vom Start ohne Login über die Bewertung bis zum Ergebnis, in beiden Tools und drei Sprachen.",
+    "vid_note": "Aufnahme der Live Demo mit Beispieldaten, ohne Ton.",
     "demo_h2": "Zwei Demo PDFs.",
     "demo_p": "Direkt einsehbar, mit echter PDF zum Herunterladen. Hinweis: Beide Firmenprofile sind vollständig fiktiv und dienen ausschließlich der Demonstration.",
     "demo1_h": "PDF Firmenprofil Scan · Nordlicht AI Systems GmbH",
@@ -1235,6 +1260,10 @@ const I18N = {
     "tool_cta": "Open live demo →",
     "tool_linktag": "Runs in the browser, no installation",
     "demo_eyebrow": "Hands-On",
+    "vid_eyebrow": "The program at a glance",
+    "vid_h2": "One minute of Market Entry.",
+    "vid_p": "From a start without login through scoring to the result, in both tools and three languages.",
+    "vid_note": "Recording of the live demo with sample data, no sound.",
     "demo_h2": "Two demo PDFs.",
     "demo_p": "View it directly, with the real PDF available to download. Note: both company profiles are entirely fictional and used solely for demonstration purposes.",
     "demo1_h": "PDF company profile scan · Nordlicht AI Systems GmbH",
@@ -1378,6 +1407,10 @@ const I18N = {
     "tool_cta": "فتح العرض المباشر ←",
     "tool_linktag": "يعمل في المتصفح دون تثبيت",
     "demo_eyebrow": "للتجربة الفعلية",
+    "vid_eyebrow": "نظرة عامة على البرنامج",
+    "vid_h2": "دقيقة واحدة مع Market Entry.",
+    "vid_p": "من البدء دون تسجيل دخول إلى التقييم ثم النتيجة، في الأداتين وبثلاث لغات.",
+    "vid_note": "تسجيل للعرض التجريبي ببيانات نموذجية، بدون صوت.",
     "demo_h2": "ملفا PDF تجريبيان.",
     "demo_p": "معروضة مباشرة، مع ملف PDF حقيقي متاح للتحميل. ملاحظة: كلا ملفي الشركتين وهميان بالكامل ويُستخدمان لأغراض العرض التوضيحي فقط.",
     "demo1_h": "مسح ملف شركة PDF · Nordlicht AI Systems GmbH",

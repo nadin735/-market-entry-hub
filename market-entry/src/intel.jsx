@@ -17,7 +17,7 @@ export const PRESETS = [
 const I = {
   de: {
     kpiTitle: "Kennzahlen im Überblick", kpiTarget: "Empfohlener Markt", kpiScore: "Gesamtscore", kpiMargin: "Vorsprung auf Platz 2", kpiRobust: "Robustheit", kpiTime: "Zeitraum", kpiBudget: "Budget", kpiBE: "Break-even",
-    pts: "Pkt.", robustVal: "{n} von {m} Szenarien", tipScore: "Gewichteter Durchschnitt der fünf Kriterien (0 bis 100). Standard: gleiche Gewichte (je 20 %). Ein Analystenraster Wert, keine gemessene Marktgröße.", tipMargin: "Abstand zwischen Platz 1 und Platz 2. Unter 3 Punkten ist die Rangfolge knapp und sollte mit Zusatzinformationen abgesichert werden.", tipRobust: "In wie vielen Gewichtungsszenarien (Presets und je ein Kriterium doppelt betont) bleibt der empfohlene Markt auf Platz 1?",
+    pts: "Pkt.", robustVal: "{n} von {m} Szenarien", tipScore: "Gewichteter Durchschnitt der fünf Kriterien (0 bis 100). Standard: gleiche Gewichte (je 20 %). Ein Wert aus dem Analystenraster, keine gemessene Marktgröße.", tipMargin: "Abstand zwischen Platz 1 und Platz 2. Unter 3 Punkten ist die Rangfolge knapp und sollte mit Zusatzinformationen abgesichert werden.", tipRobust: "In wie vielen Gewichtungsszenarien (Presets und je ein Kriterium doppelt betont) bleibt der empfohlene Markt auf Platz 1?",
     sTitle: "Scoring Methodik & Sensitivität", sSub: "So entsteht der Score, und wie stabil ist das Ranking?",
     estimate: "Die Länderwerte sind eine Analystenraster (Schätzung) und keine live gemessenen Marktdaten. Sie werden mit Sektor und Unternehmensprofil angepasst.",
     critTitle: "Die fünf Kriterien", critCol: "Kriterium", whatCol: "Was gemessen wird", wCol: "Gewicht", higher: "Höher heißt",

@@ -21,8 +21,8 @@ const TXT = {
     brand: "Market Entry", h1: "Wohin soll es gehen?",
     lead: "Wählen Sie Ihre Richtung. Beide Tools arbeiten mit derselben nachvollziehbaren Bewertungslogik, belegten Marktdaten und einem vollständigen Eintrittsplan als PDF.",
     open: "Öffnen",
-    a: { name: "GCC Market Entry", dir: "Europa → Golfregion", desc: "Für europäische Unternehmen, die nach Saudi Arabien, in die VAE, nach Katar, Kuwait, Bahrain oder Oman expandieren wollen.", f: FEAT_DE },
-    b: { name: "Europe Market Entry", dir: "Golfregion → Europa", desc: "Für Unternehmen und Investoren aus der Golfregion mit Blick auf Deutschland, Frankreich, Großbritannien, Italien, Spanien oder die Niederlande. Mit arabischer Oberfläche (RTL).", f: ["Dieselbe Bewertungslogik mit fünf Faktoren, gespiegelt auf europäische Zielmärkte", "Neutraler Vergleich europäischer Märkte, einschließlich Branchen nach Scharia Vorgaben", "Eigener Abschnitt für Deutschland und Unternehmen aus der DACH Region", "Oberfläche auf Arabisch (RTL), Deutsch und Englisch", ...FEAT_DE.slice(4)] },
+    a: { name: "GCC Market Entry", dir: "Europa nach Golfregion", desc: "Für europäische Unternehmen, die nach Saudi Arabien, in die VAE, nach Katar, Kuwait, Bahrain oder Oman expandieren wollen.", f: FEAT_DE },
+    b: { name: "Europe Market Entry", dir: "Golfregion nach Europa", desc: "Für Unternehmen und Investoren aus der Golfregion mit Blick auf Deutschland, Frankreich, Großbritannien, Italien, Spanien oder die Niederlande. Mit arabischer Oberfläche (RTL).", f: ["Dieselbe Bewertungslogik mit fünf Faktoren, gespiegelt auf europäische Zielmärkte", "Neutraler Vergleich europäischer Märkte, einschließlich Branchen nach Scharia Vorgaben", "Eigener Abschnitt für Deutschland und Unternehmen aus der DACH Region", "Oberfläche auf Arabisch (RTL), Deutsch und Englisch", ...FEAT_DE.slice(4)] },
     signedAs: "Angemeldet als", logout: "Abmelden", signin: "Anmelden", legal: "Rechtliches", disc: "Entscheidungsgrundlage auf Basis fester Regeln. Keine Rechtsberatung, Steuerberatung oder Anlageberatung. Alle Angaben ohne Gewähr.", langs: "Sprache",
     opts: "Wie möchten Sie starten?", optsHint: "Die Wahl gilt für beide Tools und bleibt gespeichert. Eine Anmeldung ist nur für das Konto nötig und erfolgt nur hier.",
     mDemo: "Mit Demodaten testen", mDemoD: "Ohne Login. Beispieldaten sind vorausgefüllt, ideal zum schnellen Ansehen.",
@@ -36,8 +36,8 @@ const TXT = {
     brand: "Market Entry", h1: "Where are you heading?",
     lead: "Choose your direction. Both tools use the same traceable scoring logic, sourced market data and a complete entry plan as PDF.",
     open: "Open",
-    a: { name: "GCC Market Entry", dir: "Europe → Gulf region", desc: "For European companies that want to expand to Saudi Arabia, the UAE, Qatar, Kuwait, Bahrain or Oman.", f: FEAT_EN },
-    b: { name: "Europe Market Entry", dir: "Gulf region → Europe", desc: "For companies and investors from the Gulf region looking at Germany, France, the UK, Italy, Spain or the Netherlands. With an Arabic interface (RTL).", f: ["The same five factor scoring logic, mirrored for European target markets", "Neutral comparison of European markets, including sectors that follow Sharia rules", "A dedicated section for Germany and companies from the DACH region", "Interface in Arabic (RTL), German and English", ...FEAT_EN.slice(4)] },
+    a: { name: "GCC Market Entry", dir: "Europe to Gulf region", desc: "For European companies that want to expand to Saudi Arabia, the UAE, Qatar, Kuwait, Bahrain or Oman.", f: FEAT_EN },
+    b: { name: "Europe Market Entry", dir: "Gulf region to Europe", desc: "For companies and investors from the Gulf region looking at Germany, France, the UK, Italy, Spain or the Netherlands. With an Arabic interface (RTL).", f: ["The same five factor scoring logic, mirrored for European target markets", "Neutral comparison of European markets, including sectors that follow Sharia rules", "A dedicated section for Germany and companies from the DACH region", "Interface in Arabic (RTL), German and English", ...FEAT_EN.slice(4)] },
     signedAs: "Signed in as", logout: "Sign out", signin: "Sign in", legal: "Legal", disc: "A decision basis built on fixed rules. Not legal, tax or investment advice. No guarantee for any information.", langs: "Language",
     opts: "How would you like to start?", optsHint: "Your choice applies to both tools and is remembered. Signing in is only needed for an account and happens only here.",
     mDemo: "Test with demo data", mDemoD: "No login. Sample data is pre filled, ideal for a quick look.",
@@ -51,8 +51,8 @@ const TXT = {
     brand: "Market Entry", h1: "إلى أين تتجه؟",
     lead: "اختر اتجاهك. تعتمد الأداتان على منطق تقييم واضح قابل للتتبع وبيانات سوق موثقة وخطة دخول كاملة بصيغة PDF.",
     open: "فتح",
-    a: { name: "GCC Market Entry", dir: "أوروبا ← منطقة الخليج", desc: "للشركات الأوروبية التي تريد التوسع في السعودية أو الإمارات أو قطر أو الكويت أو البحرين أو عُمان.", f: FEAT_AR },
-    b: { name: "Europe Market Entry", dir: "منطقة الخليج ← أوروبا", desc: "للشركات والمستثمرين من الخليج الذين يستهدفون ألمانيا أو فرنسا أو بريطانيا أو إيطاليا أو إسبانيا أو هولندا. مع واجهة عربية كاملة.", f: ["منطق التقييم نفسه بخمسة عوامل، مطبّقاً على الأسواق الأوروبية المستهدفة", "مقارنة محايدة للأسواق الأوروبية، بما في ذلك القطاعات الملتزمة بأحكام الشريعة", "قسم خاص بألمانيا وشركات منطقة DACH", "واجهة بالعربية والألمانية والإنجليزية", ...FEAT_AR.slice(4)] },
+    a: { name: "GCC Market Entry", dir: "أوروبا إلى منطقة الخليج", desc: "للشركات الأوروبية التي تريد التوسع في السعودية أو الإمارات أو قطر أو الكويت أو البحرين أو عُمان.", f: FEAT_AR },
+    b: { name: "Europe Market Entry", dir: "منطقة الخليج إلى أوروبا", desc: "للشركات والمستثمرين من الخليج الذين يستهدفون ألمانيا أو فرنسا أو بريطانيا أو إيطاليا أو إسبانيا أو هولندا. مع واجهة عربية كاملة.", f: ["منطق التقييم نفسه بخمسة عوامل، مطبّقاً على الأسواق الأوروبية المستهدفة", "مقارنة محايدة للأسواق الأوروبية، بما في ذلك القطاعات الملتزمة بأحكام الشريعة", "قسم خاص بألمانيا وشركات منطقة DACH", "واجهة بالعربية والألمانية والإنجليزية", ...FEAT_AR.slice(4)] },
     signedAs: "مسجّل باسم", logout: "تسجيل الخروج", signin: "تسجيل الدخول", legal: "المعلومات القانونية", disc: "أساس قرار قائم على قواعد ثابتة. ليس استشارة قانونية أو ضريبية أو استثمارية. جميع المعلومات دون ضمان.", langs: "اللغة",
     opts: "كيف تريد أن تبدأ؟", optsHint: "ينطبق اختيارك على الأداتين ويُحفظ. تسجيل الدخول مطلوب للحساب فقط ويتم هنا فقط.",
     mDemo: "التجربة ببيانات تجريبية", mDemoD: "بدون تسجيل دخول. البيانات النموذجية مملوءة مسبقًا.",
@@ -93,9 +93,9 @@ function Card({ color, accent, mark, tool, href, T, d, onGo, P }) {
     <h2 style={{ fontSize: 28, fontWeight: 500, margin: 0 }}>{d.name}</h2>
     <p style={{ margin: 0, color: P.sub, fontSize: 14.5, lineHeight: 1.65 }}>{d.desc}</p>
     <ul style={{ margin: 0, padding: 0, listStyle: "none", color: P.soft, fontSize: 13.5, lineHeight: 1.7 }}>
-      {d.f.map((x, i) => <li key={i} style={{ display: "flex", gap: 10, padding: "3px 0" }}><span aria-hidden="true" style={{ color: accent, flex: "none" }}>◆</span><span>{x}</span></li>)}
+      {d.f.map((x, i) => <li key={i} style={{ display: "flex", gap: 10, padding: "3px 0" }}><span aria-hidden="true" style={{ background: accent, width: 8, height: 1, marginTop: 10, flex: "none" }} /><span>{x}</span></li>)}
     </ul>
-    <span style={{ marginTop: "auto", alignSelf: "flex-start", padding: "10px 20px", borderRadius: 4, background: color, color: P.onAccent, fontWeight: 600, fontSize: 14 }}>{T.open} {document.dir === "rtl" ? "←" : "→"}</span>
+    <span style={{ marginTop: "auto", alignSelf: "flex-start", padding: "10px 20px", borderRadius: 4, background: color, color: P.onAccent, fontWeight: 600, fontSize: 14 }}>{T.open}</span>
   </a>;
 }
 

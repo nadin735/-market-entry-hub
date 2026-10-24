@@ -307,8 +307,10 @@
   @media (max-width:900px){ .precedents-grid{ grid-template-columns:repeat(2,1fr); } }
   @media (max-width:520px){ .precedents-grid{ grid-template-columns:1fr; } }
   .approach-item{ text-align:center; }
-  .approach-icon{ width:64px; height:64px; object-fit:contain; margin-bottom:14px; filter:drop-shadow(0 6px 16px rgba(217,182,114,0.25)); transition:transform .4s var(--ease); }
+  .approach-icon-unused{ width:64px; height:64px; object-fit:contain; margin-bottom:14px; filter:drop-shadow(0 6px 16px rgba(217,182,114,0.25)); transition:transform .4s var(--ease); }
   .approach-item:hover .approach-icon{ transform:translateY(-4px) scale(1.06); }
+  .approach-num{ display:inline-block; font:500 12px/1 'Inter',system-ui,sans-serif; letter-spacing:.18em; color:var(--champagne); margin-bottom:16px; padding-bottom:10px; border-bottom:1px solid var(--champagne); }
+  .pdf-tag{ flex:none; display:inline-flex; align-items:center; justify-content:center; width:52px; height:64px; border:1px solid var(--champagne); border-radius:4px; font:500 12px/1 'Inter',system-ui,sans-serif; letter-spacing:.14em; color:var(--champagne); }
   .approach-item h4{ font-family:'Inter','Noto Sans Arabic',system-ui,sans-serif; font-size:16px; font-weight:600; margin-bottom:6px; }
   .approach-item p{ color:var(--stone); font-size:13px; line-height:1.5; max-width:26ch; margin:0 auto; }
 
@@ -324,7 +326,7 @@
   .re-list{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px; }
   .re-list li{ font-size:12.5px; color:var(--stone); line-height:1.5; padding-inline-start:14px; position:relative; }
   .re-list li::before{ content:"—"; position:absolute; inset-inline-start:0; color:var(--champagne); }
-  .bridge-list li::before{ content:""; position:absolute; inset-inline-start:0; top:7px; width:6px; height:6px; background:var(--champagne); transform:rotate(45deg); }
+  .bridge-list li::before{ content:""; position:absolute; inset-inline-start:0; top:7px; width:8px; height:1px; background:var(--champagne); top:11px; }
   .bridge-list b{ font-weight:700; color:var(--champagne); }
   .bridge-visual{ position:relative; }
   .bridge-map{ width:100%; max-width:640px; display:block; margin:0 auto; filter:drop-shadow(0 20px 50px rgba(87,208,194,0.2)); }
@@ -383,8 +385,8 @@
     font-size:13px; color:var(--ivory); display:flex; gap:10px; align-items:flex-start;
   }
   .feature-list li::before{
-    content:""; width:5px; height:5px; margin-top:6px; flex:none;
-    background:var(--accent, var(--champagne)); transform:rotate(45deg);
+    content:""; width:8px; height:1px; margin-top:11px; flex:none;
+    background:var(--accent, var(--champagne));
   }
   .tool-card .cta-row{ margin-top:28px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
   .tool-card--gold{ --accent:var(--champagne); --accent-glow:rgba(217,182,114,0.16); }
@@ -497,6 +499,11 @@
 
   .video-frame{ max-width:960px; border:1px solid var(--hairline-strong); background:var(--obsidian-2); padding:10px; }
   .video-frame video{ display:block; width:100%; height:auto; background:#000; }
+  .video-bar{ display:flex; flex-wrap:wrap; align-items:center; gap:14px; margin:12px 4px 2px; }
+  .video-bar .video-note{ margin:0; flex:1 1 260px; }
+  .tts-btn{ font:500 13px 'Inter','Noto Sans Arabic',system-ui,sans-serif; color:var(--ivory); background:transparent; border:1px solid var(--hairline-strong); border-radius:4px; padding:9px 16px; min-height:40px; cursor:pointer; }
+  .tts-btn:hover{ border-color:var(--champagne); }
+  .tts-btn[aria-pressed="true"]{ border-color:var(--champagne); color:var(--champagne); }
   .video-note{ margin:10px 4px 2px; font-size:12.5px; color:var(--stone); }
 
   /* ---------- light theme ---------- */
@@ -570,7 +577,7 @@
   <div class="hero-inner">
     <div>
       <h1 data-i18n-html="hero_h1">Markteintritt zwischen Golf und Europa: neu gedacht.</h1>
-      <p class="lead" data-i18n="hero_lead">Zwei datengetriebene Tools von Nadin Okil, die Unternehmen in beide Richtungen den Weg zeigen, GCC → Europa und Europa → GCC. Mit Daten der Weltbank, offener Methodik und gekennzeichneten Schätzungen statt Bauchgefühl.</p>
+      <p class="lead" data-i18n="hero_lead">Zwei datengetriebene Tools von Nadin Okil, die Unternehmen in beide Richtungen den Weg zeigen, GCC nach Europa und Europa nach GCC. Mit Daten der Weltbank, offener Methodik und gekennzeichneten Schätzungen statt Bauchgefühl.</p>
       <div class="hero-ctas">
         <a href="#tools" class="btn btn-primary" data-i18n="hero_cta1">Tools entdecken</a>
         <a href="#about" class="btn" data-i18n="hero_cta2">Über mich</a>
@@ -601,32 +608,32 @@
     </div>
     <div class="approach-grid">
       <div class="approach-item reveal">
-        <img data-icon="globe" alt="" class="approach-icon">
+        <span class="approach-num" aria-hidden="true">01</span>
         <h4 data-i18n="ap1_h">International</h4>
         <p data-i18n="ap1_p">12 Länder, zwei Richtungen, ein durchgängiges Datenmodell.</p>
       </div>
       <div class="approach-item reveal">
-        <img data-icon="chart" alt="" class="approach-icon">
+        <span class="approach-num" aria-hidden="true">02</span>
         <h4 data-i18n="ap2_h">Datenbasiert</h4>
         <p data-i18n="ap2_p">Veröffentlichungen der Weltbank und offen gelegte Gewichtung.</p>
       </div>
       <div class="approach-item reveal">
-        <img data-icon="search" alt="" class="approach-icon">
+        <span class="approach-num" aria-hidden="true">03</span>
         <h4 data-i18n="ap3_h">Recherchiert</h4>
         <p data-i18n="ap3_p">Reale Wettbewerber und Regulatorik mit Quelle; Schätzungen sind markiert.</p>
       </div>
       <div class="approach-item reveal">
-        <img data-icon="shield" alt="" class="approach-icon">
+        <span class="approach-num" aria-hidden="true">04</span>
         <h4 data-i18n="ap4_h">Transparent</h4>
         <p data-i18n="ap4_p">Simulierte Teile sind im Tool klar gekennzeichnet.</p>
       </div>
       <div class="approach-item reveal">
-        <img data-icon="handshake" alt="" class="approach-icon">
+        <span class="approach-num" aria-hidden="true">05</span>
         <h4 data-i18n="ap5_h">Partnerschaftlich</h4>
         <p data-i18n="ap5_p">Empfehlungen zu Eintrittsform und Partnern je Zielmarkt.</p>
       </div>
       <div class="approach-item reveal">
-        <img data-icon="network" alt="" class="approach-icon">
+        <span class="approach-num" aria-hidden="true">06</span>
         <h4 data-i18n="ap6_h">Vernetzt</h4>
         <p data-i18n="ap6_p">GCC und Europa als ein zusammenhängender Wirtschaftsraum gedacht.</p>
       </div>
@@ -646,7 +653,7 @@
         <source src="demo/market-entry-demo.webm" type="video/webm">
         <source src="demo/market-entry-demo.mp4" type="video/mp4">
       </video>
-      <p id="vidDesc" class="video-note" data-i18n="vid_note">Aufnahme der Live Demo mit Beispieldaten, ohne Ton.</p>
+      <div class="video-bar"><button type="button" id="ttsBtn" class="tts-btn" aria-pressed="false" data-i18n="vid_tts_on">Erklärung vorlesen</button><p id="vidDesc" class="video-note" data-i18n="vid_note">Aufnahme des Programms mit Beispieldaten und eingeblendeten Untertiteln. Auf Wunsch liest Ihr Browser die Erklärung dazu vor.</p></div>
     </div>
   </div>
 </section>
@@ -660,8 +667,8 @@
 
     <div class="tools-grid">
       <div class="tool-card tool-card--gold reveal">
-        <div class="kicker"><img data-icon="logoGold" alt="" class="tool-logo"><span class="eyebrow" data-i18n="t1_kicker">Europa → GCC</span></div>
-        <h3 data-i18n="t1_h3">Markteintritt Europa → GCC</h3>
+        <div class="kicker"><img data-icon="logoGold" alt="" class="tool-logo"><span class="eyebrow" data-i18n="t1_kicker">Europa nach GCC</span></div>
+        <h3 data-i18n="t1_h3">Markteintritt Europa nach GCC</h3>
         <span class="direction" data-i18n="t1_direction">Deutschland als Ursprungsmarkt · sechs Länder des GCC</span>
         <p class="desc" data-i18n="t1_desc">Für europäische Unternehmen, die nach Saudi Arabien, in die VAE, nach Katar, Kuwait, Bahrain oder Oman expandieren wollen.</p>
         <ul class="feature-list">
@@ -674,14 +681,14 @@
           <li data-i18n="t1_f7">Bewertungskarte, Szenariovergleich und Entscheidungsmemo auf einer Seite</li>
         </ul>
         <div class="cta-row">
-          <a href="demo/market-entry.html#gcc" target="_blank" rel="noopener" class="btn btn-primary" data-i18n="tool_cta">Live Demo öffnen →</a>
+          <a href="https://market-entry.nadin.dev" target="_blank" rel="noopener" class="btn btn-primary" data-i18n="tool_cta">Programm öffnen</a>
           <span class="link-tag" data-i18n="tool_linktag">Läuft im Browser, ohne Installation</span>
         </div>
       </div>
 
       <div class="tool-card tool-card--teal reveal">
-        <div class="kicker"><img data-icon="logoTeal" alt="" class="tool-logo"><span class="eyebrow teal" data-i18n="t2_kicker">GCC → Europa</span></div>
-        <h3 data-i18n="t2_h3">Markteintritt GCC → Europa</h3>
+        <div class="kicker"><img data-icon="logoTeal" alt="" class="tool-logo"><span class="eyebrow teal" data-i18n="t2_kicker">GCC nach Europa</span></div>
+        <h3 data-i18n="t2_h3">Markteintritt GCC nach Europa</h3>
         <span class="direction" data-i18n="t2_direction">Kapital aus der Golfregion als Ursprung · sechs europäische Kernmärkte</span>
         <p class="desc" data-i18n="t2_desc">Für Unternehmen und Investoren aus der Golfregion mit Blick auf Deutschland, Frankreich, Großbritannien, Italien, Spanien oder die Niederlande. Mit arabischer Oberfläche (RTL).</p>
         <ul class="feature-list">
@@ -694,7 +701,7 @@
           <li data-i18n="t2_f7">Bewertungskarte, Szenariovergleich und Entscheidungsmemo auf einer Seite</li>
         </ul>
         <div class="cta-row">
-          <a href="demo/market-entry.html#europe" target="_blank" rel="noopener" class="btn btn-primary btn-teal" data-i18n="tool_cta">Tool ansehen →</a>
+          <a href="https://market-entry.nadin.dev" target="_blank" rel="noopener" class="btn btn-primary btn-teal" data-i18n="tool_cta">Programm öffnen</a>
           <span class="link-tag" data-i18n="tool_linktag">Läuft im Browser, ohne Installation</span>
         </div>
       </div>
@@ -745,10 +752,10 @@
     <div class="demo-grid">
       <div class="pdf-card reveal">
         <div class="pdf-card-inner">
-          <img data-icon="pdfteal" alt="" style="width:52px;height:64px;object-fit:contain;flex:none;">
+          <span class="pdf-tag" aria-hidden="true">PDF</span>
           <div>
             <h4 data-i18n="demo1_h">PDF Firmenprofil Scan · Nordlicht AI Systems GmbH</h4>
-            <p data-i18n="demo1_p">Echter Testscan eines Firmenprofils mit allen abgefragten Feldern (Kennzahlen, Zertifikate, 3 KI und Digitalprodukte), wie ihn Tool 1 (Europa → GCC) für die automatische Dateneingabe nutzt.</p>
+            <p data-i18n="demo1_p">Echter Testscan eines Firmenprofils mit allen abgefragten Feldern (Kennzahlen, Zertifikate, 3 KI und Digitalprodukte), wie ihn Tool 1 (Europa nach GCC) für die automatische Dateneingabe nutzt.</p>
           </div>
         </div>
         <div class="pdf-embed">
@@ -760,10 +767,10 @@
       </div>
       <div class="pdf-card reveal">
         <div class="pdf-card-inner">
-          <img data-icon="pdfgold" alt="" style="width:52px;height:64px;object-fit:contain;flex:none;">
+          <span class="pdf-tag" aria-hidden="true">PDF</span>
           <div>
             <h4 data-i18n="demo2_h">PDF Firmenprofil Scan · Najm Wealth AI LLC</h4>
-            <p data-i18n="demo2_p">Echter Testscan eines GCC Firmenprofils mit allen abgefragten Feldern (Kennzahlen, Zertifikate, 3 KI und Digitalprodukte), wie ihn Tool 2 (GCC → Europa) für Unternehmen aus der Golfregion verarbeitet.</p>
+            <p data-i18n="demo2_p">Echter Testscan eines GCC Firmenprofils mit allen abgefragten Feldern (Kennzahlen, Zertifikate, 3 KI und Digitalprodukte), wie ihn Tool 2 (GCC nach Europa) für Unternehmen aus der Golfregion verarbeitet.</p>
           </div>
         </div>
         <div class="pdf-embed">
@@ -788,7 +795,7 @@
 
     <div class="case reveal">
       <div>
-        <div class="case-label" data-i18n="c1_label">Europa → GCC</div>
+        <div class="case-label" data-i18n="c1_label">Europa nach GCC</div>
         <span class="case-tag" data-i18n="c1_tag">Tool 01 · Deutsch, Standard</span>
       </div>
       <div class="case-body">
@@ -800,7 +807,7 @@
 
     <div class="case reveal">
       <div>
-        <div class="case-label" data-i18n="c2_label">GCC → Europa</div>
+        <div class="case-label" data-i18n="c2_label">GCC nach Europa</div>
         <span class="case-tag" data-i18n="c2_tag">Tool 02 · Arabisch, Standard</span>
       </div>
       <div class="case-body">
@@ -840,39 +847,31 @@
   <div class="wrap">
     <div class="section-head reveal">
       <h2 data-i18n="prec_h2">Es passiert bereits, in beide Richtungen.</h2>
-      <p data-i18n="prec_p">Acht real recherchierte Beispiele, keine Simulation, zur Einordnung, warum die Verbindung GCC ↔ Europa wirtschaftlich real und aktiv ist.</p>
+      <p data-i18n="prec_p">Acht real recherchierte Beispiele, keine Simulation, zur Einordnung, warum die Verbindung GCC und Europa wirtschaftlich real und aktiv ist.</p>
     </div>
     <div class="precedents-grid">
       <div class="precedent-card reveal">
-        <img data-icon="handshake" alt="" class="precedent-icon">
         <p data-i18n="prec_1">Katar Investment Authority hält seit 2009 rund 17&nbsp;% der Stimmrechte an Volkswagen, eines der bekanntesten Beispiele für Kapital aus der Golfregion in der europäischen Industrie.</p>
       </div>
       <div class="precedent-card reveal">
-        <img data-icon="handshake" alt="" class="precedent-icon">
         <p data-i18n="prec_2">Abu Dhabis Staatsfonds Aabar erwarb 2009 rund 9&nbsp;% an Daimler (Mercedes Benz).</p>
       </div>
       <div class="precedent-card reveal">
-        <img data-icon="chart" alt="" class="precedent-icon">
         <p data-i18n="prec_3">Allein in den ersten sieben Monaten 2024 exportierte Deutschland Fahrzeuge im Wert von 4,8&nbsp;Mrd. Euro nach Saudi Arabien.</p>
       </div>
       <div class="precedent-card reveal">
-        <img data-icon="globe" alt="" class="precedent-icon">
         <p data-i18n="prec_4">Siemens ist seit über 80 Jahren in Saudi Arabien aktiv und eröffnete 2013 ein eigenes Turbinenwerk in Dammam, gemeinsam mit dem lokalen Partner E.A. Juffali &amp; Brothers.</p>
       </div>
       <div class="precedent-card reveal">
-        <img data-icon="scale" alt="" class="precedent-icon">
         <p data-i18n="prec_5">BASF hat seine Zentrale für den Nahen Osten in Dubai und ist über ein Joint Venture mit der National Industrialisation Company an einer Propandehydrierungsanlage in Jubail (Saudi Arabien) beteiligt.</p>
       </div>
       <div class="precedent-card reveal">
-        <img data-icon="network" alt="" class="precedent-icon">
         <p data-i18n="prec_6">Adidas plant über 100 eigene Filialen in Saudi Arabien bis 2025 und hat dafür ein eigenes Büro in Riad eröffnet.</p>
       </div>
       <div class="precedent-card reveal">
-        <img data-icon="search" alt="" class="precedent-icon">
         <p data-i18n="prec_7">Abu Dhabis Staatsfonds Mubadala kündigte einen Fonds über 400 Mio USD an, der gezielt in europäische und britische Technologieunternehmen investiert.</p>
       </div>
       <div class="precedent-card reveal">
-        <img data-icon="shield" alt="" class="precedent-icon">
         <p data-i18n="prec_8">Die fünf größten Staatsfonds der Golfregion (PIF, QIA, ADIA, Mubadala, ADQ) zählen laut einer Studie der Stiftung Wissenschaft und Politik seit 2024 drei Jahre in Folge zu den zehn aktivsten Staatsfonds weltweit, Europa gilt dabei als besonders attraktiver Zielmarkt.</p>
       </div>
     </div>
@@ -1064,7 +1063,7 @@ const I18N = {
     "nav_contact": "Kontakt",
     "hero_eyebrow": "Cross Border Market Intelligence",
     "hero_h1": "Markteintritt zwischen Golf und Europa.",
-    "hero_lead": "Zwei datengetriebene Tools von Nadin Okil, die Unternehmen in beide Richtungen den Weg zeigen, GCC → Europa und Europa → GCC. Mit Daten der Weltbank, offener Methodik und gekennzeichneten Schätzungen statt Bauchgefühl.",
+    "hero_lead": "Zwei datengetriebene Tools von Nadin Okil, die Unternehmen in beide Richtungen den Weg zeigen, GCC nach Europa und Europa nach GCC. Mit Daten der Weltbank, offener Methodik und gekennzeichneten Schätzungen statt Bauchgefühl.",
     "hero_cta1": "Tools entdecken",
     "hero_cta2": "Über mich",
     "stat1": "Märkte analysiert",
@@ -1088,8 +1087,8 @@ const I18N = {
     "tools_eyebrow": "Die zwei Tools",
     "tools_h2": "Ein Tool pro Richtung.",
     "tools_p": "Beide Tools teilen sich Scoring Engine, Finanzmodell und Datenmethodik, aber jedes ist für seine eigene Zielgruppe und Marktrichtung eigenständig gestaltet.",
-    "t1_kicker": "Europa → GCC",
-    "t1_h3": "Markteintritt Europa → GCC",
+    "t1_kicker": "Europa nach GCC",
+    "t1_h3": "Markteintritt Europa nach GCC",
     "t1_direction": "Deutschland als Ursprungsmarkt · sechs Länder des GCC",
     "t1_desc": "Für europäische Unternehmen, die nach Saudi Arabien, in die VAE, nach Katar, Kuwait, Bahrain oder Oman expandieren wollen.",
     "t1_f1": "Bewertung über fünf Faktoren: Markt, Wettbewerb, Regulatorik, Partner und Investitionspotenzial",
@@ -1099,8 +1098,8 @@ const I18N = {
     "t1_f5": "Nachvollziehbare Bewertung: Gewichte, Sensitivität, Monte Carlo und Begründung",
     "t1_f7": "Bewertungskarte, Szenariovergleich und Entscheidungsmemo auf einer Seite",
     "t1_f6": "Quellen mit Datenstatus (Quelle, Schätzung, Annahme) und Datenjahr",
-    "t2_kicker": "GCC → Europa",
-    "t2_h3": "Markteintritt GCC → Europa",
+    "t2_kicker": "GCC nach Europa",
+    "t2_h3": "Markteintritt GCC nach Europa",
     "t2_direction": "Kapital aus der Golfregion als Ursprung · sechs europäische Kernmärkte",
     "t2_desc": "Für Unternehmen und Investoren aus der Golfregion mit Blick auf Deutschland, Frankreich, Großbritannien, Italien, Spanien oder die Niederlande. Mit arabischer Oberfläche (RTL).",
     "t2_f1": "Dieselbe Bewertungslogik mit fünf Faktoren, gespiegelt auf europäische Zielmärkte",
@@ -1110,28 +1109,30 @@ const I18N = {
     "t2_f5": "Nachvollziehbare Bewertung: Gewichte, Sensitivität, Monte Carlo und Begründung",
     "t2_f7": "Bewertungskarte, Szenariovergleich und Entscheidungsmemo auf einer Seite",
     "t2_f6": "Quellen mit Datenstatus (Quelle, Schätzung, Annahme) und Datenjahr",
-    "tool_cta": "Live Demo öffnen →",
+    "tool_cta": "Programm öffnen",
     "tool_linktag": "Läuft im Browser, ohne Installation",
     "demo_eyebrow": "Zum Anfassen",
     "vid_eyebrow": "Das Programm im Überblick",
     "vid_h2": "Eine Minute Market Entry.",
     "vid_p": "Vom Start ohne Login über die Bewertung bis zum Ergebnis, in beiden Tools und drei Sprachen.",
-    "vid_note": "Aufnahme der Live Demo mit Beispieldaten, ohne Ton.",
+    "vid_note": "Aufnahme des Programms mit Beispieldaten und eingeblendeten Untertiteln. Auf Wunsch liest Ihr Browser die Erklärung dazu vor.",
+    "vid_tts_on": "Erklärung vorlesen",
+    "vid_tts_off": "Vorlesen beenden",
     "demo_h2": "Zwei Demo PDFs.",
     "demo_p": "Direkt einsehbar, mit echter PDF zum Herunterladen. Hinweis: Beide Firmenprofile sind vollständig fiktiv und dienen ausschließlich der Demonstration.",
     "demo1_h": "PDF Firmenprofil Scan · Nordlicht AI Systems GmbH",
-    "demo1_p": "Echter Testscan eines Firmenprofils mit allen abgefragten Feldern (Kennzahlen, Zertifikate, 3 KI und Digitalprodukte), wie ihn Tool 1 (Europa → GCC) für die automatische Dateneingabe nutzt.",
+    "demo1_p": "Echter Testscan eines Firmenprofils mit allen abgefragten Feldern (Kennzahlen, Zertifikate, 3 KI und Digitalprodukte), wie ihn Tool 1 (Europa nach GCC) für die automatische Dateneingabe nutzt.",
     "demo2_h": "PDF Firmenprofil Scan · Najm Wealth AI LLC",
-    "demo2_p": "Echter Testscan eines GCC Firmenprofils mit allen abgefragten Feldern (Kennzahlen, Zertifikate, 3 KI und Digitalprodukte), wie ihn Tool 2 (GCC → Europa) für Unternehmen aus der Golfregion verarbeitet.",
+    "demo2_p": "Echter Testscan eines GCC Firmenprofils mit allen abgefragten Feldern (Kennzahlen, Zertifikate, 3 KI und Digitalprodukte), wie ihn Tool 2 (GCC nach Europa) für Unternehmen aus der Golfregion verarbeitet.",
     "pdf_open_link": "PDF in neuem Tab öffnen ↗",
     "demo2_pending": "In Vorbereitung",
     "demo_download": "PDF herunterladen",
     "pf_eyebrow": "Portfolio",
     "pf_h2": "Zwei Projekte, ein Ansatz.",
     "pf_p": "Herausforderung, Ansatz und aktueller Stand.",
-    "c1_label": "Europa → GCC",
+    "c1_label": "Europa nach GCC",
     "c1_tag": "Tool 01 · Deutsch, Standard",
-    "c2_label": "GCC → Europa",
+    "c2_label": "GCC nach Europa",
     "c2_tag": "Tool 02 · Arabisch, Standard",
     "kv_challenge": "Herausforderung",
     "kv_approach": "Ansatz",
@@ -1155,7 +1156,7 @@ const I18N = {
     "re_3": "Allein in den ersten sieben Monaten 2024 exportierte Deutschland Fahrzeuge im Wert von 4,8 Mrd. Euro nach Saudi Arabien.",
     "prec_eyebrow": "Reale Präzedenzfälle",
     "prec_h2": "Es passiert bereits, in beide Richtungen.",
-    "prec_p": "Acht real recherchierte Beispiele, keine Simulation, zur Einordnung, warum die Verbindung GCC ↔ Europa wirtschaftlich real und aktiv ist.",
+    "prec_p": "Acht real recherchierte Beispiele, keine Simulation, zur Einordnung, warum die Verbindung GCC und Europa wirtschaftlich real und aktiv ist.",
     "prec_1": "Katar Investment Authority hält seit 2009 rund 17 % der Stimmrechte an Volkswagen, eines der bekanntesten Beispiele für Kapital aus der Golfregion in der europäischen Industrie.",
     "prec_2": "Abu Dhabis Staatsfonds Aabar erwarb 2009 rund 9 % an Daimler (Mercedes Benz).",
     "prec_3": "Allein in den ersten sieben Monaten 2024 exportierte Deutschland Fahrzeuge im Wert von 4,8 Mrd. Euro nach Saudi Arabien.",
@@ -1211,7 +1212,7 @@ const I18N = {
     "nav_contact": "Contact",
     "hero_eyebrow": "Cross Border Market Intelligence",
     "hero_h1": "Market entry between the Gulf and Europe.",
-    "hero_lead": "Two data driven tools by Nadin Okil that show companies the way in both directions, GCC → Europe and Europe → GCC. Built on World Bank data, an open methodology and clearly labelled estimates instead of gut feeling.",
+    "hero_lead": "Two data driven tools by Nadin Okil that show companies the way in both directions, GCC to Europe and Europe to GCC. Built on World Bank data, an open methodology and clearly labelled estimates instead of gut feeling.",
     "hero_cta1": "Explore the tools",
     "hero_cta2": "About me",
     "stat1": "Markets analyzed",
@@ -1235,8 +1236,8 @@ const I18N = {
     "tools_eyebrow": "The Two Tools",
     "tools_h2": "One tool per direction.",
     "tools_p": "Both tools share a scoring engine, financial model and data methodology, but each is designed independently for its own audience and market direction.",
-    "t1_kicker": "Europe → GCC",
-    "t1_h3": "Market Entry Europe → GCC",
+    "t1_kicker": "Europe to GCC",
+    "t1_h3": "Market Entry Europe to GCC",
     "t1_direction": "Germany as home market · six GCC countries",
     "t1_desc": "For European companies that want to expand to Saudi Arabia, the UAE, Qatar, Kuwait, Bahrain or Oman.",
     "t1_f1": "Scoring across five factors: market, competition, regulation, partners and investment potential",
@@ -1246,8 +1247,8 @@ const I18N = {
     "t1_f5": "Traceable scoring: weights, sensitivity, Monte Carlo and rationale",
     "t1_f7": "Score card, scenario comparison and a one page decision memo",
     "t1_f6": "Sources with data status (source, estimate, assumption) and data year",
-    "t2_kicker": "GCC → Europe",
-    "t2_h3": "Market Entry GCC → Europe",
+    "t2_kicker": "GCC to Europe",
+    "t2_h3": "Market Entry GCC to Europe",
     "t2_direction": "Gulf capital as origin · six core European markets",
     "t2_desc": "For companies and investors from the Gulf region looking at Germany, France, the UK, Italy, Spain or the Netherlands. With an Arabic interface (RTL).",
     "t2_f1": "The same five factor scoring logic, mirrored for European target markets",
@@ -1257,28 +1258,30 @@ const I18N = {
     "t2_f5": "Traceable scoring: weights, sensitivity, Monte Carlo and rationale",
     "t2_f7": "Score card, scenario comparison and a one page decision memo",
     "t2_f6": "Sources with data status (source, estimate, assumption) and data year",
-    "tool_cta": "Open live demo →",
+    "tool_cta": "Open the program",
     "tool_linktag": "Runs in the browser, no installation",
     "demo_eyebrow": "Hands-On",
     "vid_eyebrow": "The program at a glance",
     "vid_h2": "One minute of Market Entry.",
     "vid_p": "From a start without login through scoring to the result, in both tools and three languages.",
-    "vid_note": "Recording of the live demo with sample data, no sound.",
+    "vid_note": "Recording of the program with sample data and on screen captions. On request your browser reads the explanation aloud.",
+    "vid_tts_on": "Read the explanation aloud",
+    "vid_tts_off": "Stop reading aloud",
     "demo_h2": "Two demo PDFs.",
     "demo_p": "View it directly, with the real PDF available to download. Note: both company profiles are entirely fictional and used solely for demonstration purposes.",
     "demo1_h": "PDF company profile scan · Nordlicht AI Systems GmbH",
-    "demo1_p": "Real test scan of a company profile with every requested field (financials, certifications, 3 AI/digital products), as used by Tool 1 (Europe → GCC) for automatic data entry.",
+    "demo1_p": "Real test scan of a company profile with every requested field (financials, certifications, 3 AI/digital products), as used by Tool 1 (Europe to GCC) for automatic data entry.",
     "demo2_h": "PDF company profile scan · Najm Wealth AI LLC",
-    "demo2_p": "Real test scan of a GCC company profile with every requested field (financials, certifications, 3 AI/digital products), as processed by Tool 2 (GCC → Europe) for Gulf companies.",
+    "demo2_p": "Real test scan of a GCC company profile with every requested field (financials, certifications, 3 AI/digital products), as processed by Tool 2 (GCC to Europe) for Gulf companies.",
     "pdf_open_link": "Open PDF in new tab ↗",
     "demo2_pending": "In preparation",
     "demo_download": "Download PDF",
     "pf_eyebrow": "Portfolio",
     "pf_h2": "Two projects, one approach.",
     "pf_p": "Challenge, approach and current status.",
-    "c1_label": "Europe → GCC",
+    "c1_label": "Europe to GCC",
     "c1_tag": "Tool 01 · German, default",
-    "c2_label": "GCC → Europe",
+    "c2_label": "GCC to Europe",
     "c2_tag": "Tool 02 · Arabic, default",
     "kv_challenge": "Challenge",
     "kv_approach": "Approach",
@@ -1382,7 +1385,7 @@ const I18N = {
     "tools_eyebrow": "الأداتان",
     "tools_h2": "أداة لكل اتجاه.",
     "tools_p": "تتشارك الأداتان محرك التقييم والنموذج المالي ومنهجية البيانات، لكن كل واحدة مصممة بشكل مستقل لجمهورها واتجاه سوقها.",
-    "t1_kicker": "أوروبا ← الخليج",
+    "t1_kicker": "أوروبا إلى الخليج",
     "t1_h3": "دخول السوق: أوروبا إلى الخليج",
     "t1_direction": "ألمانيا كسوق أصلية · ست دول خليجية",
     "t1_desc": "للشركات الأوروبية التي تريد التوسع في السعودية أو الإمارات أو قطر أو الكويت أو البحرين أو عُمان.",
@@ -1393,7 +1396,7 @@ const I18N = {
     "t1_f5": "تقييم قابل للتتبع: الأوزان والحساسية ومونت كارلو والتعليل",
     "t1_f7": "بطاقة التقييم ومقارنة السيناريوهات ومذكرة قرار في صفحة واحدة",
     "t1_f6": "مصادر مع حالة البيانات (مصدر، تقدير، افتراض) وسنة البيانات",
-    "t2_kicker": "الخليج ← أوروبا",
+    "t2_kicker": "الخليج إلى أوروبا",
     "t2_h3": "دخول السوق: الخليج إلى أوروبا",
     "t2_direction": "رأس المال الخليجي كمنطلق · ست أسواق أوروبية رئيسية",
     "t2_desc": "للشركات والمستثمرين من الخليج الذين يستهدفون ألمانيا أو فرنسا أو بريطانيا أو إيطاليا أو إسبانيا أو هولندا. مع واجهة عربية كاملة.",
@@ -1404,13 +1407,15 @@ const I18N = {
     "t2_f5": "تقييم قابل للتتبع: الأوزان والحساسية ومونت كارلو والتعليل",
     "t2_f7": "بطاقة التقييم ومقارنة السيناريوهات ومذكرة قرار في صفحة واحدة",
     "t2_f6": "مصادر مع حالة البيانات (مصدر، تقدير، افتراض) وسنة البيانات",
-    "tool_cta": "فتح العرض المباشر ←",
+    "tool_cta": "فتح البرنامج",
     "tool_linktag": "يعمل في المتصفح دون تثبيت",
     "demo_eyebrow": "للتجربة الفعلية",
     "vid_eyebrow": "نظرة عامة على البرنامج",
     "vid_h2": "دقيقة واحدة مع Market Entry.",
     "vid_p": "من البدء دون تسجيل دخول إلى التقييم ثم النتيجة، في الأداتين وبثلاث لغات.",
-    "vid_note": "تسجيل للعرض التجريبي ببيانات نموذجية، بدون صوت.",
+    "vid_note": "تسجيل للبرنامج ببيانات تجريبية وترجمة مكتوبة على الشاشة. عند الطلب يقرأ المتصفح الشرح بصوت عالٍ.",
+    "vid_tts_on": "قراءة الشرح بصوت عالٍ",
+    "vid_tts_off": "إيقاف القراءة",
     "demo_h2": "ملفا PDF تجريبيان.",
     "demo_p": "معروضة مباشرة، مع ملف PDF حقيقي متاح للتحميل. ملاحظة: كلا ملفي الشركتين وهميان بالكامل ويُستخدمان لأغراض العرض التوضيحي فقط.",
     "demo1_h": "مسح ملف شركة PDF · Nordlicht AI Systems GmbH",
@@ -1575,6 +1580,33 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 2600);
   }
 });
+</script>
+<script>
+(function(){
+  var CUES=[{"t": 0.8, "de": "Das ist der Market Entry Hub. Er verbindet zwei Tools: Europa nach Golfregion und Golfregion nach Europa. Ohne Login startet man direkt mit Demodaten.", "en": "This is the Market Entry Hub. It connects two tools: Europe to the Gulf region and the Gulf region to Europe. Without a login you start right away with demo data.", "ar": "هذا هو مركز Market Entry. يجمع أداتين: من أوروبا إلى الخليج ومن الخليج إلى أوروبا. دون تسجيل دخول تبدأ مباشرة ببيانات تجريبية."}, {"t": 13.8, "de": "Hell und dunkel lassen sich mit einem Klick umschalten.", "en": "Light and dark mode switch with one click.", "ar": "يمكن التبديل بين الوضع الفاتح والداكن بنقرة واحدة."}, {"t": 19.2, "de": "Die beiden Karten zeigen, was das jeweilige Tool leistet.", "en": "The two cards show what each tool offers.", "ar": "تعرض البطاقتان ما تقدمه كل أداة."}, {"t": 24.7, "de": "Im GCC Tool sind Beispieldaten schon eingetragen, so lässt sich alles sofort ausprobieren.", "en": "In the GCC tool, sample data is already filled in, so you can try everything immediately.", "ar": "في أداة GCC البيانات التجريبية مدخلة مسبقًا، فيمكن تجربة كل شيء فورًا."}, {"t": 33.0, "de": "Ein Klick auf Score berechnen startet die Bewertung über fünf Faktoren.", "en": "One click on calculate score starts the assessment across five factors.", "ar": "نقرة واحدة على حساب التقييم تبدأ التقييم وفق خمسة عوامل."}, {"t": 39.6, "de": "Das Ergebnis ist ein Ranking der sechs Golfmärkte, jeweils mit nachvollziehbarer Begründung.", "en": "The result is a ranking of the six Gulf markets, each with a traceable rationale.", "ar": "النتيجة ترتيب للأسواق الخليجية الستة، لكل منها تعليل يمكن تتبعه."}, {"t": 48.0, "de": "Darunter stehen die Quellen mit Datenstatus, das Finanzmodell und der Eintrittsplan, der sich als PDF exportieren lässt.", "en": "Below are the sources with their data status, the financial model and the entry plan, which can be exported as a PDF.", "ar": "في الأسفل المصادر مع حالة البيانات والنموذج المالي وخطة الدخول التي يمكن تصديرها بصيغة PDF."}, {"t": 58.6, "de": "Das zweite Tool wendet dieselbe Logik in Gegenrichtung an, für Unternehmen aus der Golfregion mit Ziel Europa.", "en": "The second tool applies the same logic in the opposite direction, for companies from the Gulf region targeting Europe.", "ar": "تطبّق الأداة الثانية المنطق نفسه في الاتجاه المعاكس، للشركات الخليجية التي تستهدف أوروبا."}, {"t": 68.4, "de": "Alle Inhalte gibt es auch auf Englisch und auf Arabisch, mit Layout von rechts nach links.", "en": "Everything is also available in English and in Arabic, with a right to left layout.", "ar": "كل المحتوى متاح أيضًا بالإنجليزية والعربية بتخطيط من اليمين إلى اليسار."}, {"t": 76.6, "de": "Das Programm öffnet sich direkt im Browser, ohne Installation.", "en": "The program opens right in the browser, with no installation.", "ar": "يعمل البرنامج مباشرة في المتصفح دون تثبيت."}];
+  var v=document.querySelector('#video video'), b=document.getElementById('ttsBtn');
+  if(!v||!b) return;
+  if(!('speechSynthesis' in window)){ b.hidden=true; return; }
+  var on=false, last=-1, VL={de:'de-DE',en:'en-US',ar:'ar-SA'};
+  function lang(){ var l=document.documentElement.lang||'de'; return VL[l]?l:'de'; }
+  function label(){ var t=(typeof I18N!=='undefined'&&I18N[lang()])||{}; var k=on?'vid_tts_off':'vid_tts_on'; b.setAttribute('data-i18n',k); b.textContent=t[k]||b.textContent; b.setAttribute('aria-pressed',on?'true':'false'); }
+  function say(i){
+    speechSynthesis.cancel(); if(i<0) return;
+    var l=lang(), u=new SpeechSynthesisUtterance(CUES[i][l]); u.lang=VL[l]; u.rate=1;
+    var vs=speechSynthesis.getVoices().filter(function(x){return x.lang&&x.lang.toLowerCase().indexOf(l)===0;});
+    if(vs.length) u.voice=vs[0];
+    speechSynthesis.speak(u);
+  }
+  function idx(){ var t=v.currentTime, k=-1; for(var i=0;i<CUES.length;i++){ if(t>=CUES[i].t-0.2) k=i; } return k; }
+  b.addEventListener('click',function(){ on=!on; label(); if(!on){ speechSynthesis.cancel(); } else { last=idx(); if(!v.paused) say(last); } });
+  v.addEventListener('timeupdate',function(){ if(!on||v.paused) return; var k=idx(); if(k!==last){ last=k; say(k); } });
+  v.addEventListener('pause',function(){ speechSynthesis.cancel(); });
+  v.addEventListener('play',function(){ if(on){ last=idx(); say(last); } });
+  v.addEventListener('seeked',function(){ if(on&&!v.paused){ last=idx(); say(last); } });
+  v.addEventListener('ended',function(){ speechSynthesis.cancel(); last=-1; });
+  document.addEventListener('click',function(e){ if(e.target.closest&&e.target.closest('[data-lang]')) setTimeout(label,0); });
+  label();
+})();
 </script>
 </body>
 </html>

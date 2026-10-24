@@ -39,7 +39,7 @@ export default function HubAuth({ lang, th, onDone, onClose, onLegal }) {
   return <form onSubmit={submit} data-testid="hub-auth" style={{ maxWidth: 420, margin: "0 0 28px", padding: 24, borderRadius: 16, border: `1px solid ${th.lineColor}`, background: th.cardBg }}>
     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
       <h2 style={{ margin: 0, fontSize: 18, fontWeight: 500, color: th.ink }}>{T.title}</h2>
-      {onClose && <button type="button" onClick={onClose} style={{ color: th.subtleInk, fontSize: 13, minHeight: 44 }}>{T.close} ✕</button>}
+      {onClose && <button type="button" onClick={onClose} style={{ color: th.subtleInk, fontSize: 13, minHeight: 44 }}>{T.close}</button>}
     </div>
     <p style={{ color: th.subtleInk, fontSize: 13, margin: "6px 0 0" }}>{T.sub}</p>
     {reg && <><label style={lab} htmlFor="ha-name">{T.name}</label><input id="ha-name" name="name" autoComplete="name" style={inp} value={f.name} onChange={e => setF({ ...f, name: e.target.value })} /></>}

@@ -325,7 +325,7 @@ export function SourceLine({ source, lang, th, kind }) {
   return <p style={{ color: th.subtleInk, fontSize: 10, margin: "6px 0 0", display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center" }}>
     <Status kind={kind || "sourced"} lang={lang} th={th} />
     <span>{L.srcLabel}: {p.text}</span>
-    {p.links.map(l => <a key={l.url} href={`https://${l.url}`} target="_blank" rel="noopener noreferrer" style={{ color: th.accent, textDecoration: "underline", textUnderlineOffset: 2 }}>{l.name} ↗</a>)}
+    {p.links.map(l => <a key={l.url} href={`https://${l.url}`} target="_blank" rel="noopener noreferrer" style={{ color: th.accent, textDecoration: "underline", textUnderlineOffset: 2 }}>{l.name}</a>)}
   </p>;
 }
 
@@ -413,8 +413,8 @@ export function ScoringPanel({ rec, A, th, lang, factorLabels, parts, w, setW })
     <p style={{ color: th.ink, fontSize: 12, fontWeight: 600, margin: "0 0 4px" }}>{L.live}</p>
     <div data-testid="live-ranking">{live.map(([c, v], i) => { const d = baseRank[c] - (i + 1); return <div key={c} style={{ display: "flex", alignItems: "center", gap: 10, padding: "3px 0", fontSize: 12.5, color: th.ink }}>
       <span style={{ width: 18, color: th.subtleInk }}>{i + 1}</span><span style={{ width: 80, fontWeight: i === 0 ? 700 : 400 }}>{c}</span>{bar(v, th, i === 0 ? th.accent : th.pos)}<span style={{ width: 42, textAlign: "end" }}>{Math.round(v * 10) / 10}</span>
-      <span style={{ width: 70, fontSize: 11, color: d > 0 ? th.pos : d < 0 ? th.neg : th.subtleInk }} dir="ltr">{d > 0 ? "▲ +" + d : d < 0 ? "▼ " + d : "n/a"} {d !== 0 ? "" : ""}</span></div>; })}</div>
-    <p style={{ color: th.subtleInk, fontSize: 10.5, margin: "2px 0 0" }}>▲▼ {L.vsBase}</p>
+      <span style={{ width: 70, fontSize: 11, color: d > 0 ? th.pos : d < 0 ? th.neg : th.subtleInk }} dir="ltr">{d > 0 ? "+" + d : d < 0 ? "" + d : "n/a"} {d !== 0 ? "" : ""}</span></div>; })}</div>
+    <p style={{ color: th.subtleInk, fontSize: 10.5, margin: "2px 0 0" }}>{L.vsBase}</p>
 
     <p style={{ color: th.ink, fontSize: 13, fontWeight: 600, margin: "20px 0 2px" }}>{L.sensTitle}</p>
     <p style={{ color: th.subtleInk, fontSize: 11.5, margin: "0 0 8px" }}>{L.sensIntro}</p>

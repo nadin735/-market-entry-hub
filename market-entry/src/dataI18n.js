@@ -29,7 +29,7 @@ export const GCC_I18N = {
       Saudi: o("Young, highly urbanised population with strong purchasing power (over 84% urban)", ["Vision 2030 and e commerce law since 2019", "Over USD 100 bn of planned logistics investment"], "The e commerce market is expected to grow to around USD 20 bn by 2027 (CAGR about 20.9%)."),
       Qatar: o("High spending consumers, state driven large projects", ["LNG expansion drives fiscal room", "Diversification into tourism, logistics and Islamic digital finance"], "E commerce revenue grew from about USD 1.3 bn to 3.2 bn (2018 to 2022); the Islamic fintech sector is actively expanding."),
       Kuwait: o("Mobile first consumers, growing fintech user base", ["Higher oil output as a fiscal tailwind", "Gradual pro business reforms"], "In 2024 Kuwait led the GCC in mobile shopping app downloads."),
-      Bahrain: o("Logistics and financial services sector, regional hub", ["Airport modernisation (capacity 8→14 million passengers)", "Metro project (~USD 2 bn) and King Hamad Causeway (~USD 4 bn)"], "Stable growth base, but high public debt as structural context."),
+      Bahrain: o("Logistics and financial services sector, regional hub", ["Airport modernisation (capacity 8 to 14 million passengers)", "Metro project (~USD 2 bn) and King Hamad Causeway (~USD 4 bn)"], "Stable growth base, but high public debt as structural context."),
       Oman: o("Logistics and industrial sector in a strategic location", ["Fiscal consolidation creates stability", "Expansion of the logistics hub positioning"], "Expanding, diversifying market economy focused on logistics."),
     },
   },

@@ -7,7 +7,7 @@ import { COIN } from "../../hubAssets.js";
 import { EUROPE_I18N, localizeIntel } from "../../dataI18n.js";
 import { KpiStrip, WhyPanel, ScoringSuite, ScenarioCompare, MemoDoc, CompetitorBlock, IntelPrint, SourceLine, StatusLegend, analyze } from "../../intel.jsx";
 import { LegalPage, LegalNotice, ConsentBox, DataCenter, downloadJSON, legalPack } from "../../legal.jsx";
-import { LogOut, Plus, Download, ArrowRight, ChevronLeft, Lock, User as UserIcon, Building2, AlertTriangle, Users, ListChecks, BarChart3, FileText, Upload, FileSpreadsheet, CheckCircle2, Milestone, Link as LinkIcon, Wallet, Globe2, ChevronDown, ChevronUp } from "lucide-react";
+import { LogOut, ChevronLeft, ChevronDown, ChevronUp } from "lucide-react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ComposedChart, Line, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ScatterChart, Scatter, ZAxis, ReferenceLine } from "recharts";
 
 /* ============================================================================
@@ -1182,7 +1182,7 @@ function AmbientCrystalRows() {
 function CrystalPhoto({ size = 300 }) {
   const small = size <= 100;
   return <div style={{ width: small ? size : Math.round(size * 1.45), maxWidth: "100%", margin: "0 auto" }}>
-      <img src={small ? MARK_IMG : CRYSTAL_STAR_TEAL} alt="Gulf States ↔ Europe, Market Entry" style={{ width: "100%", height: "auto", display: "block", objectFit: "contain" }} />
+      <img src={small ? MARK_IMG : CRYSTAL_STAR_TEAL} alt="Gulf States and Europe, Market Entry" style={{ width: "100%", height: "auto", display: "block", objectFit: "contain" }} />
     </div>;
 }
 
@@ -1325,7 +1325,7 @@ function ScoreBreakdownBars({ scores, labels, gold = "#C8A96B", teal = "#527FB8"
 const T = {
   de: {
     appName: "Europe Market Entry",
-    corridorLabel: "Golf → Europa",
+    corridorLabel: "Golf nach Europa",
     tagline: "Vom Unternehmensprofil zum Europäischen Markteintrittsplan",
     heroSubtext: "Regelbasierte Marktanalyse, strategische Planung und nachvollziehbare Empfehlungen für Ihren Markteintritt.",
     rememberMe: "Angemeldet bleiben",
@@ -1550,8 +1550,8 @@ const T = {
     radarSubtitle: "Alle fünf Bewertungsfaktoren auf einen Blick",
     positioningTitle: "Strategische Positionierung",
     positioningSubtitle: "Marktattraktivität vs. Wettbewerb, Blasengröße = Investitionspotenzial",
-    positioningXLabel: "Wettbewerb →",
-    positioningYLabel: "Marktattraktivität →",
+    positioningXLabel: "Wettbewerb",
+    positioningYLabel: "Marktattraktivität",
     sensitivityTitle: "Budget-Sensitivität",
     sensitivitySubtitle: "Wie verändert sich der Score im Zielmarkt bei anderem Budget?",
     sensitivityXLabel: "Budget (Mio. €)",
@@ -1584,7 +1584,7 @@ const T = {
   },
   en: {
     appName: "Europe Market Entry",
-    corridorLabel: "Gulf → Europe",
+    corridorLabel: "Gulf to Europe",
     tagline: "From company profile to European market entry plan",
     heroSubtext: "Rule based market analysis, strategic planning and traceable recommendations for your market entry.",
     rememberMe: "Stay signed in",
@@ -1809,8 +1809,8 @@ const T = {
     radarSubtitle: "All five scoring factors at a glance",
     positioningTitle: "Strategic Positioning",
     positioningSubtitle: "Market attractiveness vs. competition, bubble size = investment potential",
-    positioningXLabel: "Competition →",
-    positioningYLabel: "Market Attractiveness →",
+    positioningXLabel: "Competition",
+    positioningYLabel: "Market Attractiveness",
     sensitivityTitle: "Budget Sensitivity",
     sensitivitySubtitle: "How does the target market's score change with a different budget?",
     sensitivityXLabel: "Budget (€M)",
@@ -1843,7 +1843,7 @@ const T = {
   },
   ar: {
     appName: "دخول السوق الأوروبي",
-    corridorLabel: "الخليج → أوروبا",
+    corridorLabel: "الخليج إلى أوروبا",
     tagline: "من ملف الشركة إلى خطة دخول السوق الأوروبي",
     heroSubtext: "تحليل سوق قائم على قواعد واضحة، تخطيط استراتيجي وتوصيات قابلة للتتبع لدخولك السوقك.",
     rememberMe: "تذكرني",
@@ -2068,8 +2068,8 @@ const T = {
     radarSubtitle: "جميع عوامل التقييم الخمسة في لمحة واحدة",
     positioningTitle: "الموقع الاستراتيجي",
     positioningSubtitle: "جاذبية السوق مقابل المنافسة، حجم الفقاعة = إمكانات الاستثمار",
-    positioningXLabel: "المنافسة ←",
-    positioningYLabel: "جاذبية السوق ←",
+    positioningXLabel: "المنافسة",
+    positioningYLabel: "جاذبية السوق",
     sensitivityTitle: "حساسية الميزانية",
     sensitivitySubtitle: "كيف تتغير نتيجة السوق المستهدف مع ميزانية مختلفة؟",
     sensitivityXLabel: "الميزانية (مليون يورو)",
@@ -2992,7 +2992,7 @@ function PlanReportDoc({ rec, t, lang, entryPlanDisplay, detailedSteps, finModel
         <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: 8 }}>
           <thead><tr><th style={th}>{L.ranking}</th>{factorKeys.map(([k, label]) => <th key={k} style={th}>{label}</th>)}<th style={th}>{L.overall}</th></tr></thead>
           <tbody>{ranked.map(([c, s], i) => <tr key={c} style={{ background: c === target ? "#f4ecd8" : "transparent", breakInside: "avoid", ...exact }}>
-            <td style={{ ...td, fontWeight: c === target ? 700 : 400 }}>{i + 1}. {c}{c === target ? " ★" : ""}</td>
+            <td style={{ ...td, fontWeight: c === target ? 700 : 400 }}>{i + 1}. {c}{c === target ? "" : ""}</td>
             {factorKeys.map(([k]) => <td key={k} style={td}>{Math.round(s[k])}</td>)}
             <td style={{ ...td, fontWeight: 700 }}>{s.overall}</td></tr>)}</tbody>
         </table>
@@ -4409,12 +4409,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
               </div> : <form onSubmit={e => { syncAuthDom(e.currentTarget); (isLogin ? handleLogin : handleRegister)(e); }}>
               <Field label={t.name} subtleInk={subtleInk} fontBody={fontBody}>
                   <div className="relative">
-                    <UserIcon size={15} style={{
-                  position: "absolute",
-                  top: 12,
-                  [isRTL ? "right" : "left"]: 12,
-                  color: subtleInk
-                }} />
+                    
                     <input style={{
                   ...inputStyle,
                   paddingLeft: isRTL ? 12 : 34,
@@ -4427,12 +4422,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
                 </Field>
               <Field label={t.password} subtleInk={subtleInk} fontBody={fontBody}>
                 <div className="relative">
-                  <Lock size={15} style={{
-                  position: "absolute",
-                  top: 12,
-                  [isRTL ? "right" : "left"]: 12,
-                  color: subtleInk
-                }} />
+                  
                   <input type="password" style={{
                   ...inputStyle,
                   paddingLeft: isRTL ? 12 : 34,
@@ -4519,13 +4509,13 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
                 border: `1px solid ${lineColor}`,
                 color: ink
               }}>
-                    <BarChart3 size={15} /> {t.overviewBtn}
+                    {t.overviewBtn}
                   </button>
                   <button onClick={exportAllCSV} className="flex items-center gap-2 px-4 py-2.5 rounded-md font-medium text-sm" style={{
                 border: `1px solid ${lineColor}`,
                 color: ink
               }}>
-                    <Download size={15} /> {t.exportAllBtn}
+                    {t.exportAllBtn}
                   </button>
                 </>}
               <button onClick={openNewAnalysis} className="flex items-center gap-2 px-5 py-2.5 rounded-md font-medium" style={{
@@ -4533,7 +4523,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
               color: palette.navyDeep,
               boxShadow: '0 8px 22px rgba(34,242,208,0.45)'
             }}>
-                <Plus size={16} /> {t.newAnalysis}
+                {t.newAnalysis}
               </button>
             </div>
           </div>
@@ -4585,9 +4575,6 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
               }}>
                       {rec.rec.targetMarket} · {rec.scores[rec.rec.targetMarket].overall}
                     </span>
-                    <ArrowRight size={16} color={subtleInk} style={{
-                transform: isRTL ? "scaleX(-1)" : "none"
-              }} />
                   </div>
                 </div>)}
             </div>}
@@ -4627,7 +4614,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
           border: `1px solid ${palette.gold}`,
           textAlign: isRTL ? "right" : "left"
         }}>
-            <Building2 size={16} style={{ flexShrink: 0 }} />
+            
             <span style={{ display: "flex", flexDirection: "column", gap: 2 }}>
               <span>{t.tryTest}</span>
               <span style={{ fontSize: 11, fontWeight: 400, color: subtleInk }}>{t.tryTestHint}</span>
@@ -4636,7 +4623,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
 
           {/* input method tabs */}
           <div className="flex gap-2 mb-5">
-            {[["manual", t.manualTab, UserIcon], ["pdf", t.pdfTab, FileText], ["csv", t.csvTab, FileSpreadsheet]].map(([key, label, Icon]) => <button key={key} onClick={() => {
+            {[["manual", t.manualTab], ["pdf", t.pdfTab], ["csv", t.csvTab]].map(([key, label]) => <button key={key} onClick={() => {
             setInputMethod(key);
             setExtracted(false);
           }} className="flex items-center gap-1.5 px-4 py-2 rounded-md text-xs font-medium" style={{
@@ -4644,7 +4631,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
             color: inputMethod === key ? palette.navyDeep : subtleInk,
             border: `1px solid ${inputMethod === key ? palette.gold : lineColor}`
           }}>
-                <Icon size={13} /> {label}
+                {label}
               </button>)}
           </div>
 
@@ -4653,7 +4640,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
           border: `1px dashed ${lineColor}`
         }}>
               <label className="flex flex-col items-center justify-center gap-2 py-8 cursor-pointer">
-                <Upload size={22} color={palette.gold} />
+                
                 <span style={{
               color: ink,
               fontWeight: 600,
@@ -4669,16 +4656,16 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
               </label>
               {extracting && <p className="text-center text-xs mt-2" style={{
             color: palette.gold
-          }}>⏳ {t.scanningText} ({pdfFileName})</p>}
+          }}>{t.scanningText} ({pdfFileName})</p>}
               {extracted && !extracting && <p className="flex items-center justify-center gap-1.5 text-xs mt-2" style={{
             color: palette.teal
           }}>
-                  <CheckCircle2 size={13} /> {t.extractedBadge}
+                  {t.extractedBadge}
                 </p>}
               {extractError && !extracting && <p className="flex items-center justify-center gap-1.5 text-xs mt-2" style={{
             color: "#E0A458"
           }}>
-                  <AlertTriangle size={13} /> {extractError}
+                  {extractError}
                 </p>}
               {!extractError && <p className="text-center text-[10px] mt-3" style={{
             color: subtleInk
@@ -4702,7 +4689,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
               border: `1px solid ${lineColor}`,
               color: subtleInk
             }}>
-                  <Upload size={12} /> CSV-Datei
+                  CSV-Datei
                   <input type="file" accept=".csv,text/csv" className="hidden" onChange={handleCsvFileUpload} />
                 </label>
                 <button type="button" onClick={handleCsvImport} className="px-4 py-1.5 rounded-md text-xs font-medium" style={{
@@ -4719,7 +4706,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
               {extracted && !csvError && <p className="flex items-center gap-1.5 text-xs mt-2" style={{
             color: palette.teal
           }}>
-                  <CheckCircle2 size={13} /> {t.extractedBadge}
+                  {t.extractedBadge}
                 </p>}
             </div>}
 
@@ -4853,7 +4840,7 @@ const renderCountryDetail = (country, s) => {
     const chartBox = { background: dark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)", border: `1px solid ${lineColor}` };
     const hintLine = <p style={{ color: subtleInk, fontSize: 10.5, marginTop: 6 }}>{t.chartHint}</p>;
     const countryPanel = chartSel && chartSel.kind === "country" && rec.scores[chartSel.id] ? <div data-testid="chart-detail" style={{ marginTop: 8 }}>
-      <div className="flex items-center justify-between"><p style={{ color: palette.gold, fontWeight: 700, fontSize: 13 }}>{chartSel.id} · {rec.scores[chartSel.id].overall}/100</p><button type="button" onClick={() => setChartSel(null)} style={{ color: subtleInk, fontSize: 11 }}>{t.chClose} ✕</button></div>
+      <div className="flex items-center justify-between"><p style={{ color: palette.gold, fontWeight: 700, fontSize: 13 }}>{chartSel.id} · {rec.scores[chartSel.id].overall}/100</p><button type="button" onClick={() => setChartSel(null)} style={{ color: subtleInk, fontSize: 11 }}>{t.chClose}</button></div>
       {renderCountryDetail(chartSel.id, rec.scores[chartSel.id])}
     </div> : null;
     const catPanel = chartSel && chartSel.kind === "cat" ? (() => {
@@ -4861,7 +4848,7 @@ const renderCountryDetail = (country, s) => {
       const tot = finModel.costBreakdown.reduce((x, c) => x + c.amount, 0) || 1;
       const sts = detailedSteps.filter(x => x.category === chartSel.id);
       return <div data-testid="chart-detail" className="p-3 rounded-md" style={{ ...chartBox, marginTop: 8 }}>
-        <div className="flex items-center justify-between"><p style={{ color: palette.gold, fontWeight: 700, fontSize: 13 }}>{t[chartSel.id]} · {cb.amount} {t.costEurLabel}</p><button type="button" onClick={() => setChartSel(null)} style={{ color: subtleInk, fontSize: 11 }}>{t.chClose} ✕</button></div>
+        <div className="flex items-center justify-between"><p style={{ color: palette.gold, fontWeight: 700, fontSize: 13 }}>{t[chartSel.id]} · {cb.amount} {t.costEurLabel}</p><button type="button" onClick={() => setChartSel(null)} style={{ color: subtleInk, fontSize: 11 }}>{t.chClose}</button></div>
         <p style={{ color: subtleInk, fontSize: 11.5, margin: "4px 0 8px" }}>{t.chShare}: {Math.round(cb.amount / tot * 100)}%</p>
         <p style={{ color: ink, fontSize: 11.5, fontWeight: 600, marginBottom: 4 }}>{t.chSteps}</p>
         {sts.map(x => <div key={x.key} className="flex items-center justify-between" style={{ fontSize: 11.5, padding: "3px 0", borderTop: `1px solid ${lineColor}` }}><span style={{ color: ink }}>{t.steps_[x.key]}</span><span style={{ color: subtleInk }}>{t.weekLabel} {x.startWeek + 1} {RANGE[lang]} {x.startWeek + x.durationWeeks} · {x.costEurM} {t.costEurLabel}</span></div>)}
@@ -4871,7 +4858,7 @@ const renderCountryDetail = (country, s) => {
       const y = finModel.projection.find(p => p.year === chartSel.id); if (!y) return null;
       const net = Math.round((y.cumRevenue - y.cumCost) * 100) / 100;
       return <div data-testid="chart-detail" className="p-3 rounded-md" style={{ ...chartBox, marginTop: 8 }}>
-        <div className="flex items-center justify-between"><p style={{ color: palette.gold, fontWeight: 700, fontSize: 13 }}>{y.year}</p><button type="button" onClick={() => setChartSel(null)} style={{ color: subtleInk, fontSize: 11 }}>{t.chClose} ✕</button></div>
+        <div className="flex items-center justify-between"><p style={{ color: palette.gold, fontWeight: 700, fontSize: 13 }}>{y.year}</p><button type="button" onClick={() => setChartSel(null)} style={{ color: subtleInk, fontSize: 11 }}>{t.chClose}</button></div>
         <p style={{ color: ink, fontSize: 11.5, marginTop: 4 }}>{t.chCost}: {Math.round(y.cumCost * 100) / 100} {t.costEurLabel} · {t.chRev}: {Math.round(y.cumRevenue * 100) / 100} {t.costEurLabel}</p>
         <p style={{ color: net >= 0 ? palette.teal : palette.coral, fontSize: 11.5, fontWeight: 600 }}>{t.chNet}: {net >= 0 ? "+" : ""}{net} {t.costEurLabel} · {net >= 0 ? t.chBE : t.chNoBE}</p>
       </div>;
@@ -4882,7 +4869,7 @@ const renderCountryDetail = (country, s) => {
       const cur = sensData.find(r => Number(r.budget) === Number(rec.input.budget));
       const d = cur ? Math.round((row.overallScore - cur.overallScore) * 10) / 10 : null;
       return <div data-testid="chart-detail" className="p-3 rounded-md" style={{ ...chartBox, marginTop: 8 }}>
-        <div className="flex items-center justify-between"><p style={{ color: palette.gold, fontWeight: 700, fontSize: 13 }}>{row.budget} {t.costEurLabel} → {row.overallScore}/100</p><button type="button" onClick={() => setChartSel(null)} style={{ color: subtleInk, fontSize: 11 }}>{t.chClose} ✕</button></div>
+        <div className="flex items-center justify-between"><p style={{ color: palette.gold, fontWeight: 700, fontSize: 13 }}>{row.budget} {t.costEurLabel}: {row.overallScore}/100</p><button type="button" onClick={() => setChartSel(null)} style={{ color: subtleInk, fontSize: 11 }}>{t.chClose}</button></div>
         <p style={{ color: subtleInk, fontSize: 11.5, marginTop: 4 }}>{t.chScoreAt}: {row.overallScore}{d !== null && <> · <span dir="ltr" style={{ color: d >= 0 ? palette.teal : palette.coral }}>{d >= 0 ? "+" : ""}{d}</span> {t.chVsNow}</>}</p>
       </div>;
     })() : null;
@@ -4943,10 +4930,10 @@ const renderCountryDetail = (country, s) => {
               background: palette.gold,
               color: "#14100A"
             }}>
-                <FileText size={14} /> {t.exportPdfSummary}
+                {t.exportPdfSummary}
               </button>
               <button onClick={() => setPrintMode("memo")} data-testid="memo-btn" className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium" style={{ border: `1px solid ${palette.gold}`, color: palette.gold }}>
-                <FileText size={14} /> {intelA.L.memoBtn}
+                {intelA.L.memoBtn}
               </button>
             </div>
           </div>
@@ -4981,7 +4968,7 @@ const renderCountryDetail = (country, s) => {
               }}>
                     {country} {country === rec.rec.targetMarket && <span style={{
                   color: palette.gold
-                }}>★</span>}
+                }}>■</span>}
                   </span>
                   <span style={{
                 fontFamily: "'Inter','Noto Sans Arabic',system-ui,sans-serif",
@@ -5207,33 +5194,21 @@ const renderCountryDetail = (country, s) => {
               gap: 8
             }}>
                 <div className="flex items-start gap-2">
-                  <CheckCircle2 size={13} style={{
-                  color: palette.gold,
-                  marginTop: 2,
-                  flexShrink: 0
-                }} />
+                  
                   <p style={{
                   fontSize: 11.5,
                   color: ink
                 }}><span style={{ color: subtleInk }}>{t.scoreDims[bestKey]}: </span>{Math.round(dimScores[bestKey])}</p>
                 </div>
                 <div className="flex items-start gap-2">
-                  <AlertTriangle size={13} style={{
-                  color: "#C97B5C",
-                  marginTop: 2,
-                  flexShrink: 0
-                }} />
+                  
                   <p style={{
                   fontSize: 11.5,
                   color: ink
                 }}>{t.riskText[topRiskKey]}</p>
                 </div>
                 <div className="flex items-start gap-2">
-                  <ArrowRight size={13} style={{
-                  color: palette.teal,
-                  marginTop: 2,
-                  flexShrink: 0
-                }} />
+                  <span aria-hidden="true" style={{ width: 8, height: 1, background: palette.teal, marginTop: 9, flexShrink: 0 }} />
                   <p style={{
                   fontSize: 11.5,
                   color: ink
@@ -5296,7 +5271,7 @@ const renderCountryDetail = (country, s) => {
             <div className="mb-4">
               <p className="text-xs flex items-center gap-1.5 mb-1.5" style={{
               color: subtleInk
-            }}><AlertTriangle size={12} /> {t.mainRisks}</p>
+            }}>{t.mainRisks}</p>
               {rec.rec.risks.map((k, i) => {
                 const sc = rec.scores[rec.rec.targetMarket];
                 const avg = Math.round(Object.values(rec.scores).reduce((a, x) => a + x[k], 0) / Object.keys(rec.scores).length);
@@ -5309,7 +5284,7 @@ const renderCountryDetail = (country, s) => {
             <div className="mb-4">
               <p className="text-xs flex items-center gap-1.5 mb-1.5" style={{
               color: subtleInk
-            }}><Users size={12} /> {t.potentialPartners}</p>
+            }}>{t.potentialPartners}</p>
               <p style={{
               color: ink,
               fontSize: 13
@@ -5318,7 +5293,7 @@ const renderCountryDetail = (country, s) => {
             <div>
               <p className="text-xs flex items-center gap-1.5 mb-1.5" style={{
               color: subtleInk
-            }}><ListChecks size={12} /> {t.nextSteps}</p>
+            }}>{t.nextSteps}</p>
               {rec.rec.steps.map((k, i) => {
                 const ph = entryPlanDisplay[i];
                 const phSteps = ph ? detailedSteps.filter(x => x.phase === ph.key) : [];
@@ -5346,7 +5321,7 @@ const renderCountryDetail = (country, s) => {
             fontWeight: 600,
             marginBottom: 20
           }}>
-              <Milestone size={16} color={palette.gold} /> {t.entryPlanTitle}
+              {t.entryPlanTitle}
             </h3>
             <p className="no-print" style={{ color: subtleInk, fontSize: 10.5, marginTop: -12, marginBottom: 14 }}>{t.planClickHint}</p>
             <div style={{
@@ -5414,7 +5389,7 @@ const renderCountryDetail = (country, s) => {
             fontWeight: 600,
             marginBottom: 14
           }}>
-              <Users size={15} color={palette.gold} /> {t.culturalIntelTitle}
+              {t.culturalIntelTitle}
             </h3>
             <ul style={{ margin: 0, paddingInlineStart: 18 }}>
               {(CULTURAL_INTEL[lang]?.[rec.rec.targetMarket] || CULTURAL_INTEL.en[rec.rec.targetMarket] || []).map((point, i) => <li key={i} style={{
@@ -5442,10 +5417,10 @@ const renderCountryDetail = (country, s) => {
             fontWeight: 600,
             marginBottom: 14
           }}>
-              <LinkIcon size={14} color={palette.gold} /> {t.sourcesTitle}
+              {t.sourcesTitle}
             </h3>
             <div className="flex flex-col gap-2">
-              {(SOURCES[rec.rec.targetMarket] || []).map((src, i) => <div key={i} className="flex items-center justify-between"><span style={{ color: ink, fontSize: 12.5 }}>{src.name}</span><a href={`https://${src.url}`} target="_blank" rel="noopener noreferrer" style={{ color: palette.gold, fontSize: 11, textDecoration: "underline" }}>{src.url} ↗</a></div>)}
+              {(SOURCES[rec.rec.targetMarket] || []).map((src, i) => <div key={i} className="flex items-center justify-between"><span style={{ color: ink, fontSize: 12.5 }}>{src.name}</span><a href={`https://${src.url}`} target="_blank" rel="noopener noreferrer" style={{ color: palette.gold, fontSize: 11, textDecoration: "underline" }}>{src.url}</a></div>)}
               <SourceLine source={[COUNTRY_FUNDAMENTALS[rec.rec.targetMarket]?.source, REGULATORY_CHECK[rec.rec.targetMarket]?.source, MARKET_OPPORTUNITY[rec.rec.targetMarket]?.source].filter(Boolean).join(" · ")} lang={lang} th={intelTh} />
             </div>
           </div>
@@ -5463,8 +5438,8 @@ const renderCountryDetail = (country, s) => {
             fontWeight: 600,
             marginBottom: 18
           }}>
-              <ListChecks size={16} color={palette.gold} /> {t.detailedRoadmapTitle}
-              {selPhase && <button type="button" onClick={() => setSelPhase(null)} className="text-xs font-medium" style={{ marginInlineStart: "auto", border: `1px solid ${palette.gold}`, borderRadius: 4, padding: "2px 10px", color: ink }}>{t[selPhase]} · {phaseSteps.length} {t.planSteps} ✕</button>}
+              {t.detailedRoadmapTitle}
+              {selPhase && <button type="button" onClick={() => setSelPhase(null)} className="text-xs font-medium" style={{ marginInlineStart: "auto", border: `1px solid ${palette.gold}`, borderRadius: 4, padding: "2px 10px", color: ink }}>{t[selPhase]} · {phaseSteps.length} {t.planSteps}</button>}
             </h3>
             <div className="flex flex-col gap-2">
               {visibleSteps.map(({ step, idx }) => {
@@ -5541,7 +5516,7 @@ const renderCountryDetail = (country, s) => {
             fontWeight: 600,
             marginBottom: 4
           }}>
-              <Wallet size={16} color={palette.gold} /> {t.financialModelTitle}
+              {t.financialModelTitle}
             </h3>
             <p style={{
             color: subtleInk,
@@ -5714,7 +5689,7 @@ const renderCountryDetail = (country, s) => {
             fontWeight: 600,
             marginBottom: 4
           }}>
-              <Globe2 size={14} color={palette.gold} /> {t.countryFundamentalsTitle}
+              {t.countryFundamentalsTitle}
             </h3>
             <p style={{
             color: subtleInk,
@@ -5865,7 +5840,7 @@ const renderCountryDetail = (country, s) => {
             fontWeight: 600,
             marginBottom: 4
           }}>
-              <Users size={14} color={palette.gold} /> {t.marketOpportunityTitle}
+              {t.marketOpportunityTitle}
             </h3>
             <p style={{
             color: subtleInk,
@@ -5883,7 +5858,7 @@ const renderCountryDetail = (country, s) => {
                 fontSize: 14,
                 fontWeight: 600,
                 marginBottom: 8
-              }}>{country} {country === rec.rec.targetMarket && <span style={{ color: palette.gold }}>★</span>}</p>
+              }}>{country} {country === rec.rec.targetMarket && <span style={{ color: palette.gold }}>■</span>}</p>
                   <p style={{ color: subtleInk, fontSize: 9.5, marginBottom: 2 }}>{t.targetAudienceLabel}</p>
                   <p style={{ color: ink, fontSize: 12, marginBottom: 8 }}>{mo.audience}</p>
                   <p style={{ color: subtleInk, fontSize: 9.5, marginBottom: 2 }}>{t.demandDriversLabel}</p>
@@ -5911,7 +5886,7 @@ const renderCountryDetail = (country, s) => {
             fontWeight: 600,
             marginBottom: 4
           }}>
-              <Building2 size={14} color={palette.gold} /> {t.competitorAnalysisTitle}
+              {t.competitorAnalysisTitle}
             </h3>
             <p style={{
             color: subtleInk,
@@ -5929,7 +5904,7 @@ const renderCountryDetail = (country, s) => {
                 fontSize: 14,
                 fontWeight: 600,
                 marginBottom: 8
-              }}>{country} {country === rec.rec.targetMarket && <span style={{ color: palette.gold }}>★</span>}</p>
+              }}>{country} {country === rec.rec.targetMarket && <span style={{ color: palette.gold }}>■</span>}</p>
                   <p style={{ color: subtleInk, fontSize: 9.5, marginBottom: 2 }}>{t.keyPlayersLabel}</p>
                   <ul style={{ margin: 0, padding: 0, listStyle: "none", marginBottom: 8 }}>
                     {ca.players.map((p, i) => <li key={i} style={{ color: ink, fontSize: 11.5, marginBottom: 3, display: "flex", gap: 6 }}>
@@ -5954,7 +5929,7 @@ const renderCountryDetail = (country, s) => {
             fontWeight: 600,
             marginBottom: 4
           }}>
-              <AlertTriangle size={14} color={palette.gold} /> {t.regulatoryCheckTitle}
+              {t.regulatoryCheckTitle}
             </h3>
             <p style={{
             color: subtleInk,
@@ -5972,7 +5947,7 @@ const renderCountryDetail = (country, s) => {
                 fontSize: 14,
                 fontWeight: 600,
                 marginBottom: 8
-              }}>{country} {country === rec.rec.targetMarket && <span style={{ color: palette.gold }}>★</span>}</p>
+              }}>{country} {country === rec.rec.targetMarket && <span style={{ color: palette.gold }}>■</span>}</p>
                   <div className="grid grid-cols-2 gap-2 mb-2">
                     <div>
                       <p style={{ color: subtleInk, fontSize: 9.5, marginBottom: 2 }}>{t.corporateTaxLabel}</p>
@@ -6252,7 +6227,7 @@ const renderCountryDetail = (country, s) => {
             border: `1px solid ${palette.gold}`,
             color: ink
           }}>
-              <Download size={15} /> {t.exportAllBtn}
+              {t.exportAllBtn}
             </button>
           </div>
 

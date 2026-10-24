@@ -89,7 +89,7 @@ export function LegalPage({ lang, appName, th, onBack, anchor, hashPrefix = "" }
   const addr = [LEGAL.name, LEGAL.profession, LEGAL.street, LEGAL.zipCity, LEGAL.country, !LEGAL.street && !LEGAL.zipCity ? onReq : ""].filter(Boolean);
   const go = id => { const el = document.getElementById(`rechtliches-${id}`); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); try { window.history.replaceState(null, "", `#${hashPrefix}rechtliches-${id}`); } catch (e) { /* sandboxed */ } };
   return <div style={{ maxWidth: 780, margin: "0 auto", padding: "32px 24px 80px", fontFamily: th.fontBody }}>
-    <button type="button" onClick={onBack} style={{ color: th.subtleInk, fontSize: 14, minHeight: 44, display: "inline-flex", alignItems: "center", gap: 6 }}>{th.isRTL ? "→" : "←"} {P.back}</button>
+    <button type="button" onClick={onBack} style={{ color: th.subtleInk, fontSize: 14, minHeight: 44, display: "inline-flex", alignItems: "center", gap: 6 }}>{P.back}</button>
     <h1 style={{ color: th.ink, fontFamily: th.fontDisplay, fontSize: 34, fontWeight: 600, margin: "8px 0 10px" }}>{P.title}</h1>
     <p style={{ color: th.subtleInk, fontSize: 14, lineHeight: 1.7 }}>{fill(P.intro, lang, appName)}</p>
     <div role="note" style={{ margin: "18px 0", padding: "12px 16px", border: `1px solid ${th.lineColor}`, borderRadius: 6, color: th.ink, fontSize: 13.5, lineHeight: 1.7, background: th.cardBg }}>{P.notice}</div>

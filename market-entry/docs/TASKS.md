@@ -8,14 +8,14 @@
 - Design nach CHECKLIST Teil 2 bereinigt (Hintergrund-Animation, Glow, Streifen, Großbuchstaben-Labels entfernt).
 - Impressum und Datenschutz im Portfolio ausgefüllt (ohne Straße, "Anschrift auf Anfrage").
 
-- Login nur noch über Google. E-Mail/Passwort, Apple und GitHub entfernt (Hub und beide Tools).
+- Startseite mit drei Modi (Demodaten, Konto mit Mailadresse, eigene Daten im Browser). Login nur dort.
 - Logo aus dem Portfolio (EU GCC Bridge) im Hub und in den Tools.
 - Hell/Dunkel-Modus für Hub, Tools und Portfolio, gemeinsamer Schlüssel `ui_theme`, Standard dunkel.
 - Startoptionen im Hub: Ohne Login, Mit Demodaten testen, Eigene Daten hochladen.
 - Texte in Portfolio und Programm ohne Bindestriche und Gedankenstriche, Hub und Portfolio zeigen dieselben Tool Beschreibungen.
 
 ## Offen (nur Nadin kann das)
-- Supabase: Google Provider aktivieren (Google Cloud OAuth Client, Redirect `https://zovkeyyvtaevtkmymiqt.supabase.co/auth/v1/callback`), Site URL und Redirect URL auf `https://market-entry.nadin.dev`.
+- Supabase: Site URL und Redirect URL auf `https://market-entry.nadin.dev` setzen.
 - Supabase: `supabase/schema.sql` im SQL Editor ausführen (Tabelle `user_data` ist noch nicht angelegt).
 - AV-Vertrag (DPA) mit Supabase und dem Hoster abschließen, Region (EU) prüfen und in `VITE_SUPABASE_REGION` eintragen.
 - Impressum: CHECKLIST verlangt eine ladungsfähige Anschrift. Aktuell steht nur "auf Anfrage". Sauber wäre eine c/o-Adresse oder ein Impressumsservice.

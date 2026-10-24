@@ -12,7 +12,8 @@
 - Design-Regeln stehen in `docs/CHECKLIST.md` Teil 2 und `docs/DESIGN.md`.
 
 ## Entscheidungen 23.10.2026
-- Login nur über Google (Supabase Auth). Keine Passwörter, kein Apple, kein GitHub.
+- Drei Startmodi im Hub, gelten für beide Tools: Demodaten ohne Login, Konto mit Mailadresse (Supabase), ohne Login mit eigenen Daten im Browser. Login nur im Hub, Tools zeigen nie ein eigenes Login. Google, Apple, GitHub entfernt.
+- `me_mode` (demo, account, local), `jast_demo` folgt dem Modus, erster Besuch startet im Demo Modus.
 - Dunkel ist der Standard, Hell wird über `ui_theme` gemerkt.
 - Startoptionen werden im Hub gewählt: `jast_demo` (Ohne Login, dauerhaft), `me_start` (einmalig: testdata oder upload).
 - Keine Bindestriche in sichtbaren Texten. Zusammengesetzte Wörter werden getrennt oder umformuliert.

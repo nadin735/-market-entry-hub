@@ -4237,6 +4237,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
     setSession(null);
     window.storage.delete("session", false).catch(() => {});
     setView("landing");
+    if (onHub) onHub(backend.enabled ? "login" : undefined);
   }
   function handleAnalyze(e) {
     e.preventDefault();
@@ -4456,6 +4457,14 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
     setExtracted(false);
     setView("newAnalysis");
   }
+
+  // Login lives only on the start page: without a valid account session the tool hands over to the hub.
+  useEffect(() => {
+    if (!backend.enabled || !onHub) return;
+    let off = false;
+    const id = setTimeout(() => { backend.getUser().then(u => { if (!u && !off) onHub("login"); }).catch(() => {}); }, 400);
+    return () => { off = true; clearTimeout(id); };
+  }, []);
 
   // Start option chosen in the hub ("Mit Demodaten testen" / "Eigene Daten hochladen"): consumed once after sign in.
   useEffect(() => {

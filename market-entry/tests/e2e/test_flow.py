@@ -19,7 +19,7 @@ async def run(tool):
         await pg.wait_for_timeout(1500)
         await demo_login(pg)
         await open_tool(pg, tool)
-        await pg.get_by_role("button", name="Neue Analyse").click()
+        if await pg.get_by_role("button", name="Neue Analyse").count(): await pg.get_by_role("button", name="Neue Analyse").click()
         await pg.wait_for_timeout(500)
         await pg.get_by_test_id("try-testdata").click()
         vals = await pg.evaluate("()=>[...document.querySelectorAll('form input, form select')].map(e=>e.value)")

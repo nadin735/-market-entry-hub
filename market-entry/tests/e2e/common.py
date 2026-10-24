@@ -40,7 +40,7 @@ async def open_tool(pg, tool):
 
 
 async def analyse_with_testdata(pg):
-    await pg.get_by_role("button", name="Neue Analyse").click()
+    if await pg.get_by_role("button", name="Neue Analyse").count(): await pg.get_by_role("button", name="Neue Analyse").click()
     await pg.wait_for_timeout(500)
     await pg.get_by_test_id("try-testdata").click()
     await pg.get_by_role("button", name="Score berechnen").click()

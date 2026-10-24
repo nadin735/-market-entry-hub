@@ -54,7 +54,7 @@ async def run(tool):
             verdict("hub", await pg.evaluate(JS))
         await demo_login(pg)
         await open_tool(pg, tool)
-        await pg.get_by_role("button", name="Neue Analyse").click()
+        if await pg.get_by_role("button", name="Neue Analyse").count(): await pg.get_by_role("button", name="Neue Analyse").click()
         await pg.wait_for_timeout(500)
         verdict(f"{tool} form", await pg.evaluate(JS))
         # keyboard only: reach the test data button with Tab and press Enter

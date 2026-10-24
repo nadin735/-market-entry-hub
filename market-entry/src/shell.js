@@ -15,7 +15,8 @@ export function mountDemoBanner() {
   document.head.appendChild(st);
   const b = el("div", "background:#0B0D12;border-bottom:1px solid rgba(200,169,107,.35);color:#C8A96B;font:500 12px/28px Inter,'Noto Sans Arabic',system-ui,sans-serif;text-align:center;letter-spacing:.04em;height:28px;overflow:hidden", "");
   const TXT = { de: "Demo Modus · Läuft offline, kein Konto nötig", en: "Demo mode · Runs offline, no account needed", ar: "وضع تجريبي · يعمل دون اتصال ودون حساب" };
-  const paint = () => { let l = "de"; try { l = window.localStorage.getItem("ui_lang") || "de"; } catch (e) { /* blocked */ } const v = TXT[l] || TXT.de; if (b.textContent !== v) b.textContent = v; };
+  const LOC = { de: "Lokaler Modus · Daten bleiben nur in diesem Browser", en: "Local mode · data stays in this browser only", ar: "الوضع المحلي · تبقى البيانات في هذا المتصفح فقط" };
+  const paint = () => { let l = "de", m = "demo"; try { l = window.localStorage.getItem("ui_lang") || "de"; m = window.localStorage.getItem("me_mode") || "demo"; } catch (e) { /* blocked */ } const v = (m === "local" ? LOC : TXT)[l] || TXT.de; if (b.textContent !== v) b.textContent = v; };
   paint();
   setInterval(paint, 400);
   b.id = "demo-banner";

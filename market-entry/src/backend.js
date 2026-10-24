@@ -217,9 +217,20 @@ export function setTool(t) { currentTool = t; }
 export function tool() { return currentTool; }
 /** Storage-key namespace for the local demo mode (accounts are per tool there). */
 export const ns = () => currentTool + ":";
+// No SQL needed: when the table user_data does not exist (404 / PGRST205 / 42P01), the analyses of the
+// signed in account are kept in this browser, keyed by the account id. With the table in place
+// (supabase/schema.sql) the same code syncs through Supabase instead. Nothing else changes.
+const tableMissing = (r) => r.status === 404 || ["PGRST205", "PGRST202", "42P01"].includes(errCode(r));
+const localKey = (uid) => "me_data:" + uid;
+function localRaw(uid) {
+  try { return JSON.parse(safeLSGet(localKey(uid)) || "null"); } catch (e) { return null; }
+}
 async function loadRaw(uid) {
   const r = await authed("/rest/v1/user_data?select=analyses&user_id=eq." + encodeURIComponent(uid));
-  if (!r.ok) throw new Error("load failed");
+  if (!r.ok) {
+    if (tableMissing(r)) return localRaw(uid);
+    throw new Error("load failed");
+  }
   return Array.isArray(r.data) && r.data[0] ? r.data[0].analyses : null;
 }
 export async function loadAnalyses(uid) {
@@ -230,17 +241,26 @@ export async function loadAnalyses(uid) {
 export async function saveAnalyses(uid, analyses) {
   const raw = await loadRaw(uid);
   const base = raw && !Array.isArray(raw) ? raw : {};
+  const merged = { ...base, [currentTool]: analyses };
   const r = await authed("/rest/v1/user_data?on_conflict=user_id", {
     method: "POST",
     headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
-    body: { user_id: uid, analyses: { ...base, [currentTool]: analyses }, updated_at: new Date().toISOString() },
+    body: { user_id: uid, analyses: merged, updated_at: new Date().toISOString() },
   });
-  if (!r.ok) throw new Error("save failed");
+  if (!r.ok) {
+    if (tableMissing(r)) { safeLSSet(localKey(uid), JSON.stringify(merged)); return; }
+    throw new Error("save failed");
+  }
 }
 export async function deleteAccount() {
   try {
     const r = await authed("/rest/v1/rpc/delete_my_account", { method: "POST", body: {} });
-    if (!r.ok) return fail("generic");
+    if (!r.ok) {
+      if (!tableMissing(r)) return fail("generic");
+      // Without the SQL function the sign-in record itself cannot be removed from the browser; all stored data is.
+      const u = await getUser();
+      if (u && u.id) safeLSDel(localKey(u.id));
+    }
   } catch (e) { return fail("network"); }
   await signOut();
   return ok();

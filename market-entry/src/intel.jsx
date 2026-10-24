@@ -17,13 +17,13 @@ export const PRESETS = [
 const I = {
   de: {
     kpiTitle: "Kennzahlen im Überblick", kpiTarget: "Empfohlener Markt", kpiScore: "Gesamtscore", kpiMargin: "Vorsprung auf Platz 2", kpiRobust: "Robustheit", kpiTime: "Zeitraum", kpiBudget: "Budget", kpiBE: "Break-even",
-    pts: "Pkt.", robustVal: "{n} von {m} Szenarien", tipScore: "Gewichteter Durchschnitt der fünf Kriterien (0–100). Standard: gleiche Gewichte (je 20 %). Ein Analysten-Rubrik-Wert, keine gemessene Marktgröße.", tipMargin: "Abstand zwischen Platz 1 und Platz 2. Unter 3 Punkten ist die Rangfolge knapp und sollte mit Zusatzinformationen abgesichert werden.", tipRobust: "In wie vielen Gewichtungs-Szenarien (Presets und je ein Kriterium doppelt betont) bleibt der empfohlene Markt auf Platz 1?",
-    sTitle: "Scoring-Methodik & Sensitivität", sSub: "So entsteht der Score, und wie stabil ist das Ranking?",
-    estimate: "Die Länderwerte sind eine Analysten-Rubrik (Schätzung) und keine live gemessenen Marktdaten. Sie werden mit Sektor- und Unternehmensprofil angepasst.",
+    pts: "Pkt.", robustVal: "{n} von {m} Szenarien", tipScore: "Gewichteter Durchschnitt der fünf Kriterien (0 bis 100). Standard: gleiche Gewichte (je 20 %). Ein Analystenraster Wert, keine gemessene Marktgröße.", tipMargin: "Abstand zwischen Platz 1 und Platz 2. Unter 3 Punkten ist die Rangfolge knapp und sollte mit Zusatzinformationen abgesichert werden.", tipRobust: "In wie vielen Gewichtungsszenarien (Presets und je ein Kriterium doppelt betont) bleibt der empfohlene Markt auf Platz 1?",
+    sTitle: "Scoring Methodik & Sensitivität", sSub: "So entsteht der Score, und wie stabil ist das Ranking?",
+    estimate: "Die Länderwerte sind eine Analystenraster (Schätzung) und keine live gemessenen Marktdaten. Sie werden mit Sektor und Unternehmensprofil angepasst.",
     critTitle: "Die fünf Kriterien", critCol: "Kriterium", whatCol: "Was gemessen wird", wCol: "Gewicht", higher: "Höher heißt",
-    def: { market: "Nachfragepotenzial und Wachstum des Zielmarkts für Ihre Branche.", competition: "Wettbewerbsspielraum: wie viel Platz neben etablierten Anbietern bleibt.", regulatory: "Aufwand für Gründung, Zulassungen und Steuern.", partner: "Verfügbarkeit geeigneter Vertriebs-, Joint-Venture- und Netzwerkpartner.", investment: "Investitionsklima, Anreize und Kapitalzugang." },
+    def: { market: "Nachfragepotenzial und Wachstum des Zielmarkts für Ihre Branche.", competition: "Wettbewerbsspielraum: wie viel Platz neben etablierten Anbietern bleibt.", regulatory: "Aufwand für Gründung, Zulassungen und Steuern.", partner: "Verfügbarkeit geeigneter Vertriebspartner, Joint Venture Partner und Netzwerkpartner.", investment: "Investitionsklima, Anreize und Kapitalzugang." },
     hi: { market: "größeres Potenzial", competition: "weniger gedrängt", regulatory: "einfacher / schneller", partner: "mehr geeignete Partner", investment: "günstigeres Klima" },
-    formulaTitle: "Berechnung", formula: "Gesamtscore = Σ (Gewicht × Kriteriumswert) ÷ Σ Gewichte. Kriteriumswert = Basis-Rubrik des Landes + Sektor-Fit + Anpassung durch Ihr Unternehmensprofil (Zertifikate, Segmente, Vertriebskanäle, Größe, Budget), begrenzt auf 0–100.",
+    formulaTitle: "Berechnung", formula: "Gesamtscore = Σ (Gewicht × Kriteriumswert) ÷ Σ Gewichte. Kriteriumswert = Basis Rubrik des Landes + Sektor Fit + Anpassung durch Ihr Unternehmensprofil (Zertifikate, Segmente, Vertriebskanäle, Größe, Budget), begrenzt auf 0 bis 100.",
     partsTitle: "Aufbau der Werte für {c}", base: "Basis", sector: "Sektor-Fit", company: "Profil", final: "Wert",
     wTitle: "Gewichte selbst testen", wHint: "Schieberegler ändern die Gewichte (werden auf 100 % normiert). Das Ranking aktualisiert sich sofort.", reset: "Zurücksetzen", live: "Ranking mit Ihren Gewichten", vsBase: "gegenüber Standard",
     presets: { equal: "Gleichgewichtet (Standard)", growth: "Wachstumsfokus", risk: "Risiko / Compliance", partner: "Partner & Netzwerk", speed: "Schnell zum Markt" }, focus: "Fokus {f} (40 %)",
@@ -32,11 +32,11 @@ const I = {
     whyTitle: "Warum dieser Markt?", whyLead: "{c} führt mit {s}/100, {m} Punkte vor {r}.", whyClose: "Der Abstand ist knapp, die Entscheidung sollte nicht allein am Score hängen.", whyClear: "Der Abstand ist deutlich.",
     leadsOn: "{c} liegt vorn bei: {list}.", trailsOn: "{r} wäre besser bei: {list}.", noTrade: "{r} ist in keinem Kriterium besser.",
     opp: "Chancen", risk: "Risiken", barr: "Markteintrittsbarrieren", trade: "Strategischer Zielkonflikt", next: "Praktische nächste Schritte", derived: "aus den Scores abgeleitet",
-    oppF: { market: "Großer bzw. wachsender Nachfragepool", competition: "Wettbewerbsspielraum neben etablierten Anbietern", regulatory: "Vergleichsweise unkomplizierter Marktzugang", partner: "Starkes Partner-Ökosystem (Vertrieb/JV möglich)", investment: "Unterstützendes Investitionsklima" },
-    barrF: { market: "Begrenzte Nachfrage: Volumen vor Skalierung validieren.", competition: "Dichter Wettbewerb: klare Nischen-Differenzierung nötig.", regulatory: "Zulassungen/Lizenzen können den Start verzögern: Anträge früh stellen.", partner: "Wenige geeignete Partner: 2–3 Kandidaten parallel prüfen.", investment: "Höhere Kapitalintensität: Budget in Tranchen freigeben." },
-    st: { s1: "Pilotkunde (1–2) in {c} gewinnen und Nachfrage messen (Monat 0–2). KPI: Angebote, Pilotumsatz.", s2: "Rechtsform und Genehmigung klären: {lic}", s3: "Steuern vor Ort prüfen lassen: Körperschaftsteuer {tax}, Umsatzsteuer {vat}{date}.", s4: "Partner ansprechen: {p}", s5: "Budget von {b} €M in Tranchen an die Phasen-Entscheidungspunkte koppeln.", s6: "Nach 3 Monaten Review: Annahmen und Scores mit realen Pilotdaten aktualisieren." },
+    oppF: { market: "Großer bzw. wachsender Nachfragepool", competition: "Wettbewerbsspielraum neben etablierten Anbietern", regulatory: "Vergleichsweise unkomplizierter Marktzugang", partner: "Starkes Partner Ökosystem (Vertrieb/JV möglich)", investment: "Unterstützendes Investitionsklima" },
+    barrF: { market: "Begrenzte Nachfrage: Volumen vor Skalierung validieren.", competition: "Dichter Wettbewerb: klare Nischen Differenzierung nötig.", regulatory: "Zulassungen/Lizenzen können den Start verzögern: Anträge früh stellen.", partner: "Wenige geeignete Partner: 2 bis 3 Kandidaten parallel prüfen.", investment: "Höhere Kapitalintensität: Budget in Tranchen freigeben." },
+    st: { s1: "Pilotkunde (1 bis 2) in {c} gewinnen und Nachfrage messen (Monat 0 bis 2). KPI: Angebote, Pilotumsatz.", s2: "Rechtsform und Genehmigung klären: {lic}", s3: "Steuern vor Ort prüfen lassen: Körperschaftsteuer {tax}, Umsatzsteuer {vat}{date}.", s4: "Partner ansprechen: {p}", s5: "Budget von {b} €M in Tranchen an die Phasen Entscheidungspunkte koppeln.", s6: "Nach 3 Monaten Review: Annahmen und Scores mit realen Pilotdaten aktualisieren." },
     status: { sourced: "Quelle", estimate: "Schätzung", assumption: "Annahme" },
-    statusDef: { sourced: "Veröffentlichte Statistik mit genannter Quelle und Jahr. Hier nicht live nachgeprüft: vor Entscheidungen bei der Originalquelle prüfen.", estimate: "Analysten-Einschätzung oder Prognose, keine gemessene Größe.", assumption: "Modellannahme (z. B. Finanzmodell, Zeitplan), vereinfacht und illustrativ." },
+    statusDef: { sourced: "Veröffentlichte Statistik mit genannter Quelle und Jahr. Hier nicht live nachgeprüft: vor Entscheidungen bei der Originalquelle prüfen.", estimate: "Analysten Einschätzung oder Prognose, keine gemessene Größe.", assumption: "Modellannahme (z. B. Finanzmodell, Zeitplan), vereinfacht und illustrativ." },
     legend: "Datenstatus", srcLabel: "Quelle", asOf: "Stand", noLink: "kein direkter Link", linkNote: "Links führen zur Startseite des Herausgebers, nicht zur Einzelseite.",
     compTitle: "Wettbewerbsstruktur", cPlayer: "Anbieter", cSeg: "Segment", cOverlap: "Überschneidung mit Ihrer Branche", ovD: "direkt", ovA: "angrenzend", ovL: "gering", cGap: "Marktlücke / Chance", cPos: "Empfohlene Positionierung", posNiche: "Spezialisierte Nische statt Breitenwettbewerb: Großkonzerne nicht frontal angreifen.", posPartner: "Über einen lokalen Partner eintreten und dessen Kundenzugang nutzen.", posDirect: "Direkter Eintritt mit klarer Differenzierung gegenüber den überlappenden Anbietern.", heur: "Heuristik: Zuordnung über Schlagworte, kein Marktanteilswert.", compNote: "Zielkunden und Geschäftsmodelle der Anbieter sind hier nicht belegt; dafür wäre eine lizenzierte Marktdatenquelle nötig.",
     langNote: "",
@@ -72,8 +72,8 @@ const I = {
     duelTie: "Beide Märkte liegen gleichauf.",
     budgetSame: "Bei {b} €M bleibt die Empfehlung {c}.",
     budgetChange: "Bei {b} €M wechselt die Empfehlung von {c1} zu {c2}.",
-    scenNote: "Modellrechnung: Score und Break-even folgen den Annahmen des Finanzmodells (illustrativ).",
-    memoBtn: "Entscheidungs-Memo (1 Seite)",
+    scenNote: "Modellrechnung: Score und Gewinnschwelle folgen den Annahmen des Finanzmodells (illustrativ).",
+    memoBtn: "Entscheidungs Memo (1 Seite)",
     memoTitle: "Entscheidungs-Memo",
     memoRec: "Empfehlung",
     memoWhy: "Drei Gründe",
@@ -82,33 +82,33 @@ const I = {
     memoNext: "Nächste Schritte",
     memoRank: "Ranking",
     memoAsk: "Entscheidung: Pilotphase in {c} mit {b} €M freigeben, Budget tranchenweise.",
-    memoBasis: "Basis: Analysten-Rubrik (Schätzung) und Quellen laut Datenstatus; Details im Entry-Plan-PDF.",
+    memoBasis: "Basis: Analystenraster (Schätzung) und Quellen laut Datenstatus; Details im Eintrittsplan PDF.",
     pdfExec: "Zusammenfassung", pdfMethod: "Methodik & Gewichte", pdfSens: "Sensitivität der Gewichtung", pdfFind: "Zentrale Erkenntnisse", pdfData: "Datenstatus & Quellen", pdfWhy: "Begründung der Empfehlung", pdfNote: "Dieser Bericht trennt Quellen (veröffentlicht), Schätzungen (Rubrik/Prognose) und Annahmen (Modell)."
   },
   en: {
     kpiTitle: "Key metrics at a glance", kpiTarget: "Recommended market", kpiScore: "Overall score", kpiMargin: "Lead over #2", kpiRobust: "Robustness", kpiTime: "Timeframe", kpiBudget: "Budget", kpiBE: "Break-even",
-    pts: "pts", robustVal: "{n} of {m} scenarios", tipScore: "Weighted average of the five criteria (0–100). Default: equal weights (20% each). An analyst rubric value, not a measured market size.", tipMargin: "Gap between rank 1 and rank 2. Below 3 points the ranking is tight and should be backed by additional information.", tipRobust: "In how many weighting scenarios (presets plus one criterion emphasised at 40%) does the recommended market stay at rank 1?",
+    pts: "pts", robustVal: "{n} of {m} scenarios", tipScore: "Weighted average of the five criteria (0 to 100). Default: equal weights (20% each). An analyst rubric value, not a measured market size.", tipMargin: "Gap between rank 1 and rank 2. Below 3 points the ranking is tight and should be backed by additional information.", tipRobust: "In how many weighting scenarios (presets plus one criterion emphasised at 40%) does the recommended market stay at rank 1?",
     sTitle: "Scoring methodology & sensitivity", sSub: "How the score is built, and how stable is the ranking?",
     estimate: "Country values are an analyst rubric (estimate), not live measured market data. They are adjusted for your sector and company profile.",
     critTitle: "The five criteria", critCol: "Criterion", whatCol: "What it measures", wCol: "Weight", higher: "Higher means",
-    def: { market: "Demand potential and growth of the target market for your industry.", competition: "Competitive headroom: how much room is left next to established players.", regulatory: "Effort for incorporation, approvals and taxes.", partner: "Availability of suitable distribution, joint-venture and network partners.", investment: "Investment climate, incentives and access to capital." },
+    def: { market: "Demand potential and growth of the target market for your industry.", competition: "Competitive headroom: how much room is left next to established players.", regulatory: "Effort for incorporation, approvals and taxes.", partner: "Availability of suitable distribution, joint venture and network partners.", investment: "Investment climate, incentives and access to capital." },
     hi: { market: "larger potential", competition: "less crowded", regulatory: "easier / faster", partner: "more suitable partners", investment: "more favourable climate" },
-    formulaTitle: "Calculation", formula: "Overall score = Σ (weight × criterion score) ÷ Σ weights. Criterion score = country base rubric + sector fit + adjustment from your company profile (certifications, segments, sales channels, size, budget), capped to 0–100.",
+    formulaTitle: "Calculation", formula: "Overall score = Σ (weight × criterion score) ÷ Σ weights. Criterion score = country base rubric + sector fit + adjustment from your company profile (certifications, segments, sales channels, size, budget), capped to 0 to 100.",
     partsTitle: "How the values for {c} are built", base: "Base", sector: "Sector fit", company: "Profile", final: "Value",
     wTitle: "Test the weights yourself", wHint: "Sliders change the weights (normalised to 100%). The ranking updates instantly.", reset: "Reset", live: "Ranking with your weights", vsBase: "vs. default",
     presets: { equal: "Equal weights (default)", growth: "Growth focus", risk: "Risk / compliance", partner: "Partners & network", speed: "Speed to market" }, focus: "Focus {f} (40%)",
     sensTitle: "Sensitivity analysis", sensIntro: "Rank of each country under different weightings. Presets are illustrative scenarios, not market data.", scen: "Scenario",
-    robustText: "{c} ranks #1 in {n} of {m} scenarios.", robustHigh: "The result is robust.", robustMid: "The result depends noticeably on the weighting; agree priorities first.", robustLow: "The result is weighting-dependent; support the recommendation with additional analysis.",
+    robustText: "{c} ranks #1 in {n} of {m} scenarios.", robustHigh: "The result is robust.", robustMid: "The result depends noticeably on the weighting; agree priorities first.", robustLow: "The result is weighting dependent; support the recommendation with additional analysis.",
     whyTitle: "Why this market?", whyLead: "{c} leads with {s}/100, {m} points ahead of {r}.", whyClose: "The gap is narrow, so the decision should not rest on the score alone.", whyClear: "The gap is clear.",
     leadsOn: "{c} is ahead on: {list}.", trailsOn: "{r} would be better on: {list}.", noTrade: "{r} is not better on any criterion.",
-    opp: "Opportunities", risk: "Risks", barr: "Market-entry barriers", trade: "Strategic trade-off", next: "Practical next steps", derived: "derived from the scores",
+    opp: "Opportunities", risk: "Risks", barr: "Market entry barriers", trade: "Strategic trade off", next: "Practical next steps", derived: "derived from the scores",
     oppF: { market: "Large or growing demand pool", competition: "Competitive headroom next to incumbents", regulatory: "Comparatively straightforward market access", partner: "Strong partner ecosystem (distribution/JV viable)", investment: "Supportive investment climate" },
-    barrF: { market: "Limited demand: validate volume before scaling.", competition: "Dense competition: clear niche differentiation required.", regulatory: "Approvals/licences may delay the start: file early.", partner: "Few suitable partners: evaluate 2–3 candidates in parallel.", investment: "Higher capital intensity: release budget in tranches." },
-    st: { s1: "Win 1–2 pilot customers in {c} and measure demand (month 0–2). KPIs: offers, pilot revenue.", s2: "Clarify legal form and approvals: {lic}", s3: "Have taxes checked locally: corporate tax {tax}, VAT {vat}{date}.", s4: "Approach partners: {p}", s5: "Tie the {b} €M budget in tranches to the phase decision gates.", s6: "Review after 3 months: update assumptions and scores with real pilot data." },
+    barrF: { market: "Limited demand: validate volume before scaling.", competition: "Dense competition: clear niche differentiation required.", regulatory: "Approvals/licences may delay the start: file early.", partner: "Few suitable partners: evaluate 2 to 3 candidates in parallel.", investment: "Higher capital intensity: release budget in tranches." },
+    st: { s1: "Win 1 to 2 pilot customers in {c} and measure demand (month 0 to 2). KPIs: offers, pilot revenue.", s2: "Clarify legal form and approvals: {lic}", s3: "Have taxes checked locally: corporate tax {tax}, VAT {vat}{date}.", s4: "Approach partners: {p}", s5: "Tie the {b} €M budget in tranches to the phase decision gates.", s6: "Review after 3 months: update assumptions and scores with real pilot data." },
     status: { sourced: "Sourced", estimate: "Estimate", assumption: "Assumption" },
-    statusDef: { sourced: "Published statistic with named source and year. Not re-verified live here: check the original source before decisions.", estimate: "Analyst judgement or forecast, not a measured quantity.", assumption: "Model assumption (e.g. financial model, timeline), simplified and illustrative." },
+    statusDef: { sourced: "Published statistic with named source and year. Not re verified live here: check the original source before decisions.", estimate: "Analyst judgement or forecast, not a measured quantity.", assumption: "Model assumption (e.g. financial model, timeline), simplified and illustrative." },
     legend: "Data status", srcLabel: "Source", asOf: "As of", noLink: "no direct link", linkNote: "Links go to the publisher's home page, not the individual page.",
-    compTitle: "Competitive structure", cPlayer: "Player", cSeg: "Segment", cOverlap: "Overlap with your industry", ovD: "direct", ovA: "adjacent", ovL: "low", cGap: "Market gap / opportunity", cPos: "Recommended positioning", posNiche: "Specialised niche instead of broad competition: do not attack the large groups head-on.", posPartner: "Enter through a local partner and use its customer access.", posDirect: "Direct entry with clear differentiation against the overlapping players.", heur: "Heuristic: matched by keywords, not a market-share figure.", compNote: "Players' target customers and business models are not evidenced here; that would need a licensed market-data source.",
+    compTitle: "Competitive structure", cPlayer: "Player", cSeg: "Segment", cOverlap: "Overlap with your industry", ovD: "direct", ovA: "adjacent", ovL: "low", cGap: "Market gap / opportunity", cPos: "Recommended positioning", posNiche: "Specialised niche instead of broad competition: do not attack the large groups head on.", posPartner: "Enter through a local partner and use its customer access.", posDirect: "Direct entry with clear differentiation against the overlapping players.", heur: "Heuristic: matched by keywords, not a market share figure.", compNote: "Players' target customers and business models are not evidenced here; that would need a licensed market data source.",
     langNote: "",
     mapTitle: "Score map",
     mapSub: "Colour = overall score using the weights from the panel below.",
@@ -142,7 +142,7 @@ const I = {
     duelTie: "Both markets are level.",
     budgetSame: "At {b} €M the recommendation stays {c}.",
     budgetChange: "At {b} €M the recommendation changes from {c1} to {c2}.",
-    scenNote: "Model calculation: score and break-even follow the financial model's assumptions (illustrative).",
+    scenNote: "Model calculation: score and break even follow the financial model's assumptions (illustrative).",
     memoBtn: "Decision memo (1 page)",
     memoTitle: "Decision memo",
     memoRec: "Recommendation",
@@ -152,18 +152,18 @@ const I = {
     memoNext: "Next steps",
     memoRank: "Ranking",
     memoAsk: "Decision: release a pilot phase in {c} with {b} €M, budget in tranches.",
-    memoBasis: "Basis: analyst rubric (estimate) and sources as per data status; details in the entry-plan PDF.",
+    memoBasis: "Basis: analyst rubric (estimate) and sources as per data status; details in the entry plan PDF.",
     pdfExec: "Executive summary", pdfMethod: "Methodology & weights", pdfSens: "Weighting sensitivity", pdfFind: "Key findings", pdfData: "Data status & sources", pdfWhy: "Rationale for the recommendation", pdfNote: "This report separates sources (published), estimates (rubric/forecast) and assumptions (model)."
   },
   ar: {
     kpiTitle: "المؤشرات الرئيسية", kpiTarget: "السوق الموصى به", kpiScore: "التقييم الإجمالي", kpiMargin: "التقدّم على المركز الثاني", kpiRobust: "الثبات", kpiTime: "الإطار الزمني", kpiBudget: "الميزانية", kpiBE: "نقطة التعادل",
-    pts: "نقطة", robustVal: "{n} من {m} سيناريوهات", tipScore: "المتوسط المرجّح للمعايير الخمسة (0–100). الافتراضي: أوزان متساوية (20% لكل معيار). قيمة تقديرية من منهج المحلل وليست حجم سوق مقاسًا.", tipMargin: "الفارق بين المركز الأول والثاني. أقل من 3 نقاط يعني ترتيبًا متقاربًا يحتاج إلى معلومات إضافية.", tipRobust: "في كم سيناريو للأوزان (إعدادات جاهزة مع تركيز 40% على معيار واحد) يبقى السوق الموصى به في المركز الأول؟",
+    pts: "نقطة", robustVal: "{n} من {m} سيناريوهات", tipScore: "المتوسط المرجّح للمعايير الخمسة (0 إلى 100). الافتراضي: أوزان متساوية (20% لكل معيار). قيمة تقديرية من منهج المحلل وليست حجم سوق مقاسًا.", tipMargin: "الفارق بين المركز الأول والثاني. أقل من 3 نقاط يعني ترتيبًا متقاربًا يحتاج إلى معلومات إضافية.", tipRobust: "في كم سيناريو للأوزان (إعدادات جاهزة مع تركيز 40% على معيار واحد) يبقى السوق الموصى به في المركز الأول؟",
     sTitle: "منهجية التقييم والحساسية", sSub: "كيف يُحسب التقييم، وما مدى ثبات الترتيب؟",
     estimate: "قيم الدول تقديرية من منهج المحلل وليست بيانات سوق مقاسة مباشرة. تُعدَّل حسب قطاعك وملف شركتك.",
     critTitle: "المعايير الخمسة", critCol: "المعيار", whatCol: "ما الذي يقيسه", wCol: "الوزن", higher: "الأعلى يعني",
     def: { market: "إمكانات الطلب ونمو السوق المستهدف لقطاعك.", competition: "هامش المنافسة: المساحة المتبقية بجانب اللاعبين الراسخين.", regulatory: "جهد التأسيس والتراخيص والضرائب.", partner: "توفر شركاء التوزيع والمشاريع المشتركة والشبكات المناسبين.", investment: "مناخ الاستثمار والحوافز والوصول إلى رأس المال." },
     hi: { market: "إمكانات أكبر", competition: "ازدحام أقل", regulatory: "أسهل / أسرع", partner: "شركاء مناسبون أكثر", investment: "مناخ أفضل" },
-    formulaTitle: "طريقة الحساب", formula: "التقييم الإجمالي = مجموع (الوزن × قيمة المعيار) ÷ مجموع الأوزان. قيمة المعيار = المنهج الأساسي للدولة + ملاءمة القطاع + تعديل ملف شركتك (الشهادات والشرائح وقنوات البيع والحجم والميزانية) ضمن 0–100.",
+    formulaTitle: "طريقة الحساب", formula: "التقييم الإجمالي = مجموع (الوزن × قيمة المعيار) ÷ مجموع الأوزان. قيمة المعيار = المنهج الأساسي للدولة + ملاءمة القطاع + تعديل ملف شركتك (الشهادات والشرائح وقنوات البيع والحجم والميزانية) ضمن 0 إلى 100.",
     partsTitle: "كيف تتكوّن قيم {c}", base: "الأساس", sector: "ملاءمة القطاع", company: "الملف", final: "القيمة",
     wTitle: "جرّب الأوزان بنفسك", wHint: "تغيّر المنزلقات الأوزان (تُوحَّد إلى 100%). يتحدّث الترتيب فورًا.", reset: "إعادة ضبط", live: "الترتيب بأوزانك", vsBase: "مقارنة بالافتراضي",
     presets: { equal: "أوزان متساوية (افتراضي)", growth: "التركيز على النمو", risk: "المخاطر / الامتثال", partner: "الشركاء والشبكات", speed: "السرعة إلى السوق" }, focus: "التركيز على {f} (40%)",
@@ -173,8 +173,8 @@ const I = {
     leadsOn: "يتفوق {c} في: {list}.", trailsOn: "سيكون {r} أفضل في: {list}.", noTrade: "{r} ليس أفضل في أي معيار.",
     opp: "الفرص", risk: "المخاطر", barr: "عوائق دخول السوق", trade: "المفاضلة الاستراتيجية", next: "الخطوات العملية التالية", derived: "مستنتج من التقييمات",
     oppF: { market: "حجم طلب كبير أو متنامٍ", competition: "هامش منافسة بجانب اللاعبين الراسخين", regulatory: "وصول أسهل نسبيًا إلى السوق", partner: "منظومة شركاء قوية (توزيع/مشروع مشترك ممكن)", investment: "مناخ استثماري داعم" },
-    barrF: { market: "طلب محدود: تحقّق من الحجم قبل التوسع.", competition: "منافسة كثيفة: يلزم تمايز واضح في نيش محدد.", regulatory: "قد تؤخر التراخيص البداية: قدّم الطلبات مبكرًا.", partner: "شركاء مناسبون قليلون: قيّم ٢–٣ مرشحين بالتوازي.", investment: "كثافة رأسمالية أعلى: اصرف الميزانية على دفعات." },
-    st: { s1: "اكسب عميلًا تجريبيًا أو اثنين في {c} وقِس الطلب (الشهر 0–2). المؤشرات: العروض والإيراد التجريبي.", s2: "وضّح الشكل القانوني والتراخيص: {lic}", s3: "اطلب مراجعة الضرائب محليًا: ضريبة الشركات {tax}، القيمة المضافة {vat}{date}.", s4: "تواصل مع الشركاء: {p}", s5: "اربط ميزانية {b} مليون يورو بنقاط القرار بين المراحل على دفعات.", s6: "مراجعة بعد 3 أشهر: حدّث الافتراضات والتقييمات ببيانات تجريبية حقيقية." },
+    barrF: { market: "طلب محدود: تحقّق من الحجم قبل التوسع.", competition: "منافسة كثيفة: يلزم تمايز واضح في نيش محدد.", regulatory: "قد تؤخر التراخيص البداية: قدّم الطلبات مبكرًا.", partner: "شركاء مناسبون قليلون: قيّم ٢ إلى ٣ مرشحين بالتوازي.", investment: "كثافة رأسمالية أعلى: اصرف الميزانية على دفعات." },
+    st: { s1: "اكسب عميلًا تجريبيًا أو اثنين في {c} وقِس الطلب (الشهر 0 إلى 2). المؤشرات: العروض والإيراد التجريبي.", s2: "وضّح الشكل القانوني والتراخيص: {lic}", s3: "اطلب مراجعة الضرائب محليًا: ضريبة الشركات {tax}، القيمة المضافة {vat}{date}.", s4: "تواصل مع الشركاء: {p}", s5: "اربط ميزانية {b} مليون يورو بنقاط القرار بين المراحل على دفعات.", s6: "مراجعة بعد 3 أشهر: حدّث الافتراضات والتقييمات ببيانات تجريبية حقيقية." },
     status: { sourced: "مصدر", estimate: "تقدير", assumption: "افتراض" },
     statusDef: { sourced: "إحصاءة منشورة بمصدر وسنة معلنين. لم يُعاد التحقق منها هنا مباشرة: راجع المصدر الأصلي قبل اتخاذ القرار.", estimate: "تقدير محلل أو توقع، وليس كمية مقاسة.", assumption: "افتراض نموذج (مثل النموذج المالي والجدول الزمني)، مبسّط وتوضيحي." },
     legend: "حالة البيانات", srcLabel: "المصدر", asOf: "التاريخ", noLink: "لا يوجد رابط مباشر", linkNote: "الروابط تؤدي إلى الصفحة الرئيسية للجهة الناشرة وليس إلى الصفحة المحددة.",
@@ -269,7 +269,7 @@ export function analyze(rec, t, lang, data, factorLabels) {
   const steps = [
     fmt(L.st.s1, { c: target }),
     rg.licensing ? fmt(L.st.s2, { lic: rg.licensing }) : null,
-    rg.corporateTax ? fmt(L.st.s3, { tax: rg.corporateTax, vat: rg.vat || "–", date: yr ? ` (${L.asOf} ${yr[0]})` : "" }) : null,
+    rg.corporateTax ? fmt(L.st.s3, { tax: rg.corporateTax, vat: rg.vat || "n/a", date: yr ? ` (${L.asOf} ${yr[0]})` : "" }) : null,
     t.partnersText && t.partnersText[rec.rec.prioritySector] ? fmt(L.st.s4, { p: t.partnersText[rec.rec.prioritySector] }) : null,
     fmt(L.st.s5, { b: rec.input.budget }),
     L.st.s6
@@ -364,7 +364,7 @@ export function WhyPanel({ A, th, lang }) {
     <div style={{ display: "flex", flexWrap: "wrap", gap: 20, marginBottom: 14 }}>
       {list(`${L.opp} (${L.derived})`, [...A.opp.map(o => `${o.label} ${o.v}: ${o.text}`), ...A.driver], th.pos)}
       {list(`${L.barr} (${L.derived})`, A.barr.map(o => `${o.label} ${o.v}: ${o.text}`), th.neg)}
-      {list(L.risk, A.risks.length ? A.risks : ["–"], th.neg)}
+      {list(L.risk, A.risks.length ? A.risks : ["n/a"], th.neg)}
     </div>
     <p style={{ color: th.accent, fontSize: 12, fontWeight: 700, margin: "0 0 6px" }}>{L.next}</p>
     <ol style={{ margin: 0, paddingInlineStart: 20, listStyle: "decimal", color: th.ink, fontSize: 12.5, lineHeight: 1.65 }}>{A.steps.map((s, i) => <li key={i}>{s}</li>)}</ol>
@@ -413,7 +413,7 @@ export function ScoringPanel({ rec, A, th, lang, factorLabels, parts, w, setW })
     <p style={{ color: th.ink, fontSize: 12, fontWeight: 600, margin: "0 0 4px" }}>{L.live}</p>
     <div data-testid="live-ranking">{live.map(([c, v], i) => { const d = baseRank[c] - (i + 1); return <div key={c} style={{ display: "flex", alignItems: "center", gap: 10, padding: "3px 0", fontSize: 12.5, color: th.ink }}>
       <span style={{ width: 18, color: th.subtleInk }}>{i + 1}</span><span style={{ width: 80, fontWeight: i === 0 ? 700 : 400 }}>{c}</span>{bar(v, th, i === 0 ? th.accent : th.pos)}<span style={{ width: 42, textAlign: "end" }}>{Math.round(v * 10) / 10}</span>
-      <span style={{ width: 70, fontSize: 11, color: d > 0 ? th.pos : d < 0 ? th.neg : th.subtleInk }} dir="ltr">{d > 0 ? "▲ +" + d : d < 0 ? "▼ " + d : "–"} {d !== 0 ? "" : ""}</span></div>; })}</div>
+      <span style={{ width: 70, fontSize: 11, color: d > 0 ? th.pos : d < 0 ? th.neg : th.subtleInk }} dir="ltr">{d > 0 ? "▲ +" + d : d < 0 ? "▼ " + d : "n/a"} {d !== 0 ? "" : ""}</span></div>; })}</div>
     <p style={{ color: th.subtleInk, fontSize: 10.5, margin: "2px 0 0" }}>▲▼ {L.vsBase}</p>
 
     <p style={{ color: th.ink, fontSize: 13, fontWeight: 600, margin: "20px 0 2px" }}>{L.sensTitle}</p>
@@ -437,7 +437,7 @@ const OVERLAP = { medtech: /health|med|pharma|hospital/i, manufacturing: /indust
 export function CompetitorBlock({ rec, A, th, lang, data, t }) {
   const L = A.L, ca = (data.COMPETITOR_ANALYSIS || {})[A.target]; if (!ca) return null;
   const re = OVERLAP[rec.rec.prioritySector] || OVERLAP[rec.input.industry];
-  const rows = (ca.players || []).map(p => { const m = p.match(/^(.*?)\s*\((.*)\)\s*$/); const name = m ? m[1] : p, seg = m ? m[2] : "–"; const hit = re && re.test(p); const adj = !hit && re && /./.test(seg) && false; return { name, seg, ov: hit ? L.ovD : L.ovL, hit }; });
+  const rows = (ca.players || []).map(p => { const m = p.match(/^(.*?)\s*\((.*)\)\s*$/); const name = m ? m[1] : p, seg = m ? m[2] : "n/a"; const hit = re && re.test(p); const adj = !hit && re && /./.test(seg) && false; return { name, seg, ov: hit ? L.ovD : L.ovL, hit }; });
   const pos = rows.some(r => r.hit) ? (rec.rec.entryStrategy === "distributorPartner" ? L.posPartner : L.posDirect) : L.posNiche;
   const td = { padding: "6px 8px", fontSize: 12, color: th.ink, borderBottom: `1px solid ${th.lineColor}` };
   return <section data-testid="competitor-block" style={card(th)}>
@@ -502,7 +502,7 @@ export function IntelPrint({ A, rec, lang, factorLabels, data, parts, t }) {
     <section style={{ marginTop: 20 }}><H>{L.pdfData}</H>
       <p style={{ margin: "0 0 6px", fontSize: 9.5 }}>{L.pdfNote}</p>
       <table style={{ width: "100%", borderCollapse: "collapse" }}><tbody>
-        {[["estimate", L.sTitle, L.estimate], ...srcs.map(x => { const p = parseSource(x.s); return ["sourced", x.label, `${p.text}${p.links.length ? " — " + p.links.map(l => l.url).join(", ") : ""}`]; }), ["assumption", t.reportSectionFinancials || "Financial", L.statusDef.assumption]].map(([k, a, b], i) => <tr key={i} style={{ breakInside: "avoid" }}><td style={{ ...td, whiteSpace: "nowrap", fontWeight: 700, color: KCOL[k] }}>{L.status[k]}</td><td style={{ ...td, fontWeight: 600 }}>{a}</td><td style={td}>{b}</td></tr>)}
+        {[["estimate", L.sTitle, L.estimate], ...srcs.map(x => { const p = parseSource(x.s); return ["sourced", x.label, `${p.text}${p.links.length ? ": " + p.links.map(l => l.url).join(", ") : ""}`]; }), ["assumption", t.reportSectionFinancials || "Financial", L.statusDef.assumption]].map(([k, a, b], i) => <tr key={i} style={{ breakInside: "avoid" }}><td style={{ ...td, whiteSpace: "nowrap", fontWeight: 700, color: KCOL[k] }}>{L.status[k]}</td><td style={{ ...td, fontWeight: 600 }}>{a}</td><td style={td}>{b}</td></tr>)}
       </tbody></table>
       <p style={{ fontSize: 8.5, color: "#777", marginTop: 4 }}>{L.linkNote}</p>
     </section>
@@ -575,8 +575,8 @@ export function ScenarioCompare({ rec, A, th, lang, t, factorLabels, data, simul
       <tbody>
         {FACTORS.map((k, i) => <tr key={k}><td style={td}>{factorLabels[i]}</td>{cell(ca, cb, k)}{cell(cb, ca, k)}</tr>)}
         <tr><td style={{ ...td, fontWeight: 600 }}>{L.rScore}</td>{cell(ca, cb, "overall")}{cell(cb, ca, "overall")}</tr>
-        <tr><td style={td}>{L.rTax}</td><td style={td}>{rg(ca).corporateTax || "–"}</td><td style={td}>{rg(cb).corporateTax || "–"}</td></tr>
-        <tr><td style={td}>{L.rVat}</td><td style={td}>{rg(ca).vat || "–"}</td><td style={td}>{rg(cb).vat || "–"}</td></tr>
+        <tr><td style={td}>{L.rTax}</td><td style={td}>{rg(ca).corporateTax || "n/a"}</td><td style={td}>{rg(cb).corporateTax || "n/a"}</td></tr>
+        <tr><td style={td}>{L.rVat}</td><td style={td}>{rg(ca).vat || "n/a"}</td><td style={td}>{rg(cb).vat || "n/a"}</td></tr>
       </tbody>
     </table></div>
     <p style={{ color: th.ink, fontSize: 12.5, fontWeight: 600, margin: "8px 0 20px" }}>{verdict}</p>

@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import * as backend from "../../backend.js";
+import { readTheme, writeTheme } from "../../theme.js";
+const RANGE = { de: "bis", en: "to", ar: "إلى" };
+import ThemeToggle from "../../ThemeToggle.jsx";
+import { COIN } from "../../hubAssets.js";
 import { GCC_I18N, localizeIntel } from "../../dataI18n.js";
 import { KpiStrip, WhyPanel, ScoringSuite, ScenarioCompare, MemoDoc, CompetitorBlock, IntelPrint, SourceLine, StatusLegend, analyze } from "../../intel.jsx";
 import { LegalPage, LegalNotice, ConsentBox, DataCenter, downloadJSON, legalPack } from "../../legal.jsx";
@@ -407,7 +411,7 @@ const COUNTRY_FUNDAMENTALS = {
     populationMillions: 4.85,
     gdpPerCapitaUsd: 33030,
     gdpGrowthPct: -2.7,
-    source: "World Bank, 2024 (oil-production cuts under OPEC+ quota)",
+    source: "World Bank, 2024 (oil production cuts under OPEC+ quota)",
     growthHistory: [{ year: 2019, pct: 0.4 }, { year: 2020, pct: -5.4 }, { year: 2024, pct: -2.7 }, { year: 2025, pct: 2.7, forecast: true }]
   },
   Bahrain: {
@@ -440,7 +444,7 @@ const REGULATORY_CHECK = {
     source: "UAE Ministry of Finance / Deloitte Tax Highlights, 2025"
   },
   Saudi: {
-    corporateTax: "20% (auf nicht-saudischen Unternehmensanteil)",
+    corporateTax: "20% (auf nicht saudischen Unternehmensanteil)",
     vat: "15%",
     licensing: "Investitionslizenz der MISA (Ministry of Investment Saudi Arabia) erforderlich, neues Investment Law seit 2024 in Kraft.",
     source: "Deloitte Saudi Arabia Tax Highlights / MISA, 2024/2025"
@@ -452,21 +456,21 @@ const REGULATORY_CHECK = {
     source: "Trading Economics / Gulf News Tax News, 2025/2026"
   },
   Kuwait: {
-    corporateTax: "15% für ausländische Unternehmen (kuwaitisch-/GCC-eigene Firmen steuerbefreit)",
+    corporateTax: "15% für ausländische Unternehmen (kuwaitisch und GCC eigene Firmen steuerbefreit)",
     vat: "Noch keine VAT eingeführt (in Prüfung)",
-    licensing: "FDI-Gesetz erlaubt bis 100% ausländisches Eigentum in definierten Zielsektoren.",
+    licensing: "FDI Gesetz erlaubt bis 100% ausländisches Eigentum in definierten Zielsektoren.",
     source: "Wise / Kuwait Decree Corporate Tax Guide, 2025"
   },
   Bahrain: {
-    corporateTax: "0% aktuell (Einführung einer Körperschaftsteuer laut OECD-Rahmen in Vorbereitung)",
+    corporateTax: "0% aktuell (Einführung einer Körperschaftsteuer laut OECD Rahmen in Vorbereitung)",
     vat: "10%",
-    licensing: "Gilt als vergleichsweise einfacher GCC-Einstiegspunkt, Unterstützung über die Bahrain Economic Development Board.",
+    licensing: "Gilt als vergleichsweise einfacher GCC Einstiegspunkt, Unterstützung über die Bahrain Economic Development Board.",
     source: "Trading Economics / KPMG Bahrain Tax News, 2024\u20132026"
   },
   Oman: {
     corporateTax: "15% (3% für definierte Kleinunternehmen)",
     vat: "5% (seit 2021)",
-    licensing: "Lizenz des Ministry of Commerce and Industry für nicht-omanische Geschäftstätigkeit zwingend erforderlich.",
+    licensing: "Lizenz des Ministry of Commerce and Industry für nicht omanische Geschäftstätigkeit zwingend erforderlich.",
     source: "Deloitte Oman Tax Highlights, 2023"
   }
 };
@@ -479,61 +483,61 @@ const COMPETITOR_ANALYSIS = {
   },
   Saudi: {
     players: ["Saudi Aramco (Energie, mit Abstand größter Konzern)", "SABIC (Industrie/Chemie)", "Al Rajhi Bank (größte Islamic Bank weltweit)"],
-    gap: "Vision-2030-getriebene Diversifizierung öffnet Sektoren außerhalb Öl/Petrochemie, in denen die dominanten Platzhirsche noch weniger etabliert sind (z. B. Freizeit, Tourismus, spezialisierte Finanzdienstleistungen)."
+    gap: "Vision 2030 getriebene Diversifizierung öffnet Sektoren außerhalb Öl/Petrochemie, in denen die dominanten Platzhirsche noch weniger etabliert sind (z. B. Freizeit, Tourismus, spezialisierte Finanzdienstleistungen)."
   },
   Qatar: {
     players: ["QNB Group (größte Bank der Region)", "Ooredoo (Telekom/Digital)", "Qatar Duty Free (Retail)"],
-    gap: "Starke Konzentration auf wenige staatsnahe Champions; Mittelstand/Nischenanbieter-Segment vergleichsweise dünn besetzt."
+    gap: "Starke Konzentration auf wenige staatsnahe Champions; Mittelstand/Nischenanbieter Segment vergleichsweise dünn besetzt."
   },
   Kuwait: {
     players: ["Kuwait Finance House (dominante Islamic Bank, fusioniert mit Ahli United Bank 2024)", "National Bank of Kuwait (größte konventionelle Bank)"],
-    gap: "Bankensektor stark konsolidiert (KFH/AUB-Fusion 2024); außerhalb Finanzsektor vergleichsweise wenig internationale Konkurrenz etabliert."
+    gap: "Bankensektor stark konsolidiert (KFH/AUB Fusion 2024); außerhalb Finanzsektor vergleichsweise wenig internationale Konkurrenz etabliert."
   },
   Bahrain: {
-    players: ["Ahli United Bank (historisch ca. 21% des Bankensektors, jetzt Teil der KFH-Gruppe)", "Al Salam Bank (Islamic Banking)"],
-    gap: "Bahrain positioniert sich bewusst als regionaler Finanz-/Logistik-Hub mit niedrigeren Eintrittshürden als die größeren Nachbarmärkte — Einstiegspunkt für kleinere ausländische Anbieter."
+    players: ["Ahli United Bank (historisch ca. 21% des Bankensektors, jetzt Teil der KFH Gruppe)", "Al Salam Bank (Islamic Banking)"],
+    gap: "Bahrain positioniert sich bewusst als regionaler Finanz und Logistik Hub mit niedrigeren Eintrittshürden als die größeren Nachbarmärkte, Einstiegspunkt für kleinere ausländische Anbieter."
   },
   Oman: {
-    players: ["Bank Muscat (Flaggschiff-Bank, seit 1982)"],
-    gap: "Kleinerer, weniger gesättigter Markt mit Fokus auf Logistik-Positionierung; geringere Wettbewerbsdichte als in Saudi-Arabien oder den VAE."
+    players: ["Bank Muscat (Flaggschiff Bank, seit 1982)"],
+    gap: "Kleinerer, weniger gesättigter Markt mit Fokus auf Logistik Positionierung; geringere Wettbewerbsdichte als in Saudi Arabien oder den VAE."
   }
 };
 
 /** Market Opportunity — target audience, demand drivers, current trend per country. Real, sourced (see each entry), not modeled. Verified Aug 2026. */
 const MARKET_OPPORTUNITY = {
   UAE: {
-    audience: "Digital-affine urbane Konsumenten, KMU im Non-Oil-Sektor",
-    drivers: ["Mobile Commerce wächst am schnellsten aller Kanäle", "Tourismus- & Logistik-Drehscheibe der Region"],
-    trend: "B2C-E-Commerce soll bis 2026 auf ca. 9,2 Mrd. USD wachsen, mobiler Anteil legt am stärksten zu.",
+    audience: "Digital affine urbane Konsumenten, KMU im Non Oil Sektor",
+    drivers: ["Mobile Commerce wächst am schnellsten aller Kanäle", "Tourismus & Logistik Drehscheibe der Region"],
+    trend: "B2C E Commerce soll bis 2026 auf ca. 9,2 Mrd. USD wachsen, mobiler Anteil legt am stärksten zu.",
     source: "Dubai Chamber of Commerce / Euromonitor, 2022"
   },
   Saudi: {
     audience: "Junge, stark urbanisierte, kaufkräftige Bevölkerung (über 84% urban)",
-    drivers: ["Vision 2030 & E-Commerce-Gesetz seit 2019", "Über 100 Mrd. USD geplante Logistik-Investitionen"],
-    trend: "E-Commerce-Markt soll bis 2027 auf rund 20 Mrd. USD wachsen (CAGR ca. 20,9%).",
+    drivers: ["Vision 2030 & E Commerce Gesetz seit 2019", "Über 100 Mrd. USD geplante Logistik Investitionen"],
+    trend: "E Commerce Markt soll bis 2027 auf rund 20 Mrd. USD wachsen (CAGR ca. 20,9%).",
     source: "ResearchAndMarkets / Vision 2030, 2023"
   },
   Qatar: {
-    audience: "High-Spending-Konsumenten, staatlich getriebene Großprojekte",
-    drivers: ["LNG-Expansion treibt Fiskalspielraum", "Diversifizierung in Tourismus, Logistik, Islamic Digital Finance"],
-    trend: "E-Commerce-Umsatz wuchs von rund 1,3 auf 3,2 Mrd. USD (2018\u20132022); Islamic FinTech-Sektor aktiv im Ausbau.",
+    audience: "High Spending Konsumenten, staatlich getriebene Großprojekte",
+    drivers: ["LNG Expansion treibt Fiskalspielraum", "Diversifizierung in Tourismus, Logistik, Islamic Digital Finance"],
+    trend: "E Commerce Umsatz wuchs von rund 1,3 auf 3,2 Mrd. USD (2018\u20132022); Islamic FinTech Sektor aktiv im Ausbau.",
     source: "trade.gov / Qatar Islamic Finance Report, 2025"
   },
   Kuwait: {
-    audience: "Mobile-first-Konsumenten, wachsende Fintech-Nutzerbasis",
-    drivers: ["Höhere Ölförderung als fiskalischer Rückenwind", "Graduelle pro-business Reformen"],
-    trend: "Kuwait führte 2024 GCC-weit bei mobilen Shopping-App-Downloads.",
+    audience: "Mobile first Konsumenten, wachsende Fintech Nutzerbasis",
+    drivers: ["Höhere Ölförderung als fiskalischer Rückenwind", "Graduelle pro business Reformen"],
+    trend: "Kuwait führte 2024 GCC weit bei mobilen Shopping App Downloads.",
     source: "Allianz Trade GCC Country Risk Atlas 2026"
   },
   Bahrain: {
-    audience: "Logistik- & Finanzdienstleistungssektor, regionale Drehscheibe",
-    drivers: ["Flughafen-Modernisierung (Kapazität 8→14 Mio. Passagiere)", "Metro-Projekt (~2 Mrd. USD) & King-Hamad-Causeway (~4 Mrd. USD)"],
+    audience: "Logistik & Finanzdienstleistungssektor, regionale Drehscheibe",
+    drivers: ["Flughafen Modernisierung (Kapazität 8→14 Mio. Passagiere)", "Metro Projekt (~2 Mrd. USD) & King Hamad Causeway (~4 Mrd. USD)"],
     trend: "Stabile Wachstumsbasis, aber hohe Staatsverschuldung als struktureller Kontext.",
     source: "US Commercial Guide Bahrain / Allianz Trade, 2026"
   },
   Oman: {
-    audience: "Logistik- & Industriesektor an strategischer Position",
-    drivers: ["Fiskalische Konsolidierung schafft Stabilität", "Ausbau der Logistik-Hub-Positionierung"],
+    audience: "Logistik & Industriesektor an strategischer Position",
+    drivers: ["Fiskalische Konsolidierung schafft Stabilität", "Ausbau der Logistik Hub Positionierung"],
     trend: "Expandierende, diversifizierende Marktwirtschaft mit Fokus auf Logistik.",
     source: "Allianz Trade GCC Country Risk Atlas 2026"
   }
@@ -559,7 +563,7 @@ function intelFor(lang) {
 const SAMPLE_PROFILE = {
   "companyName": "Nordlicht AI Systems GmbH",
   "industry": "software",
-  "product": "Enterprise AI assistant platform, computer-vision quality inspection and a data integration API (SaaS)",
+  "product": "Enterprise AI assistant platform, computer vision quality inspection and a data integration API (SaaS)",
   "revenue": 18.2,
   "budget": 1.1,
   "employees": 112,
@@ -587,9 +591,9 @@ const SAMPLE_PROFILE = {
       "category": "AI Assistant Platform",
       "price": 38,
       "priceRaw": "EUR 38 per user per month",
-      "usp": "Private LLM deployment, Arabic and English support, in-region hosting possible, role-based access",
+      "usp": "Private LLM deployment, Arabic and English support, in region hosting possible, role based access",
       "targetCustomer": "Large Enterprises, Government Digital Programs",
-      "performance": "Best-seller, 44% YoY growth, 48% of total revenue"
+      "performance": "Best seller, 44% YoY growth, 48% of total revenue"
     },
     {
       "name": "NL Vision QC",
@@ -598,7 +602,7 @@ const SAMPLE_PROFILE = {
       "priceRaw": "EUR 2,400 per production line per month",
       "usp": "Detects defects in real time, runs on edge devices, integrates with PLC and MES systems",
       "targetCustomer": "Industrial Manufacturers",
-      "performance": "Fastest-growing product, 61% YoY growth, 27% of total revenue"
+      "performance": "Fastest growing product, 61% YoY growth, 27% of total revenue"
     },
     {
       "name": "NL DataBridge API",
@@ -1089,20 +1093,20 @@ const MARK_IMG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACnCAYAAACr
 
 const CULTURAL_INTEL = {
   de: {
-    UAE: ["Sehr internationale Geschäftskultur, Englisch ist Geschäftssprache. Dubai/Abu Dhabi sind schnell und abschlussorientiert, sobald Vertrauen besteht.", "Öffentlicher Sektor arbeitet Montag–Freitag (seit 2022), viele Privatunternehmen behalten flexible Modelle bei."],
+    UAE: ["Sehr internationale Geschäftskultur, Englisch ist Geschäftssprache. Dubai/Abu Dhabi sind schnell und abschlussorientiert, sobald Vertrauen besteht.", "Öffentlicher Sektor arbeitet Montag bis Freitag (seit 2022), viele Privatunternehmen behalten flexible Modelle bei."],
     Saudi: ["Formeller und hierarchischer als die VAE; persönliche Beziehungspflege vor Vertragsverhandlung ist entscheidend.", "Vision 2030 treibt schnelle regulatorische Modernisierung, Genehmigungsprozesse können sich dennoch über mehrere Monate ziehen."],
-    Qatar: ["Kleiner, eng vernetzter Geschäftskreis; (halb-)staatliche Institutionen spielen bei größeren Deals eine überproportionale Rolle.", "Persönliche Empfehlungen und Netzwerke öffnen oft mehr Türen als Kaltakquise."],
-    Kuwait: ["Traditionell vorsichtigere, längere Freigabeprozesse als in VAE oder Katar.", "Familiengeführte Konglomerate dominieren große Teile des Privatsektors — Beziehung zur Familie oft wichtiger als zum Einzelkontakt."],
-    Bahrain: ["Kleinster und traditionell liberalster Golf-Markt, oft Testmarkt für Finanzdienstleistungen in der Region.", "Genehmigungsprozesse gelten als vergleichsweise unbürokratisch."],
-    Oman: ["Konservativeres Tempo, langfristiger Vertrauensaufbau wird höher gewichtet als schnelle Abschlüsse.", "Weniger internationalisiert als VAE/Katar — persönliche Präsenz vor Ort zahlt sich aus."]
+    Qatar: ["Kleiner, eng vernetzter Geschäftskreis; (halb)staatliche Institutionen spielen bei größeren Deals eine überproportionale Rolle.", "Persönliche Empfehlungen und Netzwerke öffnen oft mehr Türen als Kaltakquise."],
+    Kuwait: ["Traditionell vorsichtigere, längere Freigabeprozesse als in VAE oder Katar.", "Familiengeführte Konglomerate dominieren große Teile des Privatsektors, Beziehung zur Familie oft wichtiger als zum Einzelkontakt."],
+    Bahrain: ["Kleinster und traditionell liberalster Golf Markt, oft Testmarkt für Finanzdienstleistungen in der Region.", "Genehmigungsprozesse gelten als vergleichsweise unbürokratisch."],
+    Oman: ["Konservativeres Tempo, langfristiger Vertrauensaufbau wird höher gewichtet als schnelle Abschlüsse.", "Weniger internationalisiert als VAE/Katar, persönliche Präsenz vor Ort zahlt sich aus."]
   },
   en: {
-    UAE: ["Highly international business culture, English is the working language. Dubai/Abu Dhabi move fast and are deal-oriented once trust is established.", "Public sector works Monday–Friday (since 2022); many private companies keep flexible schedules."],
+    UAE: ["Highly international business culture, English is the working language. Dubai/Abu Dhabi move fast and are deal oriented once trust is established.", "Public sector works Monday to Friday (since 2022); many private companies keep flexible schedules."],
     Saudi: ["More formal and hierarchical than the UAE; building a personal relationship before negotiating terms is essential.", "Vision 2030 is driving rapid regulatory modernization, though approval processes can still take several months."],
-    Qatar: ["Small, tightly networked business circle; (semi-)government entities play an outsized role in larger deals.", "Personal referrals and networks often open more doors than cold outreach."],
-    Kuwait: ["Traditionally more cautious, longer approval processes than in the UAE or Qatar.", "Family-owned conglomerates dominate large parts of the private sector — the relationship to the family often matters more than to an individual contact."],
+    Qatar: ["Small, tightly networked business circle; (semi)government entities play an outsized role in larger deals.", "Personal referrals and networks often open more doors than cold outreach."],
+    Kuwait: ["Traditionally more cautious, longer approval processes than in the UAE or Qatar.", "Family owned conglomerates dominate large parts of the private sector, the relationship to the family often matters more than to an individual contact."],
     Bahrain: ["Smallest and traditionally most liberal Gulf market, often used as a regional testbed for financial services.", "Approval processes are seen as comparatively unbureaucratic."],
-    Oman: ["More conservative pace; long-term trust-building is valued over fast closes.", "Less internationalized than the UAE/Qatar — an in-person presence pays off."]
+    Oman: ["More conservative pace; long term trust building is valued over fast closes.", "Less internationalized than the UAE/Qatar, an in person presence pays off."]
   },
   ar: {
     UAE: ["ثقافة أعمال دولية للغاية، الإنجليزية هي لغة العمل. دبي وأبوظبي سريعتا الوتيرة وتركزان على إتمام الصفقات بمجرد بناء الثقة.", "يعمل القطاع العام من الاثنين إلى الجمعة منذ عام 2022، بينما تحتفظ شركات القطاع الخاص بجداول مرنة."],
@@ -1335,7 +1339,7 @@ function CrystalStar({ size = 320, color = "#C8A96B", colorLight = "#FFFFFF", sp
 function CrystalPhoto({ size = 300 }) {
   const small = size <= 100;
   return <div style={{ width: small ? size : Math.round(size * 1.45), maxWidth: "100%", margin: "0 auto" }}>
-      <img src={small ? MARK_IMG : CRYSTAL_STAR_GOLD} alt="Gulf States ↔ Europe – Market Entry" style={{ width: "100%", height: "auto", display: "block", objectFit: "contain" }} />
+      <img src={small ? MARK_IMG : CRYSTAL_STAR_GOLD} alt="Gulf States ↔ Europe, Market Entry" style={{ width: "100%", height: "auto", display: "block", objectFit: "contain" }} />
     </div>;
 }
 
@@ -1515,16 +1519,16 @@ function ScoreBreakdownBars({ scores, labels, gold = "#C8A96B", teal = "#527FB8"
 const T = {
   de: {
     appName: "GCC Market Entry",
-    tagline: "Vom Unternehmensprofil zum GCC-Markteintrittsplan",
+    tagline: "Vom Unternehmensprofil zum GCC Markteintrittsplan",
     heroSubtext: "Regelbasierte Marktanalyse, strategische Planung und nachvollziehbare Empfehlungen für Ihren Markteintritt.",
     rememberMe: "Angemeldet bleiben",
     forgotPassword: "Passwort vergessen?",
-    forgotPasswordNote: "In dieser Demo-Version ohne echtes Backend nicht funktional.",
-    demoNotice: "Demo-Build. Konten sind nur für diese Sitzung gespeichert (kein echtes Backend). Produktivversion nutzt Supabase-Auth mit echter Nutzertrennung.",
+    forgotPasswordNote: "In dieser Demo Version ohne echtes Backend nicht funktional.",
+    demoNotice: "Demo Build. Konten sind nur für diese Sitzung gespeichert (kein echtes Backend). Produktivversion nutzt Supabase Auth mit echter Nutzertrennung.",
     login: "Anmelden",
     register: "Konto erstellen",
     loginHint: "Mit Namen und Passwort anmelden.",
-    registerHint: "Nur Name und Passwort, keine E-Mail nötig.",
+    registerHint: "Nur Name und Passwort, keine Mail nötig.",
     logout: "Abmelden",
     email: "E-Mail",
     password: "Passwort",
@@ -1571,19 +1575,19 @@ const T = {
     entryStrategy: "Entry Strategy",
     prioritySector: "Prioritätsbranche",
     timeline: "Geschätzter Zeitrahmen",
-    timelineShort: "6–9 Monate",
-    timelineMedium: "9–14 Monate",
+    timelineShort: "6 bis 9 Monate",
+    timelineMedium: "9 bis 14 Monate",
     timelineLong: "14+ Monate",
     mainRisks: "Hauptrisiken",
     potentialPartners: "Potenzielle Partner",
     nextSteps: "Nächste Schritte",
     exportCsv: "Als CSV exportieren",
     exportPdf: "Als PDF exportieren",
-    exportPdfAnalysis: "PDF: Markt- & Unternehmensanalyse",
+    exportPdfAnalysis: "PDF: Markt & Unternehmensanalyse",
     exportPdfStrategy: "PDF: Markteintrittsstrategie",
-    exportPdfSummary: "Kompletter Entry-Plan als PDF", reportSummaryTitle: "Plan-Kurzfassung", sumScore: "Gesamtscore", sumBudget: "Budget", sumPeriod: "Zeitraum", sumBreakEven: "Break-even", sumPhase: "Phase", infoRank: "Rang", infoStrongest: "Stärkster Faktor", infoWeakest: "Schwächster Faktor", infoTrigger: "Auslöser", infoAvg: "Ø aller Märkte", infoVsTarget: "zum Zielmarkt", infoClick: "Anklicken für Details", chartHint: "Tipp: Auf Punkte, Segmente und Balken tippen für Details.", chShare: "Anteil am Budget", chSteps: "Schritte in dieser Kategorie", chNet: "Netto (kumuliert)", chCost: "Kosten kumuliert", chRev: "Umsatz kumuliert", chBE: "Break-even erreicht", chNoBE: "Break-even noch nicht erreicht", chScoreAt: "Score bei diesem Budget", chVsNow: "gegenüber aktuellem Budget", chClose: "Schließen", infoTotal: "von",
-    exportPdfPlan: "PDF: Optimaler Entry-Plan", reportPlanTitle: "Optimaler Entry-Plan", planSectionTarget: "Zielmarkt und Einstieg", planSectionPhases: "Phasen und Meilensteine", planSectionGantt: "Zeitplan nach Wochen", planSectionBudget: "Budget nach Kategorie", planSectionBreakEven: "Break-even", planMilestone: "Meilenstein", planTotal: "Gesamt", planAllPhases: "Alle Phasen", planClickHint: "Phase anklicken, um die Schritte zu filtern", planStepHint: "Schritt anklicken für Details", planDuration: "Dauer", planWeeks: "Wochen", planShare: "Anteil am Budget", planSteps: "Schritte", planBudgetLabel: "Budget (€M)", planNoBreakEven: "Kein Break-even innerhalb von 3 Jahren",
-    reportAnalysisTitle: "Markt- & Unternehmensanalyse",
+    exportPdfSummary: "Kompletter Eintrittsplan als PDF", reportSummaryTitle: "Plan-Kurzfassung", sumScore: "Gesamtscore", sumBudget: "Budget", sumPeriod: "Zeitraum", sumBreakEven: "Break-even", sumPhase: "Phase", infoRank: "Rang", infoStrongest: "Stärkster Faktor", infoWeakest: "Schwächster Faktor", infoTrigger: "Auslöser", infoAvg: "Ø aller Märkte", infoVsTarget: "zum Zielmarkt", infoClick: "Anklicken für Details", chartHint: "Tipp: Auf Punkte, Segmente und Balken tippen für Details.", chShare: "Anteil am Budget", chSteps: "Schritte in dieser Kategorie", chNet: "Netto (kumuliert)", chCost: "Kosten kumuliert", chRev: "Umsatz kumuliert", chBE: "Gewinnschwelle erreicht", chNoBE: "Gewinnschwelle noch nicht erreicht", chScoreAt: "Score bei diesem Budget", chVsNow: "gegenüber aktuellem Budget", chClose: "Schließen", infoTotal: "von",
+    exportPdfPlan: "PDF: Optimaler Eintrittsplan", reportPlanTitle: "Optimaler Eintrittsplan", planSectionTarget: "Zielmarkt und Einstieg", planSectionPhases: "Phasen und Meilensteine", planSectionGantt: "Zeitplan nach Wochen", planSectionBudget: "Budget nach Kategorie", planSectionBreakEven: "Break-even", planMilestone: "Meilenstein", planTotal: "Gesamt", planAllPhases: "Alle Phasen", planClickHint: "Phase anklicken, um die Schritte zu filtern", planStepHint: "Schritt anklicken für Details", planDuration: "Dauer", planWeeks: "Wochen", planShare: "Anteil am Budget", planSteps: "Schritte", planBudgetLabel: "Budget (€M)", planNoBreakEven: "Keine Gewinnschwelle innerhalb von 3 Jahren",
+    reportAnalysisTitle: "Markt & Unternehmensanalyse",
     reportStrategyTitle: "Markteintrittsstrategie",
     reportGeneratedOn: "Erstellt am",
     reportFor: "Erstellt für",
@@ -1608,14 +1612,14 @@ const T = {
     reportPopulationLabel: "Bevölkerung",
     reportDisclaimer: "Diese Analyse basiert auf den im Tool hinterlegten, quellenbelegten Marktdaten sowie den vom Nutzer eingegebenen Unternehmensangaben. Sie ersetzt keine individuelle rechtliche, steuerliche oder betriebswirtschaftliche Beratung.",
     threeMonthReviewBtn: "3-Monats-Review",
-    threeMonthReviewDoneBtn: "3-Monats-Review ansehen",
+    threeMonthReviewDoneBtn: "3 Monats Review ansehen",
     threeMonthReviewTitle: "Drei-Monats-Review",
-    threeMonthReviewIntro: "Trage die tatsächliche Performance der ersten drei Monate ein. Als Vergleichsbasis dient ein Viertel der ursprünglichen Jahr-1-Prognose (lineare Annäherung, da das Tool keine eigene Quartalsprognose führt).",
+    threeMonthReviewIntro: "Trage die tatsächliche Performance der ersten drei Monate ein. Als Vergleichsbasis dient ein Viertel der ursprünglichen Jahr 1 Prognose (lineare Annäherung, da das Tool keine eigene Quartalsprognose führt).",
     fieldRevenueActual: "Tatsächlicher Umsatz, 3 Monate (Mio. €)",
     fieldCostsActual: "Tatsächliche Kosten, 3 Monate (Mio. €)",
     fieldNewCustomers: "Neukunden",
     fieldLeads: "Generierte Leads",
-    fieldConversionActual: "Conversion-Rate (%)",
+    fieldConversionActual: "Conversion Rate (%)",
     fieldReviewNotes: "Notizen (was ist passiert, was war anders als erwartet?)",
     submitReview: "Review auswerten",
     planVsRealityTitle: "Plan vs. Realität",
@@ -1626,12 +1630,12 @@ const T = {
     statusInLine: "Im Rahmen des Plans",
     statusBelowExpectation: "Deutlich unter Plan",
     observationsTitle: "Was auffällt",
-    obsLowConversion: "Umsatz liegt unter Plan bei gleichzeitig niedriger Conversion aus den generierten Leads — der Engpass scheint eher im Verkaufsprozess als in der Nachfrage zu liegen.",
-    obsNoLeads: "Umsatz liegt unter Plan und es wurden keine Leads erfasst — vor der nächsten Prognose-Anpassung zuerst die Lead-Generierung prüfen.",
-    obsCostOverrun: "Kosten liegen deutlich über Plan, während der Umsatz nicht im gleichen Maß mitgewachsen ist — Kostenkontrolle für die nächsten drei Monate priorisieren.",
-    obsAheadOfPlan: "Umsatz liegt über Plan bei planmäßigen Kosten — ein positives Signal, das die nächste Phase eher beschleunigen als bremsen sollte.",
+    obsLowConversion: "Umsatz liegt unter Plan bei gleichzeitig niedriger Conversion aus den generierten Leads, der Engpass scheint eher im Verkaufsprozess als in der Nachfrage zu liegen.",
+    obsNoLeads: "Umsatz liegt unter Plan und es wurden keine Leads erfasst, vor der nächsten Prognose Anpassung zuerst die Lead Generierung prüfen.",
+    obsCostOverrun: "Kosten liegen deutlich über Plan, während der Umsatz nicht im gleichen Maß mitgewachsen ist, Kostenkontrolle für die nächsten drei Monate priorisieren.",
+    obsAheadOfPlan: "Umsatz liegt über Plan bei planmäßigen Kosten, ein positives Signal, das die nächste Phase eher beschleunigen als bremsen sollte.",
     obsOnTrack: "Umsatz und Kosten bewegen sich beide im Rahmen der ursprünglichen Prognose.",
-    obsMixed: "Gemischtes Bild ohne eindeutiges Muster — Notizen unten für Kontext heranziehen.",
+    obsMixed: "Gemischtes Bild ohne eindeutiges Muster, Notizen unten für Kontext heranziehen.",
     recalibratedForecastTitle: "Angepasste Prognose",
     recalibratedForecastNote: "Einfache, transparente Neuskalierung: die verbleibenden Jahre werden im Verhältnis von tatsächlichem zu erwartetem Quartalsumsatz angepasst. Das ist keine neue Modellrechnung, sondern eine nachvollziehbare Korrektur der bestehenden Prognose.",
     reviewSavedNotice: "Review gespeichert.",
@@ -1662,25 +1666,25 @@ const T = {
     },
     nextStepText: {
       nextValidatePilot: "Marktvalidierung via Pilotkunde",
-      nextLegalReview: "Rechtsform & Local-Content,Prüfung",
-      nextPartnerShortlist: "Partnerauswahl (2–3 Kandidaten)",
+      nextLegalReview: "Rechtsform und Prüfung der Local Content Vorgaben",
+      nextPartnerShortlist: "Partnerauswahl (2 bis 3 Kandidaten)",
       nextMarketEntry: "Markteintritt in Zielquartal"
     },
     partnersText: {
-      medtech: "Regionale Healthcare-Distributoren, Krankenhausgruppen, MedTech-Cluster.",
-      manufacturing: "Industrielle Zonen (KEZAD, Jubail), lokale EPC-Unternehmen.",
-      software: "Systemintegratoren, Free-Zone,Tech-Hubs (DIFC, Qatar Science & Tech Park).",
-      consumer: "Retail-Ketten, lokale Handelsagenten.",
-      energy: "Staatliche Energieversorger, Sovereign-Wealth,Fund-Töchter.",
-      finance: "Lokale Banken, Fintech-Sandboxes der Zentralbanken.",
-      logistics: "Freihafenbetreiber, 3PL-Anbieter."
+      medtech: "Regionale Healthcare Distributoren, Krankenhausgruppen, MedTech Cluster.",
+      manufacturing: "Industrielle Zonen (KEZAD, Jubail), lokale EPC Unternehmen.",
+      software: "Systemintegratoren, Free Zones und Tech Hubs (DIFC, Qatar Science & Tech Park).",
+      consumer: "Retail Ketten, lokale Handelsagenten.",
+      energy: "Staatliche Energieversorger, Sovereign Wealth Funds und deren Töchter.",
+      finance: "Lokale Banken, Fintech Sandboxes der Zentralbanken.",
+      logistics: "Freihafenbetreiber, 3PL Anbieter."
     },
     reqField: "Pflichtfeld",
     invalidLogin: "Name oder Passwort falsch.",
-    emailInUse: "Diese E-Mail ist bereits registriert.",
+    emailInUse: "Diese Mail ist bereits registriert.",
     nameInUse: "Dieser Name ist bereits registriert.",
     saveFailed: "Konto konnte nicht gespeichert werden (Verbindungsproblem). Bitte erneut versuchen.",
-    authUnexpectedError: "Anmeldung in dieser Vorschau nicht möglich (fehlender sicherer Browser-Kontext, z. B. in einer eingebetteten Vorschau). Bitte auf der echten Live-Seite testen.",
+    authUnexpectedError: "Anmeldung in dieser Vorschau nicht möglich (fehlender sicherer Browser Kontext, z. B. in einer eingebetteten Vorschau). Bitte auf der echten Live Seite testen.",
     entryPlanTitle: "Planüberblick zum Markteintritt",
     sourcesTitle: "Datenquellen",
     phaseValidation: "Marktvalidierung",
@@ -1699,7 +1703,7 @@ const T = {
     pdfUploadHint: "Firmenprofil, Pitch Deck oder Datenblatt als PDF. Felder werden automatisch befüllt.",
     scanningText: "Dokument wird gescannt …",
     extractedBadge: "Automatisch erkannt, bitte prüfen",
-    csvImportLabel: "CSV-Datei einfügen oder hochladen",
+    csvImportLabel: "CSV Datei einfügen oder hochladen",
     csvPlaceholder: "companyName,industry,product,revenue,budget\nNovaDiagnostics GmbH,medtech,Diagnostikgerät,20,1",
     csvParseBtn: "CSV übernehmen",
     csvParseError: "CSV konnte nicht gelesen werden. Bitte Format prüfen.",
@@ -1719,15 +1723,15 @@ const T = {
     extractNoFields: "Es konnten keine Felder erkannt werden. Bitte Angaben unten manuell eintragen.",
     extractPartial: "Nicht alle Felder konnten erkannt werden. Bitte unten ergänzen.",
     extractFailed: "PDF konnte nicht gelesen werden (evtl. gescanntes Bild ohne Textebene). Bitte Angaben manuell eintragen.",
-    detailedRoadmapTitle: "Detaillierter Schritt-für-Schritt-Plan",
+    detailedRoadmapTitle: "Detaillierter Schritt für Schritt Plan",
     financialModelTitle: "Finanzmodell",
     costBreakdownTitle: "Kostenverteilung nach Kategorie",
-    projectionTitle: "3,Jahres-Prognose: Kosten vs. Umsatz",
+    projectionTitle: "Prognose über 3 Jahre: Kosten vs. Umsatz",
     breakEvenLabel: "Break-even",
-    breakEvenNote: "Geschätzter Break-even",
-    noBreakEven: "Kein Break-even innerhalb von 3 Jahren",
+    breakEvenNote: "Geschätzter Gewinnschwelle",
+    noBreakEven: "Keine Gewinnschwelle innerhalb von 3 Jahren",
     countryFundamentalsTitle: "Länderkennzahlen (echte Daten)",
-    growthTrendTitle: "BIP-Wachstum im Zeitverlauf",
+    growthTrendTitle: "BIP Wachstum im Zeitverlauf",
     marketOpportunityTitle: "Markt-Chance",
     marketOpportunitySubtitle: "Zielgruppe, Nachfragetreiber und aktueller Trend je Land",
     targetAudienceLabel: "Zielgruppe",
@@ -1747,7 +1751,7 @@ const T = {
     forecastLabel: "Prognose",
     giiTitle: "GII, Islamic Finance Hinweis",
     giiSubtitle: "Relevant für Finanzierung & Kapitalstruktur im GCC",
-    giiBody: "Wenn Investoren oder Partner im Zielmarkt Sharia-konforme Strukturen erwarten (kein Riba/Zins, Kopplung an reale Vermögenswerte), sollte das bereits bei Vertrags, und Finanzierungsplanung berücksichtigt werden. GII (Gulf Islamic Investments) bezeichnet diesen wachsenden Kapitalpool. Praxisbeispiel: die KT Bank AG in Frankfurt zeigt, dass Sharia-konforme Bankstrukturen auch europäisch-seitig etabliert sind, das erleichtert die Anschlussfähigkeit an GCC-Kapitalgeber.",
+    giiBody: "Wenn Investoren oder Partner im Zielmarkt Sharia konforme Strukturen erwarten (kein Riba/Zins, Kopplung an reale Vermögenswerte), sollte das bereits bei der Vertragsgestaltung und der Finanzierung berücksichtigt werden. GII (Gulf Islamic Investments) bezeichnet diesen wachsenden Kapitalpool. Praxisbeispiel: die KT Bank AG in Frankfurt zeigt, dass Sharia konforme Bankstrukturen auch europäisch seitig etabliert sind, das erleichtert die Anschlussfähigkeit an GCC Kapitalgeber.",
     weekLabel: "Woche",
     weeksLabel: "Wochen",
     yearLabel: "Jahr",
@@ -1757,8 +1761,8 @@ const T = {
     populationLabel: "Bevölkerung (Mio.)",
     gdpPerCapitaLabel: "BIP pro Kopf (USD)",
     gdpGrowthLabel: "BIP-Wachstum",
-    financialDisclaimer: "Vereinfachtes, illustratives Modell auf Basis von Umsatz, Budget und Match-Score, kein Ersatz für einen vollständigen Businessplan.",
-    radarTitle: "Faktor-Vergleich, alle Länder",
+    financialDisclaimer: "Vereinfachtes, illustratives Modell auf Basis von Umsatz, Budget und Match Score, kein Ersatz für einen vollständigen Businessplan.",
+    radarTitle: "Faktor Vergleich, alle Länder",
     radarSubtitle: "Alle fünf Bewertungsfaktoren auf einen Blick",
     positioningTitle: "Strategische Positionierung",
     positioningSubtitle: "Marktattraktivität vs. Wettbewerb, Blasengröße = Investitionspotenzial",
@@ -1773,7 +1777,7 @@ const T = {
     collapseSteps: "Einklappen",
     expandSteps: "Alle Schritte anzeigen",
     steps_: {
-      stepDeskResearch: "Desk Research & Markt-Scoring",
+      stepDeskResearch: "Desk Research & Markt Scoring",
       stepPilotCustomer: "Pilotkunde / Absichtserklärung (LOI)",
       stepJurisdiction: "Standortentscheidung: Free Zone vs. Mainland",
       stepCompanyReg: "Firmenregistrierung & Handelslizenz",
@@ -1781,7 +1785,7 @@ const T = {
       stepRegulatoryApproval: "Regulatorische Zulassung (z. B. MOH/SFDA)",
       stepInvestorVisa: "Investoren-Visum",
       stepKeyHires: "Schlüsselpositionen besetzen",
-      stepPartnerShortlist: "Partner-Shortlist erstellen",
+      stepPartnerShortlist: "Partner Shortlist erstellen",
       stepDistributionAgreement: "Vertriebsvertrag unterzeichnen",
       stepSoftLaunch: "Soft Launch",
       stepMarketingLaunch: "Marketing-Launch",
@@ -1797,11 +1801,11 @@ const T = {
   en: {
     appName: "GCC Market Entry",
     tagline: "From company profile to GCC market entry plan",
-    heroSubtext: "Rule-based market analysis, strategic planning and traceable recommendations for your market entry.",
+    heroSubtext: "Rule based market analysis, strategic planning and traceable recommendations for your market entry.",
     rememberMe: "Stay signed in",
     forgotPassword: "Forgot password?",
     forgotPasswordNote: "Not functional in this demo build (no real backend).",
-    demoNotice: "Demo build. Accounts are stored for this session only (no real backend). The production version uses Supabase auth with real per-user data separation.",
+    demoNotice: "Demo build. Accounts are stored for this session only (no real backend). The production version uses Supabase auth with real per user data separation.",
     login: "Log in",
     register: "Create account",
     loginHint: "Sign in with your name and password.",
@@ -1824,10 +1828,10 @@ const T = {
     revenue: "Annual Revenue (€M)",
     budget: "Expansion Budget (€M)",
     employees: "Number of Employees",
-    certifications: "Certifications (comma-separated)",
-    customerSegments: "Customer Segments (comma-separated)",
-    salesChannels: "Sales Channels (comma-separated)",
-    productsText: "Additional Products (comma-separated)",
+    certifications: "Certifications (comma separated)",
+    customerSegments: "Customer Segments (comma separated)",
+    salesChannels: "Sales Channels (comma separated)",
+    productsText: "Additional Products (comma separated)",
     analyze: "Calculate Score",
     back: "Back",
     resultTitle: "Market Entry Score",
@@ -1852,8 +1856,8 @@ const T = {
     entryStrategy: "Entry Strategy",
     prioritySector: "Priority Sector",
     timeline: "Estimated Timeline",
-    timelineShort: "6–9 months",
-    timelineMedium: "9–14 months",
+    timelineShort: "6 to 9 months",
+    timelineMedium: "9 to 14 months",
     timelineLong: "14+ months",
     mainRisks: "Main Risks",
     potentialPartners: "Potential Partners",
@@ -1862,8 +1866,8 @@ const T = {
     exportPdf: "Export as PDF",
     exportPdfAnalysis: "PDF: Market & Company Analysis",
     exportPdfStrategy: "PDF: Market Entry Strategy",
-    exportPdfSummary: "Complete entry plan as PDF", reportSummaryTitle: "Plan Summary", sumScore: "Overall score", sumBudget: "Budget", sumPeriod: "Timeframe", sumBreakEven: "Break-even", sumPhase: "Phase", infoRank: "Rank", infoStrongest: "Strongest factor", infoWeakest: "Weakest factor", infoTrigger: "Trigger", infoAvg: "Avg. of all markets", infoVsTarget: "vs. target market", infoClick: "Click for details", chartHint: "Tip: tap points, segments and bars for details.", chShare: "Share of budget", chSteps: "Steps in this category", chNet: "Net (cumulative)", chCost: "Cumulative cost", chRev: "Cumulative revenue", chBE: "Break-even reached", chNoBE: "Break-even not yet reached", chScoreAt: "Score at this budget", chVsNow: "vs. current budget", chClose: "Close", infoTotal: "of",
-    exportPdfPlan: "PDF: Optimal Entry Plan", reportPlanTitle: "Optimal Entry Plan", planSectionTarget: "Target market and entry", planSectionPhases: "Phases and milestones", planSectionGantt: "Timeline by week", planSectionBudget: "Budget by category", planSectionBreakEven: "Break-even", planMilestone: "Milestone", planTotal: "Total", planAllPhases: "All phases", planClickHint: "Click a phase to filter its steps", planStepHint: "Click a step for details", planDuration: "Duration", planWeeks: "weeks", planShare: "Share of budget", planSteps: "steps", planBudgetLabel: "Budget (€M)", planNoBreakEven: "No break-even within 3 years",
+    exportPdfSummary: "Complete entry plan as PDF", reportSummaryTitle: "Plan Summary", sumScore: "Overall score", sumBudget: "Budget", sumPeriod: "Timeframe", sumBreakEven: "Break-even", sumPhase: "Phase", infoRank: "Rank", infoStrongest: "Strongest factor", infoWeakest: "Weakest factor", infoTrigger: "Trigger", infoAvg: "Avg. of all markets", infoVsTarget: "vs. target market", infoClick: "Click for details", chartHint: "Tip: tap points, segments and bars for details.", chShare: "Share of budget", chSteps: "Steps in this category", chNet: "Net (cumulative)", chCost: "Cumulative cost", chRev: "Cumulative revenue", chBE: "Break even reached", chNoBE: "Break even not yet reached", chScoreAt: "Score at this budget", chVsNow: "vs. current budget", chClose: "Close", infoTotal: "of",
+    exportPdfPlan: "PDF: Optimal Entry Plan", reportPlanTitle: "Optimal Entry Plan", planSectionTarget: "Target market and entry", planSectionPhases: "Phases and milestones", planSectionGantt: "Timeline by week", planSectionBudget: "Budget by category", planSectionBreakEven: "Break-even", planMilestone: "Milestone", planTotal: "Total", planAllPhases: "All phases", planClickHint: "Click a phase to filter its steps", planStepHint: "Click a step for details", planDuration: "Duration", planWeeks: "weeks", planShare: "Share of budget", planSteps: "steps", planBudgetLabel: "Budget (€M)", planNoBreakEven: "No break even within 3 years",
     reportAnalysisTitle: "Market & Company Analysis",
     reportStrategyTitle: "Market Entry Strategy",
     reportGeneratedOn: "Generated on",
@@ -1889,9 +1893,9 @@ const T = {
     reportPopulationLabel: "Population",
     reportDisclaimer: "This analysis is based on the sourced market data stored in the tool and the company details entered by the user. It does not replace individual legal, tax, or business advice.",
     threeMonthReviewBtn: "3-Month Review",
-    threeMonthReviewDoneBtn: "View 3-Month Review",
-    threeMonthReviewTitle: "Three-Month Review",
-    threeMonthReviewIntro: "Enter the actual performance for the first three months. The comparison baseline is a quarter of the original Year-1 forecast (a linear approximation, since the tool does not maintain a separate quarterly forecast).",
+    threeMonthReviewDoneBtn: "View Three Month Review",
+    threeMonthReviewTitle: "Three Month Review",
+    threeMonthReviewIntro: "Enter the actual performance for the first three months. The comparison baseline is a quarter of the original Year 1 forecast (a linear approximation, since the tool does not maintain a separate quarterly forecast).",
     fieldRevenueActual: "Actual Revenue, 3 Months (€M)",
     fieldCostsActual: "Actual Costs, 3 Months (€M)",
     fieldNewCustomers: "New Customers",
@@ -1907,12 +1911,12 @@ const T = {
     statusInLine: "In Line With Plan",
     statusBelowExpectation: "Well Below Plan",
     observationsTitle: "What Stands Out",
-    obsLowConversion: "Revenue is below plan while conversion from the leads generated is low — the bottleneck looks more like the sales process than demand.",
-    obsNoLeads: "Revenue is below plan and no leads were recorded — check lead generation before adjusting the forecast further.",
-    obsCostOverrun: "Costs are well above plan while revenue has not grown to match — prioritize cost control for the next three months.",
-    obsAheadOfPlan: "Revenue is above plan with costs on track — a positive signal that should accelerate rather than slow the next phase.",
+    obsLowConversion: "Revenue is below plan while conversion from the leads generated is low, the bottleneck looks more like the sales process than demand.",
+    obsNoLeads: "Revenue is below plan and no leads were recorded, check lead generation before adjusting the forecast further.",
+    obsCostOverrun: "Costs are well above plan while revenue has not grown to match, prioritize cost control for the next three months.",
+    obsAheadOfPlan: "Revenue is above plan with costs on track, a positive signal that should accelerate rather than slow the next phase.",
     obsOnTrack: "Both revenue and costs are moving within the original forecast.",
-    obsMixed: "Mixed picture with no clear pattern — use the notes below for context.",
+    obsMixed: "Mixed picture with no clear pattern, use the notes below for context.",
     recalibratedForecastTitle: "Recalibrated Forecast",
     recalibratedForecastNote: "A simple, transparent recalibration: the remaining years are scaled by the ratio of actual to expected quarterly revenue. This is not a new modeling exercise, just a traceable correction to the existing forecast.",
     reviewSavedNotice: "Review saved.",
@@ -1943,18 +1947,18 @@ const T = {
     },
     nextStepText: {
       nextValidatePilot: "Market validation via pilot customer",
-      nextLegalReview: "Legal structure & local-content review",
-      nextPartnerShortlist: "Partner shortlisting (2–3 candidates)",
+      nextLegalReview: "Legal structure & local content review",
+      nextPartnerShortlist: "Partner shortlisting (2 to 3 candidates)",
       nextMarketEntry: "Market entry in target quarter"
     },
     partnersText: {
       medtech: "Regional healthcare distributors, hospital groups, MedTech clusters.",
       manufacturing: "Industrial zones (KEZAD, Jubail), local EPC contractors.",
-      software: "Systems integrators, free-zone tech hubs (DIFC, Qatar Science & Tech Park).",
+      software: "Systems integrators, free zone tech hubs (DIFC, Qatar Science & Tech Park).",
       consumer: "Retail chains, local trading agents.",
-      energy: "State utilities, sovereign-wealth-fund subsidiaries.",
-      finance: "Local banks, central-bank fintech sandboxes.",
-      logistics: "Free-port operators, 3PL providers."
+      energy: "State utilities, sovereign wealth fund subsidiaries.",
+      finance: "Local banks, central bank fintech sandboxes.",
+      logistics: "Free port operators, 3PL providers."
     },
     reqField: "Required",
     invalidLogin: "Incorrect name or password.",
@@ -1979,7 +1983,7 @@ const T = {
     pdfUploadCta: "Upload PDF",
     pdfUploadHint: "Company profile, pitch deck, or data sheet as PDF. Fields are filled in automatically.",
     scanningText: "Scanning document …",
-    extractedBadge: "Auto-detected, please review",
+    extractedBadge: "Auto detected, please review",
     csvImportLabel: "Paste or upload CSV file",
     csvPlaceholder: "companyName,industry,product,revenue,budget\nNovaDiagnostics GmbH,medtech,Diagnostic Device,20,1",
     csvParseBtn: "Import CSV",
@@ -2000,13 +2004,13 @@ const T = {
     extractNoFields: "No fields could be recognized. Please fill in the details below manually.",
     extractPartial: "Not all fields could be recognized. Please complete the rest below.",
     extractFailed: "The PDF could not be read (it may be a scanned image without a text layer). Please fill in the details manually.",
-    detailedRoadmapTitle: "Detailed Step-by-Step Plan",
+    detailedRoadmapTitle: "Detailed Step by Step Plan",
     financialModelTitle: "Financial Model",
     costBreakdownTitle: "Cost Breakdown by Category",
-    projectionTitle: "3,Year Projection: Cost vs. Revenue",
+    projectionTitle: "Three Year Projection: Cost vs. Revenue",
     breakEvenLabel: "Break-even",
-    breakEvenNote: "Estimated break-even",
-    noBreakEven: "No break-even within 3 years",
+    breakEvenNote: "Estimated break even",
+    noBreakEven: "No break even within 3 years",
     countryFundamentalsTitle: "Country Fundamentals (Real Data)",
     growthTrendTitle: "GDP Growth Over Time",
     marketOpportunityTitle: "Market Opportunity",
@@ -2026,9 +2030,9 @@ const T = {
     growthTrendSubtitle: "Historical (2019, 2020 COVID shock), current (2024), and forecast",
     historicalLabel: "Historical",
     forecastLabel: "Forecast",
-    giiTitle: "GII — Islamic Finance Note",
+    giiTitle: "GII, Islamic Finance Note",
     giiSubtitle: "Relevant for financing & capital structure in the GCC",
-    giiBody: "If investors or partners in the target market expect Sharia-compliant structures (no riba/interest, transactions tied to real assets), this should be factored into contract and financing planning early. GII (Gulf Islamic Investments) refers to this growing capital pool. Example: KT Bank AG in Frankfurt shows that Sharia-compliant banking structures are already established on the European side too, easing compatibility with GCC capital providers.",
+    giiBody: "If investors or partners in the target market expect Sharia compliant structures (no riba/interest, transactions tied to real assets), this should be factored into contract and financing planning early. GII (Gulf Islamic Investments) refers to this growing capital pool. Example: KT Bank AG in Frankfurt shows that Sharia compliant banking structures are already established on the European side too, easing compatibility with GCC capital providers.",
     weekLabel: "week",
     weeksLabel: "weeks",
     yearLabel: "Year",
@@ -2188,12 +2192,12 @@ const T = {
     statusInLine: "ضمن حدود الخطة",
     statusBelowExpectation: "أقل بكثير من الخطة",
     observationsTitle: "ما يستحق الانتباه",
-    obsLowConversion: "الإيرادات أقل من المخطط بينما التحويل من العملاء المحتملين منخفض — يبدو أن العائق في عملية البيع وليس في الطلب.",
-    obsNoLeads: "الإيرادات أقل من المخطط ولم يتم تسجيل أي عملاء محتملين — راجع توليد العملاء المحتملين قبل تعديل التوقعات.",
-    obsCostOverrun: "التكاليف أعلى بكثير من المخطط بينما لم تنمُ الإيرادات بنفس القدر — أعطِ الأولوية لضبط التكاليف في الأشهر الثلاثة القادمة.",
-    obsAheadOfPlan: "الإيرادات أعلى من المخطط مع تكاليف ضمن الخطة — إشارة إيجابية يجب أن تُسرّع المرحلة التالية لا أن تبطئها.",
+    obsLowConversion: "الإيرادات أقل من المخطط بينما التحويل من العملاء المحتملين منخفض، يبدو أن العائق في عملية البيع وليس في الطلب.",
+    obsNoLeads: "الإيرادات أقل من المخطط ولم يتم تسجيل أي عملاء محتملين، راجع توليد العملاء المحتملين قبل تعديل التوقعات.",
+    obsCostOverrun: "التكاليف أعلى بكثير من المخطط بينما لم تنمُ الإيرادات بنفس القدر، أعطِ الأولوية لضبط التكاليف في الأشهر الثلاثة القادمة.",
+    obsAheadOfPlan: "الإيرادات أعلى من المخطط مع تكاليف ضمن الخطة، إشارة إيجابية يجب أن تُسرّع المرحلة التالية لا أن تبطئها.",
     obsOnTrack: "تتحرك الإيرادات والتكاليف كلاهما ضمن التوقعات الأصلية.",
-    obsMixed: "صورة مختلطة دون نمط واضح — استخدم الملاحظات أدناه للسياق.",
+    obsMixed: "صورة مختلطة دون نمط واضح، استخدم الملاحظات أدناه للسياق.",
     recalibratedForecastTitle: "التوقعات المعدّلة",
     recalibratedForecastNote: "إعادة معايرة بسيطة وشفافة: يتم تعديل السنوات المتبقية بنسبة الإيرادات الفعلية إلى المتوقعة ربع سنوياً. هذا ليس نموذجاً جديداً، بل تصحيح قابل للتتبع للتوقعات الحالية.",
     reviewSavedNotice: "تم حفظ المراجعة.",
@@ -2225,7 +2229,7 @@ const T = {
     nextStepText: {
       nextValidatePilot: "التحقق من السوق عبر عميل تجريبي",
       nextLegalReview: "مراجعة الهيكل القانوني والمحتوى المحلي",
-      nextPartnerShortlist: "اختيار شركاء (٢-٣ مرشحين)",
+      nextPartnerShortlist: "اختيار شركاء (٢ إلى ٣ مرشحين)",
       nextMarketEntry: "دخول السوق في الربع المستهدف"
     },
     partnersText: {
@@ -2307,7 +2311,7 @@ const T = {
     growthTrendSubtitle: "تاريخي (٢٠١٩، صدمة كوفيد ٢٠٢٠)، حالي (٢٠٢٤)، وتوقعات",
     historicalLabel: "تاريخي",
     forecastLabel: "توقعات",
-    giiTitle: "GII — ملاحظة حول التمويل الإسلامي",
+    giiTitle: "GII, ملاحظة حول التمويل الإسلامي",
     giiSubtitle: "مهم لتخطيط التمويل وهيكل رأس المال في دول الخليج",
     giiBody: "إذا كان المستثمرون أو الشركاء في السوق المستهدف يتوقعون هياكل متوافقة مع الشريعة (بدون ربا، وارتباط المعاملات بأصول حقيقية)، ينبغي مراعاة ذلك مبكرًا عند تخطيط العقود والتمويل. يشير مصطلح GII (الاستثمارات الإسلامية الخليجية) إلى مجمع رأس المال المتنامي هذا. مثال عملي: بنك KT في فرانكفورت يوضح أن الهياكل المصرفية المتوافقة مع الشريعة راسخة أيضًا في أوروبا، ما يسهّل التوافق مع مزودي رأس المال الخليجيين.",
     weekLabel: "أسبوع",
@@ -2360,7 +2364,7 @@ const T = {
 /** Illustrative source references shown per target market in the result view. */
 const SOURCES = {
   UAE: [{
-    name: "GTAI – Germany Trade & Invest",
+    name: "GTAI, Germany Trade & Invest",
     url: "gtai.de"
   }, {
     name: "Dubai Chamber of Commerce",
@@ -2370,7 +2374,7 @@ const SOURCES = {
     url: "bundesbank.de"
   }],
   Saudi: [{
-    name: "GTAI – Germany Trade & Invest",
+    name: "GTAI, Germany Trade & Invest",
     url: "gtai.de"
   }, {
     name: "Saudi General Authority for Statistics",
@@ -2380,7 +2384,7 @@ const SOURCES = {
     url: "vision2030.gov.sa"
   }],
   Qatar: [{
-    name: "GTAI – Germany Trade & Invest",
+    name: "GTAI, Germany Trade & Invest",
     url: "gtai.de"
   }, {
     name: "Qatar Financial Centre Authority",
@@ -2390,7 +2394,7 @@ const SOURCES = {
     url: "bundesbank.de"
   }],
   Kuwait: [{
-    name: "GTAI – Germany Trade & Invest",
+    name: "GTAI, Germany Trade & Invest",
     url: "gtai.de"
   }, {
     name: "Kuwait Direct Investment Promotion Authority (KDIPA)",
@@ -2400,7 +2404,7 @@ const SOURCES = {
     url: "csb.gov.kw"
   }],
   Bahrain: [{
-    name: "GTAI – Germany Trade & Invest",
+    name: "GTAI, Germany Trade & Invest",
     url: "gtai.de"
   }, {
     name: "Bahrain Economic Development Board (EDB)",
@@ -2410,7 +2414,7 @@ const SOURCES = {
     url: "iga.gov.bh"
   }],
   Oman: [{
-    name: "GTAI – Germany Trade & Invest",
+    name: "GTAI, Germany Trade & Invest",
     url: "gtai.de"
   }, {
     name: "Invest in Oman (Ithraa)",
@@ -2583,7 +2587,7 @@ async function extractTextFromPdf(file) {
   }
   const raw = latin(bytes);
   if (/\/Encrypt\b/.test(raw.slice(Math.max(0, raw.length - 4000)))) {
-    throw new Error("PDF is password-protected / encrypted");
+    throw new Error("PDF is password protected / encrypted");
   }
   const objs = new Map();
   const objRe = /(\d+)\s+(\d+)\s+obj\b/g;
@@ -3131,30 +3135,30 @@ function ReportSources({ sources, t }) {
 
 const PL = {
   de: {
-    kind: "Kompletter Entry-Plan", cover: "Umsetzungsplan für den Markteintritt", exec: "Zusammenfassung", why: "Warum dieser Markt?", ranking: "Vergleich aller Märkte", factor: "Faktor", overall: "Gesamt",
+    kind: "Kompletter Eintrittsplan", cover: "Umsetzungsplan für den Markteintritt", exec: "Zusammenfassung", why: "Warum dieser Markt?", ranking: "Vergleich aller Märkte", factor: "Faktor", overall: "Gesamt",
     whyText: "{c} erzielt mit {s}/100 den höchsten Gesamtscore aller geprüften Märkte. Stärkste Faktoren: {a} ({av}) und {b} ({bv}); schwächster Faktor: {w} ({wv}).", strat: "Eintrittsstrategie & Partner", market: "Marktprofil",
     pop: "Einwohner (Mio.)", gdpc: "BIP pro Kopf (USD)", growth: "BIP-Wachstum", gdp: "BIP (Mrd. USD)", audience: "Zielgruppe", drivers: "Wachstumstreiber", trend: "Trend", players: "Wichtige Wettbewerber", gap: "Marktlücke", tax: "Körperschaftsteuer", vat: "Umsatzsteuer", lic: "Genehmigungen / Gründung", culture: "Geschäftskultur",
-    timeline: "Zeitplan & Entscheidungspunkte", gantt: "Wochenplan (Gantt)", steps: "Detailplan: alle Schritte", step: "Schritt", phase: "Phase", cat: "Kategorie", weeks: "Wochen", cost: "Kosten", first90: "Die ersten 90 Tage", first90Intro: "Diese Schritte starten innerhalb der ersten 13 Wochen und müssen zuerst beauftragt werden:", budget: "Budget & Finanzplan", year: "Jahr", c: "Kosten kum.", r: "Umsatz kum.", n: "Netto", risks: "Risiken & Gegenmaßnahmen", next: "Nächste Schritte (sofort)", gate: "Go/No-Go", assumptions: "Annahmen: vereinfachtes, illustratives Modell – Umsatz = Anteil des Heimatumsatzes, skaliert mit dem Marktscore; Kosten = Setup-Budget im ersten Jahr, danach reduzierte Betriebskosten.", sources: "Quellen", of: "von", wk: "Woche", page: "Seite",
-    gates: ["Pilotkunde bestätigt Nachfrage, Zielmarkt und Budget freigegeben", "Rechtsform gegründet, Konto eröffnet, Genehmigungen beantragt/erteilt", "Partner unter Vertrag, Kernteam besetzt, Preise & Vertragsrahmen stehen", "Soft-Launch ausgewertet, erste Umsätze, Skalierungsentscheidung"],
-    mit: { market: "Pilotprojekt mit 1–2 Kunden vor Vollinvestition; Nachfrage-KPIs (Angebote, Pilotumsatz) definieren.", competition: "Klare Nischenpositionierung; Differenzierung über Spezialisierung statt Preis.", regulatory: "Frühzeitig Rechts- und Steuerberater vor Ort einbinden; Genehmigungen parallel zum Setup beantragen.", partner: "2–3 Partnerkandidaten parallel prüfen; Exklusivität erst nach Pilotphase vergeben.", investment: "Budget in Tranchen freigeben, gekoppelt an die Go/No-Go-Punkte der Phasen." }, mitL: "Gegenmaßnahme",
-    notice: "Hinweis: Dieser Plan ist eine regelbasierte Entscheidungsgrundlage und ersetzt keine individuelle Rechts-, Steuer- oder Unternehmensberatung."
+    timeline: "Zeitplan & Entscheidungspunkte", gantt: "Wochenplan (Gantt)", steps: "Detailplan: alle Schritte", step: "Schritt", phase: "Phase", cat: "Kategorie", weeks: "Wochen", cost: "Kosten", first90: "Die ersten 90 Tage", first90Intro: "Diese Schritte starten innerhalb der ersten 13 Wochen und müssen zuerst beauftragt werden:", budget: "Budget & Finanzplan", year: "Jahr", c: "Kosten kum.", r: "Umsatz kum.", n: "Netto", risks: "Risiken & Gegenmaßnahmen", next: "Nächste Schritte (sofort)", gate: "Go/No-Go", assumptions: "Annahmen: vereinfachtes, illustratives Modell, Umsatz = Anteil des Heimatumsatzes, skaliert mit dem Marktscore; Kosten = Setup Budget im ersten Jahr, danach reduzierte Betriebskosten.", sources: "Quellen", of: "von", wk: "Woche", page: "Seite",
+    gates: ["Pilotkunde bestätigt Nachfrage, Zielmarkt und Budget freigegeben", "Rechtsform gegründet, Konto eröffnet, Genehmigungen beantragt/erteilt", "Partner unter Vertrag, Kernteam besetzt, Preise & Vertragsrahmen stehen", "Soft Launch ausgewertet, erste Umsätze, Skalierungsentscheidung"],
+    mit: { market: "Pilotprojekt mit 1 bis 2 Kunden vor Vollinvestition; Nachfrage KPIs (Angebote, Pilotumsatz) definieren.", competition: "Klare Nischenpositionierung; Differenzierung über Spezialisierung statt Preis.", regulatory: "Frühzeitig Rechts und Steuerberater vor Ort einbinden; Genehmigungen parallel zum Setup beantragen.", partner: "2 bis 3 Partnerkandidaten parallel prüfen; Exklusivität erst nach Pilotphase vergeben.", investment: "Budget in Tranchen freigeben, gekoppelt an die Go/No Go Punkte der Phasen." }, mitL: "Gegenmaßnahme",
+    notice: "Hinweis: Dieser Plan ist eine regelbasierte Entscheidungsgrundlage und ersetzt keine individuelle Rechtsberatung, Steuerberatung oder Unternehmensberatung."
   },
   en: {
     kind: "Complete Entry Plan", cover: "Market entry execution plan", exec: "Executive summary", why: "Why this market?", ranking: "Comparison of all markets", factor: "Factor", overall: "Overall",
     whyText: "{c} scores {s}/100, the highest overall score of all markets reviewed. Strongest factors: {a} ({av}) and {b} ({bv}); weakest factor: {w} ({wv}).", strat: "Entry strategy & partners", market: "Market profile",
     pop: "Population (m)", gdpc: "GDP per capita (USD)", growth: "GDP growth", gdp: "GDP (bn USD)", audience: "Target audience", drivers: "Growth drivers", trend: "Trend", players: "Key competitors", gap: "Market gap", tax: "Corporate tax", vat: "VAT", lic: "Licensing / incorporation", culture: "Business culture",
-    timeline: "Timeline & decision gates", gantt: "Week plan (Gantt)", steps: "Detailed plan: all steps", step: "Step", phase: "Phase", cat: "Category", weeks: "Weeks", cost: "Cost", first90: "The first 90 days", first90Intro: "These steps start within the first 13 weeks and have to be commissioned first:", budget: "Budget & financial plan", year: "Year", c: "Cum. cost", r: "Cum. revenue", n: "Net", risks: "Risks & mitigation", next: "Next steps (immediately)", gate: "Go/No-Go", assumptions: "Assumptions: simplified, illustrative model – revenue = share of home revenue scaled by the market score; cost = set-up budget in year one, reduced operating cost afterwards.", sources: "Sources", of: "of", wk: "Week", page: "Page",
-    gates: ["Pilot customer confirms demand, target market and budget approved", "Entity formed, bank account open, permits applied for/granted", "Partner contracted, core team in place, pricing and contract framework set", "Soft launch reviewed, first revenue, scale-up decision"],
-    mit: { market: "Run a pilot with 1–2 customers before full investment; define demand KPIs (offers, pilot revenue).", competition: "Position clearly in a niche; differentiate by specialisation, not price.", regulatory: "Involve local legal and tax advisers early; apply for permits in parallel with set-up.", partner: "Evaluate 2–3 partner candidates in parallel; grant exclusivity only after the pilot.", investment: "Release the budget in tranches tied to the phase go/no-go gates." }, mitL: "Mitigation",
-    notice: "Note: this plan is a rule-based basis for decisions and does not replace individual legal, tax or business advice."
+    timeline: "Timeline & decision gates", gantt: "Week plan (Gantt)", steps: "Detailed plan: all steps", step: "Step", phase: "Phase", cat: "Category", weeks: "Weeks", cost: "Cost", first90: "The first 90 days", first90Intro: "These steps start within the first 13 weeks and have to be commissioned first:", budget: "Budget & financial plan", year: "Year", c: "Cum. cost", r: "Cum. revenue", n: "Net", risks: "Risks & mitigation", next: "Next steps (immediately)", gate: "Go/No-Go", assumptions: "Assumptions: simplified, illustrative model, revenue = share of home revenue scaled by the market score; cost = set up budget in year one, reduced operating cost afterwards.", sources: "Sources", of: "of", wk: "Week", page: "Page",
+    gates: ["Pilot customer confirms demand, target market and budget approved", "Entity formed, bank account open, permits applied for/granted", "Partner contracted, core team in place, pricing and contract framework set", "Soft launch reviewed, first revenue, scale up decision"],
+    mit: { market: "Run a pilot with 1 to 2 customers before full investment; define demand KPIs (offers, pilot revenue).", competition: "Position clearly in a niche; differentiate by specialisation, not price.", regulatory: "Involve local legal and tax advisers early; apply for permits in parallel with set up.", partner: "Evaluate 2 to 3 partner candidates in parallel; grant exclusivity only after the pilot.", investment: "Release the budget in tranches tied to the phase go/no go gates." }, mitL: "Mitigation",
+    notice: "Note: this plan is a rule based basis for decisions and does not replace individual legal, tax or business advice."
   },
   ar: {
     kind: "خطة الدخول الكاملة", cover: "خطة تنفيذ دخول السوق", exec: "ملخص تنفيذي", why: "لماذا هذا السوق؟", ranking: "مقارنة جميع الأسواق", factor: "العامل", overall: "الإجمالي",
     whyText: "حقق {c} {s}/100، وهي أعلى نتيجة إجمالية بين الأسواق التي تمت مراجعتها. أقوى العوامل: {a} ({av}) و{b} ({bv})؛ وأضعف عامل: {w} ({wv}).", strat: "استراتيجية الدخول والشركاء", market: "نبذة عن السوق",
     pop: "السكان (مليون)", gdpc: "الناتج للفرد (دولار)", growth: "نمو الناتج", gdp: "الناتج المحلي (مليار دولار)", audience: "الجمهور المستهدف", drivers: "محركات النمو", trend: "الاتجاه", players: "أبرز المنافسين", gap: "فجوة السوق", tax: "ضريبة الشركات", vat: "ضريبة القيمة المضافة", lic: "التراخيص / التأسيس", culture: "ثقافة الأعمال",
-    timeline: "الجدول الزمني ونقاط القرار", gantt: "الخطة الأسبوعية", steps: "الخطة التفصيلية: كل الخطوات", step: "الخطوة", phase: "المرحلة", cat: "الفئة", weeks: "الأسابيع", cost: "التكلفة", first90: "أول ٩٠ يومًا", first90Intro: "تبدأ هذه الخطوات خلال أول ١٣ أسبوعًا ويجب إطلاقها أولًا:", budget: "الميزانية والخطة المالية", year: "السنة", c: "التكلفة التراكمية", r: "الإيرادات التراكمية", n: "الصافي", risks: "المخاطر وإجراءات المعالجة", next: "الخطوات التالية (فورًا)", gate: "قرار المتابعة", assumptions: "الافتراضات: نموذج مبسّط توضيحي – الإيرادات = نسبة من إيرادات السوق الأم مضروبة في تقييم السوق؛ التكلفة = ميزانية التأسيس في السنة الأولى ثم تكاليف تشغيل أقل.", sources: "المصادر", of: "من", wk: "أسبوع", page: "صفحة",
+    timeline: "الجدول الزمني ونقاط القرار", gantt: "الخطة الأسبوعية", steps: "الخطة التفصيلية: كل الخطوات", step: "الخطوة", phase: "المرحلة", cat: "الفئة", weeks: "الأسابيع", cost: "التكلفة", first90: "أول ٩٠ يومًا", first90Intro: "تبدأ هذه الخطوات خلال أول ١٣ أسبوعًا ويجب إطلاقها أولًا:", budget: "الميزانية والخطة المالية", year: "السنة", c: "التكلفة التراكمية", r: "الإيرادات التراكمية", n: "الصافي", risks: "المخاطر وإجراءات المعالجة", next: "الخطوات التالية (فورًا)", gate: "قرار المتابعة", assumptions: "الافتراضات: نموذج مبسّط توضيحي، الإيرادات = نسبة من إيرادات السوق الأم مضروبة في تقييم السوق؛ التكلفة = ميزانية التأسيس في السنة الأولى ثم تكاليف تشغيل أقل.", sources: "المصادر", of: "من", wk: "أسبوع", page: "صفحة",
     gates: ["عميل تجريبي يؤكد الطلب واعتماد السوق والميزانية", "تأسيس الكيان وفتح الحساب وتقديم/منح التراخيص", "التعاقد مع الشريك واكتمال الفريق الأساسي وتحديد الأسعار والإطار التعاقدي", "تقييم الإطلاق التجريبي وأولى الإيرادات وقرار التوسع"],
-    mit: { market: "تنفيذ مشروع تجريبي مع عميل أو اثنين قبل الاستثمار الكامل وتحديد مؤشرات الطلب.", competition: "التموضع الواضح في نيش محدد والتميّز بالتخصص لا بالسعر.", regulatory: "إشراك مستشارين قانونيين وضريبيين محليين مبكرًا وتقديم التراخيص بالتوازي مع التأسيس.", partner: "تقييم ٢–٣ شركاء محتملين بالتوازي ومنح الحصرية بعد المرحلة التجريبية فقط.", investment: "صرف الميزانية على دفعات مرتبطة بنقاط القرار في كل مرحلة." }, mitL: "المعالجة",
+    mit: { market: "تنفيذ مشروع تجريبي مع عميل أو اثنين قبل الاستثمار الكامل وتحديد مؤشرات الطلب.", competition: "التموضع الواضح في نيش محدد والتميّز بالتخصص لا بالسعر.", regulatory: "إشراك مستشارين قانونيين وضريبيين محليين مبكرًا وتقديم التراخيص بالتوازي مع التأسيس.", partner: "تقييم ٢ إلى ٣ شركاء محتملين بالتوازي ومنح الحصرية بعد المرحلة التجريبية فقط.", investment: "صرف الميزانية على دفعات مرتبطة بنقاط القرار في كل مرحلة." }, mitL: "المعالجة",
     notice: "ملاحظة: هذه الخطة أساس قرار قائم على قواعد ولا تغني عن الاستشارة القانونية أو الضريبية أو التجارية."
   }
 };
@@ -3259,7 +3263,7 @@ function PlanReportDoc({ rec, t, lang, entryPlanDisplay, detailedSteps, finModel
           <thead><tr><th style={th}>{L.phase}</th><th style={th}>{t.month}</th><th style={th}>{L.gate}</th></tr></thead>
           <tbody>{entryPlanDisplay.map((p, i) => <tr key={i} style={{ breakInside: "avoid" }}>
             <td style={{ ...td, fontWeight: 700 }}><span style={{ display: "inline-block", width: 8, height: 8, borderRadius: 4, background: phaseColors[i % 4], marginInlineEnd: 6, ...exact }} />{p.label}</td>
-            <td style={{ ...td, whiteSpace: "nowrap" }}>{p.startMonth}–{p.endMonth}</td>
+            <td style={{ ...td, whiteSpace: "nowrap" }}>{p.startMonth} {RANGE[lang]} {p.endMonth}</td>
             <td style={td}>{L.gates[i % 4]}</td></tr>)}</tbody>
         </table>
         <p style={{ fontWeight: 700, margin: "0 0 6px" }}>{L.gantt}</p>
@@ -3279,13 +3283,13 @@ function PlanReportDoc({ rec, t, lang, entryPlanDisplay, detailedSteps, finModel
           <thead><tr><th style={th}>#</th><th style={th}>{L.step}</th><th style={th}>{L.phase}</th><th style={th}>{L.cat}</th><th style={th}>{L.weeks}</th><th style={th}>{L.cost} ({t.costEurLabel})</th></tr></thead>
           <tbody>{detailedSteps.map((s, i) => <tr key={s.key} style={{ breakInside: "avoid" }}>
             <td style={td}>{i + 1}</td><td style={{ ...td, fontWeight: 600 }}>{t.steps_[s.key]}</td><td style={td}>{t[s.phase]}</td><td style={td}>{t[s.category]}</td>
-            <td style={{ ...td, whiteSpace: "nowrap" }}>{s.startWeek + 1}–{s.startWeek + s.durationWeeks}</td><td style={td}>{s.costEurM}</td></tr>)}</tbody>
+            <td style={{ ...td, whiteSpace: "nowrap" }}>{s.startWeek + 1} {RANGE[lang]} {s.startWeek + s.durationWeeks}</td><td style={td}>{s.costEurM}</td></tr>)}</tbody>
         </table>
       </Sec>
       {/* 7 FIRST 90 */}
       <Sec title={`7. ${L.first90}`}>
         <p style={{ margin: "0 0 6px" }}>{L.first90Intro}</p>
-        <ol style={{ margin: 0, paddingInlineStart: 18, listStyle: "decimal" }}>{first90.map(s => <li key={s.key} style={{ marginBottom: 2 }}><strong>{t.steps_[s.key]}</strong> – {L.wk} {s.startWeek + 1}–{s.startWeek + s.durationWeeks} · {s.costEurM} {t.costEurLabel}</li>)}</ol>
+        <ol style={{ margin: 0, paddingInlineStart: 18, listStyle: "decimal" }}>{first90.map(s => <li key={s.key} style={{ marginBottom: 2 }}><strong>{t.steps_[s.key]}</strong> – {L.wk} {s.startWeek + 1} {RANGE[lang]} {s.startWeek + s.durationWeeks} · {s.costEurM} {t.costEurLabel}</li>)}</ol>
       </Sec>
       {/* 8 BUDGET */}
       <Sec title={`8. ${L.budget}`} newPage>
@@ -3323,9 +3327,9 @@ function PlanReportDoc({ rec, t, lang, entryPlanDisplay, detailedSteps, finModel
 }
 
 const SB_TEXT = {
-  de: { unconfirmed: "Mail noch nicht bestätigt. Bitte den Link in der Mail öffnen.", network: "Keine Verbindung. Bitte Netz prüfen.", loginHint: "Mit E-Mail und Passwort anmelden.", regHint: "Konto mit E-Mail und Passwort erstellen.", email: "E-Mail", name: "Name", pw: "Passwort", pwHint: "Mindestens 10 Zeichen.", confirmSent: "Fast geschafft: Wir haben dir eine Bestätigungs-E-Mail geschickt. Bitte bestätige sie und melde dich dann an.", invalid: "E-Mail oder Passwort stimmt nicht.", rate: "Zu viele Versuche. Bitte warte einen Moment.", locked: "Zu viele Fehlversuche. Bitte warte eine Minute.", weak: "Bitte ein Passwort mit mindestens 10 Zeichen verwenden.", generic: "Das hat nicht geklappt. Bitte versuche es erneut.", forgot: "Passwort vergessen?", forgotTitle: "Passwort zurücksetzen", forgotSend: "Link senden", forgotSent: "Wenn ein Konto zu dieser E-Mail existiert, ist ein Link unterwegs.", back: "Zurück zur Anmeldung", newPw: "Neues Passwort", savePw: "Passwort speichern", pwSaved: "Passwort geändert.", or: "oder", cont: "Weiter mit", account: "Konto", del: "Konto löschen", delSure: "Wirklich alle Daten löschen? Zum Bestätigen erneut klicken.", deleted: "Dein Konto und alle Daten wurden gelöscht.", consent: "Mit der Registrierung stimmst du der", privacy: "Datenschutzerklärung", and: "und den", terms: "AGB", agree: "zu." },
-  en: { unconfirmed: "Email not confirmed yet. Please open the link in the email.", network: "No connection. Please check your network.", loginHint: "Sign in with email and password.", regHint: "Create an account with email and password.", email: "Email", name: "Name", pw: "Password", pwHint: "At least 10 characters.", confirmSent: "Almost done: we sent you a confirmation email. Please confirm it, then sign in.", invalid: "Email or password is incorrect.", rate: "Too many attempts. Please wait a moment.", locked: "Too many failed attempts. Please wait a minute.", weak: "Please use a password with at least 10 characters.", generic: "That did not work. Please try again.", forgot: "Forgot password?", forgotTitle: "Reset password", forgotSend: "Send link", forgotSent: "If an account exists for this email, a link is on its way.", back: "Back to sign in", newPw: "New password", savePw: "Save password", pwSaved: "Password changed.", or: "or", cont: "Continue with", account: "Account", del: "Delete account", delSure: "Delete all data for good? Click again to confirm.", deleted: "Your account and all data were deleted.", consent: "By registering you agree to the", privacy: "Privacy Policy", and: "and the", terms: "Terms", agree: "." },
-  ar: { unconfirmed: "لم يتم تأكيد البريد بعد. افتح الرابط في الرسالة.", network: "لا يوجد اتصال. تحقق من الشبكة.", loginHint: "سجّل الدخول بالبريد الإلكتروني وكلمة المرور.", regHint: "أنشئ حسابًا بالبريد الإلكتروني وكلمة المرور.", email: "البريد الإلكتروني", name: "الاسم", pw: "كلمة المرور", pwHint: "10 أحرف على الأقل.", confirmSent: "اقتربت من الإنهاء: أرسلنا لك رسالة تأكيد. يرجى تأكيدها ثم تسجيل الدخول.", invalid: "البريد الإلكتروني أو كلمة المرور غير صحيحة.", rate: "محاولات كثيرة. يرجى الانتظار قليلًا.", locked: "محاولات فاشلة كثيرة. يرجى الانتظار دقيقة.", weak: "يرجى استخدام كلمة مرور من 10 أحرف على الأقل.", generic: "لم تنجح العملية. يرجى المحاولة مرة أخرى.", forgot: "نسيت كلمة المرور؟", forgotTitle: "إعادة تعيين كلمة المرور", forgotSend: "إرسال الرابط", forgotSent: "إذا كان هناك حساب لهذا البريد، فالرابط في الطريق.", back: "العودة إلى تسجيل الدخول", newPw: "كلمة مرور جديدة", savePw: "حفظ كلمة المرور", pwSaved: "تم تغيير كلمة المرور.", or: "أو", cont: "المتابعة عبر", account: "الحساب", del: "حذف الحساب", delSure: "هل تريد حذف كل البيانات نهائيًا؟ انقر مرة أخرى للتأكيد.", deleted: "تم حذف حسابك وكل بياناتك.", consent: "بالتسجيل فإنك توافق على", privacy: "سياسة الخصوصية", and: "و", terms: "الشروط", agree: "." }
+  de: { unconfirmed: "Mail noch nicht bestätigt. Bitte den Link in der Mail öffnen.", network: "Keine Verbindung. Bitte Netz prüfen.", loginHint: "Anmeldung mit Ihrem Google Konto.", regHint: "Konto mit Mail und Passwort erstellen.", email: "E-Mail", name: "Name", pw: "Passwort", pwHint: "Mindestens 10 Zeichen.", confirmSent: "Fast geschafft: Wir haben dir eine Bestätigungs Mail geschickt. Bitte bestätige sie und melde dich dann an.", invalid: "Mail oder Passwort stimmt nicht.", rate: "Zu viele Versuche. Bitte warte einen Moment.", locked: "Zu viele Fehlversuche. Bitte warte eine Minute.", weak: "Bitte ein Passwort mit mindestens 10 Zeichen verwenden.", generic: "Das hat nicht geklappt. Bitte versuche es erneut.", forgot: "Passwort vergessen?", forgotTitle: "Passwort zurücksetzen", forgotSend: "Link senden", forgotSent: "Wenn ein Konto zu dieser Mail existiert, ist ein Link unterwegs.", back: "Zurück zur Anmeldung", newPw: "Neues Passwort", savePw: "Passwort speichern", pwSaved: "Passwort geändert.", or: "oder", cont: "Weiter mit", account: "Konto", del: "Konto löschen", delSure: "Wirklich alle Daten löschen? Zum Bestätigen erneut klicken.", deleted: "Dein Konto und alle Daten wurden gelöscht.", consent: "Mit der Registrierung stimmst du der", privacy: "Datenschutzerklärung", and: "und den", terms: "AGB", agree: "zu." },
+  en: { unconfirmed: "Email not confirmed yet. Please open the link in the email.", network: "No connection. Please check your network.", loginHint: "Sign in with your Google account.", regHint: "Create an account with email and password.", email: "Email", name: "Name", pw: "Password", pwHint: "At least 10 characters.", confirmSent: "Almost done: we sent you a confirmation email. Please confirm it, then sign in.", invalid: "Email or password is incorrect.", rate: "Too many attempts. Please wait a moment.", locked: "Too many failed attempts. Please wait a minute.", weak: "Please use a password with at least 10 characters.", generic: "That did not work. Please try again.", forgot: "Forgot password?", forgotTitle: "Reset password", forgotSend: "Send link", forgotSent: "If an account exists for this email, a link is on its way.", back: "Back to sign in", newPw: "New password", savePw: "Save password", pwSaved: "Password changed.", or: "or", cont: "Continue with", account: "Account", del: "Delete account", delSure: "Delete all data for good? Click again to confirm.", deleted: "Your account and all data were deleted.", consent: "By registering you agree to the", privacy: "Privacy Policy", and: "and the", terms: "Terms", agree: "." },
+  ar: { unconfirmed: "لم يتم تأكيد البريد بعد. افتح الرابط في الرسالة.", network: "لا يوجد اتصال. تحقق من الشبكة.", loginHint: "سجّل الدخول عبر حساب Google.", regHint: "أنشئ حسابًا بالبريد الإلكتروني وكلمة المرور.", email: "البريد الإلكتروني", name: "الاسم", pw: "كلمة المرور", pwHint: "10 أحرف على الأقل.", confirmSent: "اقتربت من الإنهاء: أرسلنا لك رسالة تأكيد. يرجى تأكيدها ثم تسجيل الدخول.", invalid: "البريد الإلكتروني أو كلمة المرور غير صحيحة.", rate: "محاولات كثيرة. يرجى الانتظار قليلًا.", locked: "محاولات فاشلة كثيرة. يرجى الانتظار دقيقة.", weak: "يرجى استخدام كلمة مرور من 10 أحرف على الأقل.", generic: "لم تنجح العملية. يرجى المحاولة مرة أخرى.", forgot: "نسيت كلمة المرور؟", forgotTitle: "إعادة تعيين كلمة المرور", forgotSend: "إرسال الرابط", forgotSent: "إذا كان هناك حساب لهذا البريد، فالرابط في الطريق.", back: "العودة إلى تسجيل الدخول", newPw: "كلمة مرور جديدة", savePw: "حفظ كلمة المرور", pwSaved: "تم تغيير كلمة المرور.", or: "أو", cont: "المتابعة عبر", account: "الحساب", del: "حذف الحساب", delSure: "هل تريد حذف كل البيانات نهائيًا؟ انقر مرة أخرى للتأكيد.", deleted: "تم حذف حسابك وكل بياناتك.", consent: "بالتسجيل فإنك توافق على", privacy: "سياسة الخصوصية", and: "و", terms: "الشروط", agree: "." }
 };
 const AUTH_TEXT = {
   de: { hint: "Falls das dein Konto ist, melde dich an. Mit gleichem Passwort wirst du automatisch angemeldet.", reset: "Gespeicherte Konten auf diesem Gerät zurücksetzen", resetSure: "Wirklich alle Konten auf diesem Gerät löschen? Zum Bestätigen erneut klicken.", resetDone: "Alle Konten auf diesem Gerät wurden gelöscht. Du kannst neu starten." },
@@ -3338,20 +3342,20 @@ const LAND_TEXT = {
     feats: [
       ["Marktscoring", "Fünf Bewertungsfaktoren pro Land: Attraktivität, Wettbewerb, Regulatorik, Partner und Investitionsklima."],
       ["Unternehmensprofil", "Kennzahlen, Zertifizierungen, Kundensegmente und Vertriebskanäle werden strukturiert erfasst."],
-      ["PDF- und CSV-Import", "Unternehmensdaten aus Dokumenten oder Tabellen übernehmen, statt alles neu einzutippen."],
+      ["PDF und CSV Import", "Unternehmensdaten aus Dokumenten oder Tabellen übernehmen, statt alles neu einzutippen."],
       ["Empfehlung mit Begründung", "Zielmarkt, Einstiegsstrategie, Risiken und potenzielle Partner nachvollziehbar hergeleitet."],
-      ["Roadmap und Break-even", "Schritt-für-Schritt-Plan, Jahresprognose und Budget-Sensitivität."],
-      ["Kompletter Entry-Plan als PDF", "Mehrseitiger Umsetzungsplan für den bestplatzierten Markt: Begründung, Marktprofil, Zeitplan, alle Schritte, Budget, Risiken und Quellen."]
+      ["Roadmap und Gewinnschwelle", "Schritt für Schritt Plan, Jahresprognose und Budgetsensitivität."],
+      ["Kompletter Eintrittsplan als PDF", "Mehrseitiger Umsetzungsplan für den bestplatzierten Markt: Begründung, Marktprofil, Zeitplan, alle Schritte, Budget, Risiken und Quellen."]
     ],
     flowTitle: "Ablauf der Analyse",
     flow: ["Profil erfassen", "Score berechnen", "Märkte vergleichen", "Empfehlung prüfen", "Report exportieren"],
     reportTitle: "Was ein Report enthält",
-    report: ["Ländervergleich mit Gesamtscore", "Faktor-Vergleich aller Länder", "Strategische Positionierung", "Empfehlung mit Zeitrahmen", "Risiken und nächste Schritte", "Planüberblick zum Markteintritt"],
+    report: ["Ländervergleich mit Gesamtscore", "Faktor Vergleich aller Länder", "Strategische Positionierung", "Empfehlung mit Zeitrahmen", "Risiken und nächste Schritte", "Planüberblick zum Markteintritt"],
     trustTitle: "Methodik und Datenschutz",
     trust: [
       ["Methodik", "Der Score gewichtet fünf Faktoren je Zielmarkt. Die Herleitung ist im Ergebnis einsehbar."],
       ["Datengrundlage", "Ihre eigenen Unternehmensangaben und hinterlegte Länderkennzahlen wie Bevölkerung und BIP."],
-      ["Datenschutz", (backend.enabled ? "Konten und Analysen liegen in einer geschützten Datenbank. Jede Person sieht nur ihre eigenen Daten. Details in der Datenschutzerklärung." : "Demo-Version: Konten und Analysen bleiben in Ihrem Browser. Kein Server, kein E-Mail-Versand.")]
+      ["Datenschutz", (backend.enabled ? "Konten und Analysen liegen in einer geschützten Datenbank. Jede Person sieht nur ihre eigenen Daten. Details in der Datenschutzerklärung." : "Demo Version: Konten und Analysen bleiben in Ihrem Browser. Kein Server, kein MailVersand.")]
     ],
     footer: "Konzept, Datenmodell und Design von Nadin Okil · Demo mit fiktiven Testdaten"
   },
@@ -3362,8 +3366,8 @@ const LAND_TEXT = {
       ["Company profile", "Key figures, certifications, customer segments and sales channels captured in a structured way."],
       ["PDF and CSV import", "Take company data from documents or spreadsheets instead of retyping it."],
       ["Reasoned recommendation", "Target market, entry strategy, risks and potential partners, traceably derived."],
-      ["Roadmap and break-even", "Step-by-step plan, annual forecast and budget sensitivity."],
-      ["Complete entry plan as PDF", "Multi-page execution plan for the best-ranked market: rationale, market profile, timeline, all steps, budget, risks and sources."]
+      ["Roadmap and break even", "Step by step plan, annual forecast and budget sensitivity."],
+      ["Complete entry plan as PDF", "Multi page execution plan for the best ranked market: rationale, market profile, timeline, all steps, budget, risks and sources."]
     ],
     flowTitle: "How the analysis works",
     flow: ["Capture profile", "Calculate score", "Compare markets", "Review recommendation", "Export report"],
@@ -3507,7 +3511,7 @@ function Header({
     borderBottom: `1px solid ${lineColor}`
   }}>
       <div className="flex items-center gap-3 cursor-pointer" onClick={onLogoClick}>
-        <img src={MARK_IMG} alt="" style={{ height: 30, width: "auto" }} />
+        <img src={COIN} alt="" style={{ height: 32, width: 32, borderRadius: "50%" }} />
         <span style={{
         fontFamily: "'Inter','Noto Sans Arabic',system-ui,sans-serif",
         color: ink,
@@ -3521,6 +3525,7 @@ function Header({
         color: subtleInk,
         fontFamily: "'Inter','Noto Sans Arabic',system-ui,sans-serif"
       }}>{lang === "ar" ? "كل الأدوات" : lang === "en" ? "All tools" : "Alle Tools"}</button>}
+        <ThemeToggle dark={dark} lang={lang} onToggle={() => setDark(!dark)} color={subtleInk} border={lineColor} />
         <div className="flex rounded-md overflow-hidden" style={{
         border: `1px solid ${lineColor}`
       }}>
@@ -3742,7 +3747,8 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
   });
   useEffect(() => { try { window.localStorage.setItem("ui_lang", lang); } catch (e) { /* ignore */ } }, [lang]);
   const { REGULATORY_CHECK, COMPETITOR_ANALYSIS, MARKET_OPPORTUNITY } = intelFor(lang);
-  const [dark, setDark] = useState(true);
+  const [dark, setDark] = useState(readTheme);
+  useEffect(() => { writeTheme(dark); }, [dark]);
   /** Real, persisted multi-user accounts via the artifact storage API — survives reloads and works across visitors of this tool link. Accounts are stored under a shared key so anyone who registers can log back in from any session; each account only needs a name + password. This is still a demo-grade auth (no hashing, no real backend server) — good enough for a working multi-user prototype, not for handling sensitive real passwords. */
   const [db, setDb] = useState({});
   const [dbLoaded, setDbLoaded] = useState(false);
@@ -4075,7 +4081,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
   });
   async function sbSocial(p) {
     setAuthError("");
-    if (view === "register" && !consent) { setConsentErr(legalPack(lang).consent.error); return; }
+    if (!consent) { setConsentErr(legalPack(lang).consent.error); return; }
     const r = await backend.signInOAuth(p);
     if (!r.ok) setAuthError(SBT.generic);
   }
@@ -4451,6 +4457,14 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
     setView("newAnalysis");
   }
 
+  // Start option chosen in the hub ("Mit Demodaten testen" / "Eigene Daten hochladen"): consumed once after sign in.
+  useEffect(() => {
+    if (!session || view !== "dashboard") return;
+    let s = "";
+    try { s = window.localStorage.getItem("me_start") || ""; window.localStorage.removeItem("me_start"); } catch (e) { /* ignore */ }
+    if (s === "testdata" || s === "upload") { openNewAnalysis(); if (s === "testdata") fillTestData(); else setInputMethod("pdf"); }
+  }, [session, view]);
+
   /* ---------------- shared UI bits ---------------- */
   const inputStyle = {
     width: "100%",
@@ -4636,39 +4650,15 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
               fontWeight: 600,
               marginBottom: 6
             }}>
-                {isLogin ? t.login : t.register}
+                {backend.enabled || isLogin ? t.login : t.register}
               </h1>
-              <p style={{ color: subtleInk, fontSize: 12, marginBottom: 20 }}>{backend.enabled ? (isLogin ? SBT.loginHint : SBT.regHint) : (isLogin ? t.loginHint : t.registerHint)}</p>
+              <p style={{ color: subtleInk, fontSize: 12, marginBottom: 20 }}>{backend.enabled ? SBT.loginHint : (isLogin ? t.loginHint : t.registerHint)}</p>
               {backend.enabled ? <div>
                 <style>{`.sb-btn{min-height:44px;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border-radius:6px;font-size:14px;cursor:pointer}.sb-btn:focus-visible,.sb-link:focus-visible,.sb-in:focus-visible{outline:2px solid #fff;outline-offset:2px;box-shadow:0 0 0 4px var(--accent,#C8A96B)}.sb-link{min-height:44px;display:inline-flex;align-items:center;text-decoration:underline;text-underline-offset:3px;cursor:pointer}`}</style>
-                <form onSubmit={e => { e.preventDefault(); syncAuthDom(e.currentTarget); authMode === "recovery" ? sbRecover() : authMode === "forgot" ? sbForgot() : isLogin ? sbLogin() : sbRegister(); }} noValidate>
-                  {authMode === "forgot" && <p style={{ color: ink, fontSize: 14, marginBottom: 12 }}>{SBT.forgotTitle}</p>}
-                  {authMode === "recovery" && <p style={{ color: ink, fontSize: 14, marginBottom: 12 }}>{SBT.newPw}</p>}
-                  {!isLogin && !authMode && <Field label={SBT.name} subtleInk={subtleInk} fontBody={fontBody}>
-                    <input className="sb-in" aria-label={SBT.name} name="name" autoComplete="name" style={{ ...inputStyle, minHeight: 44 }} value={authForm.name} onChange={e => setAuthForm({ ...authForm, name: e.target.value })} />
-                  </Field>}
-                  {authMode !== "recovery" && <Field label={SBT.email} subtleInk={subtleInk} fontBody={fontBody}>
-                    <input className="sb-in" aria-label={SBT.email} name="email" type="email" autoComplete="email" inputMode="email" style={{ ...inputStyle, minHeight: 44 }} value={authForm.email} onChange={e => setAuthForm({ ...authForm, email: e.target.value })} />
-                  </Field>}
-                  {authMode !== "forgot" && <Field label={authMode === "recovery" ? SBT.newPw : SBT.pw} subtleInk={subtleInk} fontBody={fontBody}>
-                    <input className="sb-in" aria-label={SBT.pw} name="password" type="password" autoComplete={isLogin && !authMode ? "current-password" : "new-password"} style={{ ...inputStyle, minHeight: 44 }} value={authForm.password} onChange={e => setAuthForm({ ...authForm, password: e.target.value })} />
-                    {(!isLogin || authMode === "recovery") && <span style={{ color: subtleInk, fontSize: 12 }}>{SBT.pwHint}</span>}
-                  </Field>}
-                  {authError && <p role="alert" className="text-xs mb-3" style={{ color: palette.coral, lineHeight: 1.6 }}>{authError}</p>}
-                  {authNotice && <p role="status" className="text-xs mb-3" style={{ color: palette.gold, lineHeight: 1.6 }}>{authNotice}</p>}
-                  <button type="submit" disabled={authSubmitting} className="sb-btn font-medium" style={{ background: palette.gold, color: "#0B0D12", fontFamily: fontBody, opacity: authSubmitting ? 0.6 : 1 }}>
-                    {authSubmitting ? "..." : authMode === "recovery" ? SBT.savePw : authMode === "forgot" ? SBT.forgotSend : (isLogin ? t.login : t.register)}
-                  </button>
-                  {isLogin && !authMode && <div className="mt-2"><button type="button" className="sb-link" onClick={() => { setAuthError(""); setAuthNotice(""); setAuthMode("forgot"); }} style={{ color: subtleInk, fontSize: 13 }}>{SBT.forgot}</button></div>}
-                  {authMode === "forgot" && <div className="mt-2"><button type="button" className="sb-link" onClick={() => { setAuthError(""); setAuthMode(""); }} style={{ color: subtleInk, fontSize: 13 }}>{SBT.back}</button></div>}
-                  {!isLogin && !authMode && <ConsentBox lang={lang} th={{ ink, subtleInk, lineColor, cardBg, accent: palette.gold, fontBody, fontDisplay, isRTL }} checked={consent} onChange={v => { setConsent(v); if (v) setConsentErr(""); }} onOpenLegal={() => openLegal("datenschutz")} error={consentErr} />}
-                </form>
-                {!authMode && <>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "18px 0", color: subtleInk, fontSize: 12 }}><span style={{ flex: 1, height: 1, background: lineColor }} />{SBT.or}<span style={{ flex: 1, height: 1, background: lineColor }} /></div>
-                  <div style={{ display: "grid", gap: 8 }}>
-                    {[["google", "Google"], ["apple", "Apple"], ["github", "GitHub"]].map(([id, label]) => <button key={id} type="button" className="sb-btn" onClick={() => sbSocial(id)} style={{ background: "transparent", color: ink, border: `1px solid ${lineColor}`, fontFamily: fontBody }}>{SOCIAL_ICONS[id]}<span>{SBT.cont} {label}</span></button>)}
-                  </div>
-                </>}
+                <ConsentBox lang={lang} th={{ ink, subtleInk, lineColor, cardBg, accent: palette.gold, fontBody, fontDisplay, isRTL }} checked={consent} onChange={v => { setConsent(v); if (v) setConsentErr(""); }} onOpenLegal={() => openLegal("datenschutz")} error={consentErr} />
+                {authError && <p role="alert" className="text-xs mb-3" style={{ color: palette.coral, lineHeight: 1.6 }}>{authError}</p>}
+                {authNotice && <p role="status" className="text-xs mb-3" style={{ color: palette.gold, lineHeight: 1.6 }}>{authNotice}</p>}
+                <button type="button" data-testid="tool-google" className="sb-btn font-medium" onClick={() => sbSocial("google")} style={{ background: palette.gold, color: "#0B0D12", fontFamily: fontBody, marginTop: 12 }}>{SOCIAL_ICONS.google}<span>{SBT.cont} Google</span></button>
               </div> : <form onSubmit={e => { syncAuthDom(e.currentTarget); (isLogin ? handleLogin : handleRegister)(e); }}>
                 <Field label={t.name} subtleInk={subtleInk} fontBody={fontBody}>
                     <div className="relative">
@@ -4736,7 +4726,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
                   {authSubmitting ? "..." : (isLogin ? t.login : t.register)}
                 </button>
               </form>}
-              <p className="text-center text-xs mt-5" style={{
+              {!backend.enabled && <p className="text-center text-xs mt-5" style={{
               color: subtleInk
             }}>
                 {isLogin ? t.noAccount : t.haveAccount}{" "}
@@ -4749,7 +4739,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
               }}>
                   {isLogin ? t.switchToRegister : t.switchToLogin}
                 </button>
-              </p>
+              </p>}
               {!backend.enabled && <p className="text-center mt-4">
                 <button type="button" onClick={resetLocalAccounts} style={{
                 color: resetArmed ? palette.coral : subtleInk,
@@ -4835,7 +4825,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
                 color: ink,
                 fontWeight: 600,
                 fontFamily: fontDisplay
-              }}>{rec.input.companyName || "—"}</p>
+              }}>{rec.input.companyName || "n/a"}</p>
                     <p style={{
                 color: subtleInk,
                 fontSize: 12
@@ -5092,7 +5082,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
       let be = null; try { be = buildFinancialModel({ ...rec.input, revenue: Number(rec.input.revenue), budget }, sc[r2.targetMarket].overall).breakEvenYear; } catch (e) { /* model unavailable */ }
       return { target: r2.targetMarket, overall: sc[r2.targetMarket].overall, breakEven: be, timeline: r2.timelineMonths, strategy: r2.entryStrategy };
     };
-    const intelBE = (() => { try { return buildFinancialModel({ ...rec.input, revenue: Number(rec.input.revenue), budget: Number(rec.input.budget) }, targetOverall).breakEvenYear || t.planNoBreakEven; } catch (e) { return "–"; } })();
+    const intelBE = (() => { try { return buildFinancialModel({ ...rec.input, revenue: Number(rec.input.revenue), budget: Number(rec.input.budget) }, targetOverall).breakEvenYear || t.planNoBreakEven; } catch (e) { return "n/a"; } })();
     const detailedSteps = buildDetailedSteps(rec.rec, Number(rec.input.budget));
     const finModel = buildFinancialModel({
       ...rec.input,
@@ -5136,7 +5126,7 @@ const renderCountryDetail = (country, s) => {
         <div className="flex items-center justify-between"><p style={{ color: palette.gold, fontWeight: 700, fontSize: 13 }}>{t[chartSel.id]} · {cb.amount} {t.costEurLabel}</p><button type="button" onClick={() => setChartSel(null)} style={{ color: subtleInk, fontSize: 11 }}>{t.chClose} ✕</button></div>
         <p style={{ color: subtleInk, fontSize: 11.5, margin: "4px 0 8px" }}>{t.chShare}: {Math.round(cb.amount / tot * 100)}%</p>
         <p style={{ color: ink, fontSize: 11.5, fontWeight: 600, marginBottom: 4 }}>{t.chSteps}</p>
-        {sts.map(x => <div key={x.key} className="flex items-center justify-between" style={{ fontSize: 11.5, padding: "3px 0", borderTop: `1px solid ${lineColor}` }}><span style={{ color: ink }}>{t.steps_[x.key]}</span><span style={{ color: subtleInk }}>{t.weekLabel} {x.startWeek + 1}–{x.startWeek + x.durationWeeks} · {x.costEurM} {t.costEurLabel}</span></div>)}
+        {sts.map(x => <div key={x.key} className="flex items-center justify-between" style={{ fontSize: 11.5, padding: "3px 0", borderTop: `1px solid ${lineColor}` }}><span style={{ color: ink }}>{t.steps_[x.key]}</span><span style={{ color: subtleInk }}>{t.weekLabel} {x.startWeek + 1} {RANGE[lang]} {x.startWeek + x.durationWeeks} · {x.costEurM} {t.costEurLabel}</span></div>)}
       </div>;
     })() : null;
     const yearPanel = chartSel && chartSel.kind === "year" ? (() => {
@@ -5596,8 +5586,8 @@ const renderCountryDetail = (country, s) => {
                 return <div key={i} style={{ marginBottom: 4 }}>
                   <button type="button" aria-expanded={openNext === k} onClick={() => setOpenNext(v => v === k ? null : k)} className="text-start" style={{ color: ink, fontSize: 13, cursor: "pointer", minHeight: 28 }}>{i + 1}. {t.nextStepText[k]} <span style={{ color: subtleInk }}>{openNext === k ? "▴" : "▾"}</span></button>
                   {openNext === k && ph && <div style={{ color: subtleInk, fontSize: 12, margin: "2px 0 4px", paddingInlineStart: 12 }}>
-                    <p>{t.sumPhase}: {ph.label} · {t.month} {ph.startMonth}–{ph.endMonth}</p>
-                    {phSteps.map(x => <p key={x.key}>· {t.steps_[x.key]} ({t.weekLabel} {x.startWeek}–{x.startWeek + x.durationWeeks})</p>)}
+                    <p>{t.sumPhase}: {ph.label} · {t.month} {ph.startMonth} {RANGE[lang]} {ph.endMonth}</p>
+                    {phSteps.map(x => <p key={x.key}>· {t.steps_[x.key]} ({t.weekLabel} {x.startWeek} {RANGE[lang]} {x.startWeek + x.durationWeeks})</p>)}
                   </div>}
                 </div>;
               })}
@@ -5667,7 +5657,7 @@ const renderCountryDetail = (country, s) => {
                 fontFamily: "'Inter','Noto Sans Arabic',system-ui,sans-serif",
                 marginTop: 2
               }}>
-                    {t.month} {phase.startMonth}–{phase.endMonth}
+                    {t.month} {phase.startMonth} {RANGE[lang]} {phase.endMonth}
                   </p>
                 </button>)}
             </div>
@@ -5780,12 +5770,12 @@ const renderCountryDetail = (country, s) => {
                     <p style={{
                   color: subtleInk,
                   fontSize: 10
-                }}>{t.weekLabel} {step.startWeek}–{step.startWeek + step.durationWeeks}</p>
+                }}>{t.weekLabel} {step.startWeek} {RANGE[lang]} {step.startWeek + step.durationWeeks}</p>
                   </div>
                   </button>
                   {isOpen && <div className="grid grid-cols-3 gap-3 px-3 pb-3" style={{ borderTop: `1px solid ${lineColor}`, paddingTop: 10 }}>
                     <div><p style={{ color: subtleInk, fontSize: 10 }}>{t.planDuration}</p><p style={{ color: ink, fontSize: 12, fontWeight: 600 }}>{step.durationWeeks} {t.planWeeks}</p></div>
-                    <div><p style={{ color: subtleInk, fontSize: 10 }}>{t.weekLabel}</p><p style={{ color: ink, fontSize: 12, fontWeight: 600 }}>{step.startWeek}–{step.startWeek + step.durationWeeks}</p></div>
+                    <div><p style={{ color: subtleInk, fontSize: 10 }}>{t.weekLabel}</p><p style={{ color: ink, fontSize: 12, fontWeight: 600 }}>{step.startWeek} {RANGE[lang]} {step.startWeek + step.durationWeeks}</p></div>
                     <div><p style={{ color: subtleInk, fontSize: 10 }}>{t.planShare}</p><p style={{ color: ink, fontSize: 12, fontWeight: 600 }}>{share}%</p></div>
                   </div>}
                 </div>;
@@ -6430,7 +6420,7 @@ const renderCountryDetail = (country, s) => {
     userAnalyses.forEach(r => {
       marketCounts[r.rec.targetMarket] = (marketCounts[r.rec.targetMarket] || 0) + 1;
     });
-    const topMarket = Object.keys(marketCounts).length ? Object.entries(marketCounts).sort((a, b) => b[1] - a[1])[0][0] : "—";
+    const topMarket = Object.keys(marketCounts).length ? Object.entries(marketCounts).sort((a, b) => b[1] - a[1])[0][0] : "n/a";
     return <div dir={isRTL ? "rtl" : "ltr"} style={{
       minHeight: "100vh",
       background: bg,

@@ -53,74 +53,94 @@ async def mk(b,mock,file,block_ls=False,viewport=None):
     pg=await ctx.new_page(); errs=[]; pg.on('pageerror',lambda e:errs.append(str(e))); pg.on('console',lambda m: errs.append('C:'+m.text) if m.type=='error' else None)
     await pg.goto(file); await pg.wait_for_timeout(1200); return ctx,pg,errs
 ok=check
-async def login(pg,email,pw,name=None,reg=False):
-    await pg.get_by_test_id('hub-login').click()
-    if reg:
-        await pg.get_by_role('button',name='Noch kein Konto? Konto erstellen').click()
-        await pg.locator('#ha-name').fill(name or 'Nadin')
-    await pg.locator('#ha-email').fill(email); await pg.locator('#ha-pw').fill(pw)
-    if reg: await pg.get_by_role('checkbox').check()
-    await pg.get_by_test_id('hub-auth').get_by_role('button',name='Konto erstellen' if reg else 'Anmelden',exact=True).last.click() if False else await pg.locator('[data-testid=hub-auth] button[type=submit]').click()
-    await pg.wait_for_timeout(700)
+from urllib.parse import quote
+def sess(mock,email='nadin@example.com',name='Nadin Okil'):
+    u=mock.users.get(email) or {'id':f'u{len(mock.users)+1}','email':email,'pw':'','meta':{'full_name':name},'ok':True}
+    mock.users[email]=u; return mock.mk(u)
+async def back_from_google(pg,mock,email='nadin@example.com',name='Nadin Okil'):
+    d=sess(mock,email,name)
+    await pg.goto(REAL_URL+'#access_token='+d['access_token']+'&refresh_token='+d['refresh_token']+'&type=signup'); await pg.reload(); await pg.wait_for_timeout(1500)
 async def main():
     async with async_playwright() as p:
         b=await p.chromium.launch()
-        # ---- REAL build, mock supabase
-        mk_=Mock(confirm=True); ctx,pg,errs=await mk(b,mk_,REAL_URL)
+        # ---- REAL build: Google only
+        mk_=Mock(); ctx,pg,errs=await mk(b,mk_,REAL_URL)
         ok('no demo banner in real build', await pg.locator('#demo-banner').count()==0)
-        await login(pg,'nadin@example.com','LangesPasswort1','Nadin',reg=True)
-        t=await pg.get_by_test_id('hub-auth').inner_text(); ok('register shows confirm note', 'Bestätigungs' in t)
-        await pg.locator('#ha-email').fill('nadin@example.com'); await pg.locator('#ha-pw').fill('LangesPasswort1'); await pg.locator('[data-testid=hub-auth] button[type=submit]').click(); await pg.wait_for_timeout(600)
-        t=await pg.get_by_test_id('hub-auth').inner_text(); ok('unconfirmed message', 'noch nicht bestätigt' in t)
-        mk_.users['nadin@example.com']['ok']=True
-        await pg.locator('#ha-pw').fill('falsch12345'); await pg.locator('[data-testid=hub-auth] button[type=submit]').click(); await pg.wait_for_timeout(500)
-        ok('wrong password message', 'Anmeldung nicht möglich' in await pg.get_by_test_id('hub-auth').inner_text())
-        await pg.locator('#ha-pw').fill('LangesPasswort1'); await pg.locator('[data-testid=hub-auth] button[type=submit]').click(); await pg.wait_for_timeout(900)
-        ok('logged in (hub bar shows user)', 'Nadin' in await pg.get_by_test_id('hub-user').inner_text())
-        ls=await pg.evaluate("()=>({t:localStorage.getItem('jast_token'),r:localStorage.getItem('jast_refresh'),u:localStorage.getItem('jast_username')})")
-        ok('storage keys jast_token/refresh/username', bool(ls['t'] and ls['r']) and ls['u']=='nadin@example.com')
+        await pg.get_by_test_id('hub-login').click()
+        box=pg.get_by_test_id('hub-auth')
+        ok('hub login: only a Google button', await box.locator('input[type=email],input[type=password],input[type=text]').count()==0 and await box.get_by_test_id('hub-google').count()==1)
+        t=await box.inner_text(); ok('hub login: no Apple/GitHub', 'Apple' not in t and 'GitHub' not in t)
+        await box.get_by_test_id('hub-google').click(); await pg.wait_for_timeout(300)
+        ok('hub login: consent required before Google', 'Datenschutz' in await box.inner_text() and 'authorize' not in pg.url)
+        urls=[]
+        await ctx.route('**/auth/v1/authorize**',lambda r: (urls.append(r.request.url), r.abort())[1])
+        await box.get_by_role('checkbox').check(); await box.get_by_test_id('hub-google').click(); await pg.wait_for_timeout(600)
+        ok('hub login: redirects to Supabase with provider=google', any('provider=google' in u and 'redirect_to=' in u for u in urls), urls)
+        await ctx.close()
+        # return from Google
+        mk_=Mock(); ctx,pg,errs=await mk(b,mk_,REAL_URL)
+        await back_from_google(pg,mk_)
+        ok('after Google: hub bar shows the user', 'Nadin' in await pg.get_by_test_id('hub-user').inner_text())
+        ok('after Google: token cleaned from the URL', 'access_token' not in pg.url)
+        ls=await pg.evaluate("()=>({t:localStorage.getItem('jast_token'),r:localStorage.getItem('jast_refresh')})")
+        ok('storage keys jast_token/refresh', bool(ls['t'] and ls['r']))
         await pg.reload(); await pg.wait_for_timeout(1200); ok('reload stays logged in', await pg.get_by_test_id('hub-user').count()==1)
-        # expired access token -> refresh
         await pg.evaluate("localStorage.setItem('jast_token','expired')"); mk_.log.clear(); await pg.reload(); await pg.wait_for_timeout(1500)
         ok('expired token refreshed once, still logged in', await pg.get_by_test_id('hub-user').count()==1 and ('POST','/auth/v1/token') in mk_.log)
-        # tool: save analysis, reload, comes back from "database"
+        # start option "Mit Demodaten testen" opens a new analysis with sample data
+        await pg.get_by_test_id('opt-testdata').check()
         await pg.locator('[data-testid=hub-gcc]').click(); await pg.wait_for_timeout(4300)
-        await pg.get_by_role('button',name='Neue Analyse').click(); await pg.wait_for_timeout(500)
-        await pg.get_by_test_id('try-testdata').click(); await pg.get_by_role('button',name='Score berechnen').click(); await pg.wait_for_timeout(2500)
+        ok('start option testdata: new analysis opens with sample data', await pg.locator('input[value*="Nordlicht"]').count()>=1)
+        await pg.get_by_role('button',name='Score berechnen').click(); await pg.wait_for_timeout(2500)
         ok('analysis saved to REST', any(r for r in mk_.rows.values() if r.get('gcc')))
         await pg.reload(); await pg.wait_for_timeout(4500)
         ok('analysis reloaded from REST after reload', 'Nordlicht' in await pg.inner_text('body'))
-        # logout from hub
+        ok('start option consumed once (no new analysis on reload)', await pg.get_by_role('button',name='Neue Analyse').count()==1)
+        # start option "Eigene Daten hochladen" opens the upload tab
+        await pg.evaluate("location.hash=''"); await pg.reload(); await pg.wait_for_timeout(1500)
+        await pg.get_by_test_id('opt-upload').check(); await pg.locator('[data-testid=hub-gcc]').click(); await pg.wait_for_timeout(4300)
+        ok('start option upload: upload field visible', await pg.locator('input[type=file]').count()>=1)
         await pg.evaluate("location.hash=''"); await pg.reload(); await pg.wait_for_timeout(1500)
         await pg.get_by_role('button',name='Abmelden').click(); await pg.wait_for_timeout(500)
         ls=await pg.evaluate("()=>[localStorage.getItem('jast_token'),localStorage.getItem('jast_refresh'),localStorage.getItem('jast_username')]")
         ok('logout clears all three keys', ls==[None,None,None])
-        # network error
-        mk_.offline=True; await login(pg,'nadin@example.com','LangesPasswort1')
-        ok('network error message', 'Keine Verbindung' in await pg.get_by_test_id('hub-auth').inner_text())
-        ok('no console/page errors (real)', not [e for e in errs if 'Failed to load resource' not in e and 'ERR_FAILED' not in e], ) ; pass
+        ok('no console/page errors (real)', not [e for e in errs if 'Failed to load resource' not in e and 'ERR_FAILED' not in e])
+        # option "Ohne Login" switches to the local demo mode
+        await pg.get_by_test_id('opt-nologin').check(); await pg.wait_for_timeout(1500)
+        ok('option no login: demo mode, login button gone', await pg.get_by_test_id('hub-login').count()==0 and await pg.get_by_test_id('opt-nologin').is_checked())
+        await pg.get_by_test_id('opt-nologin').uncheck(); await pg.wait_for_timeout(1500)
+        ok('option no login: can be switched off again', await pg.get_by_test_id('hub-login').count()==1)
         await ctx.close()
         # ---- localStorage blocked
-        mk2=Mock(confirm=False); ctx,pg,errs=await mk(b,mk2,REAL_URL,block_ls=True)
-        await login(pg,'a@b.de','LangesPasswort1','A',reg=True); await pg.wait_for_timeout(600)
-        await pg.locator('#ha-email').fill('a@b.de'); await pg.locator('#ha-pw').fill('LangesPasswort1'); await pg.locator('[data-testid=hub-auth] button[type=submit]').click() if await pg.locator('#ha-pw').count() else None
-        await pg.wait_for_timeout(900)
-        ok('works with blocked localStorage (memory fallback)', await pg.get_by_test_id('hub-user').count()==1)
+        mk2=Mock(); ctx,pg,errs=await mk(b,mk2,REAL_URL,block_ls=True)
+        d=sess(mk2); await pg.goto(REAL_URL+'#access_token='+d['access_token']+'&refresh_token='+d['refresh_token']); await pg.reload(); await pg.wait_for_timeout(1200)
         ok('no page errors with blocked localStorage', not [e for e in errs if not e.startswith('C:')]); await ctx.close()
         # ---- setup panel
         ctx,pg,errs=await mk(b,None,REAL_URL); await pg.goto(REAL_URL+'?setup=1'); await pg.wait_for_timeout(800)
         if os.environ.get('SETUP_ENABLED')=='1': ok('setup panel shows default url (build with VITE_ENABLE_SETUP=1)', URL in await pg.locator('[data-testid=setup-panel] input').first.input_value())
         else: ok('setup panel is off by default', await pg.locator('[data-testid=setup-panel]').count()==0)
         await ctx.close()
+        # ---- light mode, shared between hub and tool
+        ctx,pg,errs=await mk(b,None,DEMO_URL)
+        bg0=await pg.evaluate("document.documentElement.style.background")
+        await pg.get_by_test_id('theme-toggle').click(); await pg.wait_for_timeout(300)
+        bg1=await pg.evaluate("document.documentElement.style.background")
+        ok('hub: theme toggle changes the background', bg0!=bg1, (bg0,bg1))
+        ok('hub: theme stored as ui_theme=light', await pg.evaluate("localStorage.getItem('ui_theme')")=='light')
+        await pg.get_by_test_id('hub-gcc').click(); await pg.wait_for_timeout(4300)
+        tbg=await pg.evaluate("document.documentElement.style.background")
+        ok('tool opens in light mode too', 'rgb(246' in tbg, tbg)
+        await ctx.close()
         # ---- DEMO build: no network to supabase
         reqs=[]; ctx,pg,errs=await mk(b,None,DEMO_URL)
         pg.on('request',lambda r: reqs.append(r.url) if 'supabase' in r.url else None)
         ok('demo banner visible', 'Demo Modus' in await pg.locator('#demo-banner').inner_text())
         ok('demo: no login button on hub', await pg.get_by_test_id('hub-login').count()==0)
-        await pg.get_by_test_id('hub-gcc').click(); await pg.wait_for_timeout(4300); await pg.wait_for_timeout(300)
-        ok('demo: tool opens directly on the dashboard, no login', await pg.get_by_role('button',name='Neue Analyse').count()==1)
+        ok('demo: "Ohne Login" is checked and fixed', await pg.get_by_test_id('opt-nologin').is_checked() and await pg.get_by_test_id('opt-nologin').is_disabled())
+        await pg.get_by_test_id('opt-testdata').check()
+        await pg.get_by_test_id('hub-gcc').click(); await pg.wait_for_timeout(4600)
+        ok('demo: tool opens directly, no login, with sample data', await pg.locator('input[value*="Nordlicht"]').count()>=1)
         ok('demo: zero supabase requests', reqs==[]); await ctx.close()
-        # offline demo
         ctx=await b.new_context(); pg=await ctx.new_page(); await pg.goto(DEMO_URL); await pg.wait_for_timeout(1500); await ctx.set_offline(True)
         ok('demo works fully offline', 'Demo Modus' in await pg.locator('#demo-banner').inner_text()); await ctx.close()
         await b.close()

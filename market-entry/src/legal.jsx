@@ -85,7 +85,7 @@ export function LegalPage({ lang, appName, th, onBack, anchor, hashPrefix = "" }
     const el = document.getElementById(`rechtliches-${anchor}`);
     if (el) el.scrollIntoView({ block: "start" }); else window.scrollTo(0, 0);
   }, [anchor]);
-  const onReq = { de: "Anschrift auf Anfrage per E-Mail", en: "Postal address on request by e-mail", ar: "العنوان البريدي عند الطلب عبر البريد الإلكتروني" }[lang] || "";
+  const onReq = { de: "Anschrift auf Anfrage per Mail", en: "Postal address on request by email", ar: "العنوان البريدي عند الطلب عبر البريد الإلكتروني" }[lang] || "";
   const addr = [LEGAL.name, LEGAL.profession, LEGAL.street, LEGAL.zipCity, LEGAL.country, !LEGAL.street && !LEGAL.zipCity ? onReq : ""].filter(Boolean);
   const go = id => { const el = document.getElementById(`rechtliches-${id}`); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); try { window.history.replaceState(null, "", `#${hashPrefix}rechtliches-${id}`); } catch (e) { /* sandboxed */ } };
   return <div style={{ maxWidth: 780, margin: "0 auto", padding: "32px 24px 80px", fontFamily: th.fontBody }}>
@@ -104,7 +104,7 @@ export function LegalPage({ lang, appName, th, onBack, anchor, hashPrefix = "" }
         <p style={{ margin: 0 }}>{I.alt}</p>
       </div>}
       <Row th={th} label={I.provider} value={addr.map((l, i) => <div key={i}>{l}</div>)} law={I.laws.provider} />
-      <Row th={th} label={I.contact} value={<>{LEGAL.email && <div>{I.email}: {LEGAL.email}</div>}{LEGAL.phone && <div>{I.phone}: {LEGAL.phone}</div>}{!LEGAL.email && !LEGAL.phone && "–"}</>} law={I.laws.contact} />
+      <Row th={th} label={I.contact} value={<>{LEGAL.email && <div>{I.email}: {LEGAL.email}</div>}{LEGAL.phone && <div>{I.phone}: {LEGAL.phone}</div>}{!LEGAL.email && !LEGAL.phone && "n/a"}</>} law={I.laws.contact} />
       <Row th={th} label={I.responsible} value={<div>{LEGAL.name}{LEGAL.street && `, ${LEGAL.street}`}{LEGAL.zipCity && `, ${LEGAL.zipCity}`}</div>} law={I.laws.responsible} />
     </Section>
 

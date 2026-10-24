@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import * as backend from "../../backend.js";
+import { readTheme, writeTheme } from "../../theme.js";
+const RANGE = { de: "bis", en: "to", ar: "إلى" };
+import ThemeToggle from "../../ThemeToggle.jsx";
+import { COIN } from "../../hubAssets.js";
 import { EUROPE_I18N, localizeIntel } from "../../dataI18n.js";
 import { KpiStrip, WhyPanel, ScoringSuite, ScenarioCompare, MemoDoc, CompetitorBlock, IntelPrint, SourceLine, StatusLegend, analyze } from "../../intel.jsx";
 import { LegalPage, LegalNotice, ConsentBox, DataCenter, downloadJSON, legalPack } from "../../legal.jsx";
@@ -321,9 +325,9 @@ const clamp = n => Math.max(0, Math.min(100, Math.round(n)));
 /** Regulatory Check — corporate tax, VAT and licensing per country. Real, sourced (Trading Economics, HMRC, national tax authorities). Verified Aug 2026. */
 const REGULATORY_CHECK = {
   Germany: {
-    corporateTax: "30% (Körperschaft- + Gewerbesteuer kombiniert)",
+    corporateTax: "30% (Körperschaft + Gewerbesteuer kombiniert)",
     vat: "19%",
-    licensing: "GmbH-Gründung + Handelsregistereintragung; Gewerbeanmeldung je nach Tätigkeit.",
+    licensing: "GmbH Gründung + Handelsregistereintragung; Gewerbeanmeldung je nach Tätigkeit.",
     source: "Trading Economics / Bundeszentralamt für Steuern, 2026"
   },
   France: {
@@ -335,7 +339,7 @@ const REGULATORY_CHECK = {
   UK: {
     corporateTax: "19\u201325% (gestaffelt: 19% bis £50.000 Gewinn, 25% ab £250.000)",
     vat: "20%",
-    licensing: "Registrierung bei Companies House; VAT-Pflicht ab £90.000 Jahresumsatz (Nicht-UK-Unternehmen: unabhängig vom Umsatz).",
+    licensing: "Registrierung bei Companies House; VAT Pflicht ab £90.000 Jahresumsatz (Nicht UK Unternehmen: unabhängig vom Umsatz).",
     source: "HMRC / Trading Economics, 2026"
   },
   Italy: {
@@ -347,13 +351,13 @@ const REGULATORY_CHECK = {
   Spain: {
     corporateTax: "25%",
     vat: "21%",
-    licensing: "Eintragung ins Handelsregister (Registro Mercantil), NIE/CIF-Steuernummer erforderlich.",
+    licensing: "Eintragung ins Handelsregister (Registro Mercantil), NIE/CIF Steuernummer erforderlich.",
     source: "Trading Economics / Agencia Tributaria, 2026"
   },
   Netherlands: {
     corporateTax: "25,8%",
     vat: "21%",
-    licensing: "Eintragung bei der Kamer van Koophandel (Handelskammer), BV-Gründung üblichste Rechtsform.",
+    licensing: "Eintragung bei der Kamer van Koophandel (Handelskammer), BV Gründung üblichste Rechtsform.",
     source: "Trading Economics / Belastingdienst, 2026"
   }
 };
@@ -362,65 +366,65 @@ const REGULATORY_CHECK = {
 const COMPETITOR_ANALYSIS = {
   Germany: {
     players: ["Volkswagen (Automobil, größter Konzern Europas nach Umsatz)", "Allianz (Versicherung/Finanzdienstleistungen)", "SAP (Software, größter Softwarekonzern Europas)"],
-    gap: "Große Konzerne dominieren Industrie/Finanzen; der Mittelstand modernisiert aktuell aktiv Richtung KI/Digitalisierung — Einstiegspunkt für spezialisierte B2B-Lösungen."
+    gap: "Große Konzerne dominieren Industrie/Finanzen; der Mittelstand modernisiert aktuell aktiv Richtung KI/Digitalisierung, Einstiegspunkt für spezialisierte B2B Lösungen."
   },
   France: {
     players: ["TotalEnergies (Energie)", "BNP Paribas (Banking)", "AXA (Versicherung)"],
-    gap: "Stark konsolidierter Finanz-/Energiesektor; Expansion in neue Geografien/Sprachen ist laut Branchenumfragen eine der größten eigenen Herausforderungen französischer B2B-Marketer — Chance für internationale Partner mit lokaler Expertise."
+    gap: "Stark konsolidierter Finanz und Energiesektor; Expansion in neue Geografien/Sprachen ist laut Branchenumfragen eine der größten eigenen Herausforderungen französischer B2B Marketer, Chance für internationale Partner mit lokaler Expertise."
   },
   UK: {
     players: ["Shell (Energie, umsatzstärkster Konzern Europas)", "HSBC (Banking)"],
-    gap: "Höchste Investitionsbereitschaft unter den großen EU-Volkswirtschaften (82% planen Budget-Erhöhung >10%), stark technologiegetrieben — offen für neue Tech-/Digital-Anbieter."
+    gap: "Höchste Investitionsbereitschaft unter den großen EU Volkswirtschaften (82% planen Budget Erhöhung >10%), stark technologiegetrieben, offen für neue Tech und Digital Anbieter."
   },
   Italy: {
     players: ["UniCredit / Intesa Sanpaolo (die zwei dominanten Bankengruppen)", "Eni (Energie)", "Generali (Versicherung, Marktführer)"],
-    gap: "Fortschrittliche Industriecluster, aber laut UK-DBT-Einschätzung (2026) noch wachsende digitale Ökosysteme — Raum für Cybersecurity-, Automatisierungs- und Smart-City-Anbieter."
+    gap: "Fortschrittliche Industriecluster, aber laut UK DBT Einschätzung (2026) noch wachsende digitale Ökosysteme, Raum für Cybersecurity, Automatisierung und Smart City Anbieter."
   },
   Spain: {
     players: ["Banco Santander (Banking)", "Inditex (Retail/Mode, u. a. Zara)"],
-    gap: "Sehr diversifizierte, schnell wachsende Wirtschaft; eine der größten EU-Förderquoten treibt erneuerbare Energien & digitale Infrastruktur — Sektoren mit noch nicht abschließend besetzter Konkurrenzlandschaft."
+    gap: "Sehr diversifizierte, schnell wachsende Wirtschaft; eine der größten EU Förderquoten treibt erneuerbare Energien & digitale Infrastruktur, Sektoren mit noch nicht abschließend besetzter Konkurrenzlandschaft."
   },
   Netherlands: {
     players: ["ASML (Halbleiter, wertvollstes Unternehmen der Niederlande)", "ING Group (Banking)", "Heineken (Konsumgüter)"],
-    gap: "Offene, wettbewerbsfähige Wirtschaft mit starkem Servicesektor; wachsende Nachfrage nach Nachhaltigkeits- und Healthtech-Lösungen noch nicht von etablierten Playern vollständig besetzt."
+    gap: "Offene, wettbewerbsfähige Wirtschaft mit starkem Servicesektor; wachsende Nachfrage nach Nachhaltigkeits und Healthtech Lösungen noch nicht von etablierten Playern vollständig besetzt."
   }
 };
 
 /** Market Opportunity — target audience, demand drivers, current trend per country. Real, sourced (see each entry), not modeled. Verified Aug 2026. */
 const MARKET_OPPORTUNITY = {
   Germany: {
-    audience: "Mittelstand auf der Suche nach KI-/Digitalisierungslösungen",
-    drivers: ["Industrieller Kern modernisiert sich für KI & Quanten-Anwendungen", "Internationale E-Commerce-Plattformen expandieren aktiv nach Deutschland"],
-    trend: "Globale E-Commerce-Anbieter nutzen Deutschland verstärkt als Einstiegspunkt in den EU-Markt.",
+    audience: "Mittelstand auf der Suche nach KI und Digitalisierungslösungen",
+    drivers: ["Industrieller Kern modernisiert sich für KI & Quanten Anwendungen", "Internationale E Commerce Plattformen expandieren aktiv nach Deutschland"],
+    trend: "Globale E Commerce Anbieter nutzen Deutschland verstärkt als Einstiegspunkt in den EU Markt.",
     source: "business.gov.uk / ResearchAndMarkets, 2022"
   },
   France: {
-    audience: "B2B-Entscheider mit wachsendem Tech-Investitionsfokus",
-    drivers: ["Technologie ist 2024 branchenübergreifend Top-Investitionsfokus", "Expansion in neue Geografien/Sprachen als erklärte Priorität"],
-    trend: "Marketing- und Tech-Budgets wachsen 2024 branchenweit, mit Fokus auf internationale Expansion.",
+    audience: "B2B Entscheider mit wachsendem Tech Investitionsfokus",
+    drivers: ["Technologie ist 2024 branchenübergreifend Top Investitionsfokus", "Expansion in neue Geografien/Sprachen als erklärte Priorität"],
+    trend: "Marketing und Tech Budgets wachsen 2024 branchenweit, mit Fokus auf internationale Expansion.",
     source: "Forrester Marketing Survey, 2024"
   },
   UK: {
-    audience: "B2B-Marketer mit höchster Investitionsbereitschaft in Europa",
-    drivers: ["82% planen Marketing-Budget-Erhöhung über 10%", "Technologie als klarer Top-Investitionsfokus"],
-    trend: "Größte Investitionsbereitschaft unter den fünf großen EU-Volkswirtschaften im Marketing-/Tech-Bereich.",
+    audience: "B2B Marketer mit höchster Investitionsbereitschaft in Europa",
+    drivers: ["82% planen Marketing Budget Erhöhung über 10%", "Technologie als klarer Top Investitionsfokus"],
+    trend: "Größte Investitionsbereitschaft unter den fünf großen EU Volkswirtschaften im Marketing und Tech Bereich.",
     source: "Forrester Marketing Survey, 2024"
   },
   Italy: {
-    audience: "Tech-Sektor mit Fokus Cybersecurity, Automatisierung, Smart Cities",
+    audience: "Tech Sektor mit Fokus Cybersecurity, Automatisierung, Smart Cities",
     drivers: ["Fortschrittliche Industriecluster", "Wachsende digitale Ökosysteme"],
     trend: "Aktive internationale Kooperationsformate (2026) zeigen wachsendes Investoreninteresse.",
     source: "UK Department for Business & Trade, März 2026"
   },
   Spain: {
-    audience: "Tourismus-, Gesundheits-, Tech- und Sicherheitssektor",
-    drivers: ["Eine der größten EU-Förderquoten für Regenerierung (erneuerbare Energien, digitale Infrastruktur)", "2023 zweitmeist besuchtes Land der Welt"],
+    audience: "Tourismus, Gesundheit, Tech und Sicherheitssektor",
+    drivers: ["Eine der größten EU Förderquoten für Regenerierung (erneuerbare Energien, digitale Infrastruktur)", "2023 zweitmeist besuchtes Land der Welt"],
     trend: "Breite Chancen über Einzelhandel, Gesundheit, Tech, Bildung und Sicherheit hinweg.",
     source: "UK DBT Experts Q&A, 2026"
   },
   Netherlands: {
     audience: "Nachhaltigkeitsorientierte Konsumenten & digitale Nachfrage",
-    drivers: ["Starke Nachfrage nach nachhaltigen Produkten", "Wachsendes E-Commerce- und Healthtech-Segment"],
+    drivers: ["Starke Nachfrage nach nachhaltigen Produkten", "Wachsendes E Commerce und Healthtech Segment"],
     trend: "Gesundheitstechnologie und digitale Dienstleistungen als aufstrebende Wachstumsfelder.",
     source: "Marktanalyse Niederlande, versch. Branchenquellen 2025/26"
   }
@@ -446,7 +450,7 @@ function intelFor(lang) {
 const SAMPLE_PROFILE = {
   "companyName": "Najm Wealth AI LLC",
   "industry": "islamicFinance",
-  "product": "AI-powered Sharia-compliant robo-advisory app, investment screening engine and zakat calculation API",
+  "product": "AI powered Sharia compliant robo advisory app, investment screening engine and zakat calculation API",
   "revenue": 12.4,
   "budget": 1.5,
   "employees": 94,
@@ -466,17 +470,17 @@ const SAMPLE_PROFILE = {
     "Mobile App Stores",
     "Direct Sales",
     "Banking Partners",
-    "White-label Licensing"
+    "White label Licensing"
   ],
   "products": [
     {
       "name": "Najm Invest App",
-      "category": "Robo-Advisory Mobile App",
+      "category": "Robo Advisory Mobile App",
       "price": 0.6,
       "priceRaw": "0.60% of assets under management per year",
-      "usp": "AI portfolio builder, automatic Sharia screening, no interest-bearing instruments, Arabic and English",
+      "usp": "AI portfolio builder, automatic Sharia screening, no interest bearing instruments, Arabic and English",
       "targetCustomer": "Retail Investors",
-      "performance": "Best-seller, 58% YoY growth, 52% of total revenue"
+      "performance": "Best seller, 58% YoY growth, 52% of total revenue"
     },
     {
       "name": "Najm Screen Engine",
@@ -485,7 +489,7 @@ const SAMPLE_PROFILE = {
       "priceRaw": "EUR 4,000 per month per institution",
       "usp": "Screens 25,000 securities daily, explainable AI results, audit trail for Sharia boards",
       "targetCustomer": "Banks and Asset Managers",
-      "performance": "Fastest-growing product, 73% YoY growth, 31% of total revenue"
+      "performance": "Fastest growing product, 73% YoY growth, 31% of total revenue"
     },
     {
       "name": "Najm Zakat API",
@@ -976,20 +980,20 @@ const MARK_IMG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACeCAYAAACI
 
 const CULTURAL_INTEL = {
   de: {
-    Germany: ["Meetings beginnen pünktlich auf die Minute; schon wenige Minuten Verspätung gelten als unprofessionell.", "Entscheidungen entstehen oft nach ausführlicher interner Prüfung — langsameres Anfangstempo als am Golf, dafür verbindliche Umsetzung nach Zusage."],
+    Germany: ["Meetings beginnen pünktlich auf die Minute; schon wenige Minuten Verspätung gelten als unprofessionell.", "Entscheidungen entstehen oft nach ausführlicher interner Prüfung, langsameres Anfangstempo als am Golf, dafür verbindliche Umsetzung nach Zusage."],
     France: ["Geschäftsessen, besonders das Mittagessen, sind ein wichtiger, unhektischer Teil des Beziehungsaufbaus.", "Anfängliche Kommunikation ist oft formeller (Titel, Höflichkeitsform), bis Vertrauen aufgebaut ist."],
-    UK: ["Kommunikation ist oft indirekt — höfliche Zurückhaltung kann auf Ablehnung hindeuten, genaues Zuhören lohnt sich.", "Schriftliche Vereinbarungen und präzise Vertragssprache werden sehr ernst genommen."],
+    UK: ["Kommunikation ist oft indirekt, höfliche Zurückhaltung kann auf Ablehnung hindeuten, genaues Zuhören lohnt sich.", "Schriftliche Vereinbarungen und präzise Vertragssprache werden sehr ernst genommen."],
     Italy: ["Persönliche Beziehungen und Treffen vor Ort werden gegenüber reiner Fernkommunikation stark bevorzugt.", "Geschäftskultur und Tempo unterscheiden sich merklich zwischen Norditalien (schneller, konzernartiger) und dem Süden."],
     Spain: ["Geschäftszeiten verschieben sich durch das traditionelle Tagesmodell später in den Nachmittag/Abend als in Deutschland.", "Persönlicher Vertrauensaufbau vor festen Zusagen wird geschätzt."],
-    Netherlands: ["Ungewöhnlich direkte Kommunikation, selbst für nordeuropäische Verhältnisse — nicht als Unhöflichkeit gemeint.", "Entscheidungen entstehen oft im Konsens mehrerer Stakeholder statt top-down, dauert länger, hält dafür verlässlicher."]
+    Netherlands: ["Ungewöhnlich direkte Kommunikation, selbst für nordeuropäische Verhältnisse, nicht als Unhöflichkeit gemeint.", "Entscheidungen entstehen oft im Konsens mehrerer Stakeholder statt top down, dauert länger, hält dafür verlässlicher."]
   },
   en: {
-    Germany: ["Meetings start precisely on time; even a few minutes late can be read as unprofessional.", "Decisions often follow extensive internal review — a slower initial pace than in the Gulf, but firm follow-through once agreed."],
-    France: ["Business meals, especially lunch, are an important, unhurried part of relationship-building.", "Initial communication tends to be more formal (titles, formal address) until rapport is established."],
-    UK: ["Communication is often indirect — polite understatement can signal disagreement, so it pays to read between the lines.", "Written agreements and precise contractual language are taken very seriously."],
-    Italy: ["Personal relationships and in-person meetings are strongly preferred over remote-only communication.", "Business culture and pace differ noticeably between northern Italy (faster, more corporate) and the south."],
-    Spain: ["The traditional daily schedule shifts business hours later into the afternoon/evening than in Germany.", "Personal trust-building before firm commitments is valued."],
-    Netherlands: ["Communication is unusually direct, even by northern European standards — not meant as rudeness.", "Decisions are often made by consensus among stakeholders rather than top-down, which takes longer but yields firmer buy-in."]
+    Germany: ["Meetings start precisely on time; even a few minutes late can be read as unprofessional.", "Decisions often follow extensive internal review, a slower initial pace than in the Gulf, but firm follow through once agreed."],
+    France: ["Business meals, especially lunch, are an important, unhurried part of relationship building.", "Initial communication tends to be more formal (titles, formal address) until rapport is established."],
+    UK: ["Communication is often indirect, polite understatement can signal disagreement, so it pays to read between the lines.", "Written agreements and precise contractual language are taken very seriously."],
+    Italy: ["Personal relationships and in person meetings are strongly preferred over remote only communication.", "Business culture and pace differ noticeably between northern Italy (faster, more corporate) and the south."],
+    Spain: ["The traditional daily schedule shifts business hours later into the afternoon/evening than in Germany.", "Personal trust building before firm commitments is valued."],
+    Netherlands: ["Communication is unusually direct, even by northern European standards, not meant as rudeness.", "Decisions are often made by consensus among stakeholders rather than top down, which takes longer but yields firmer buy in."]
   },
   ar: {
     Germany: ["تبدأ الاجتماعات في موعدها بدقة، وحتى التأخر لبضع دقائق قد يُعتبر غير مهني.", "غالباً ما تأتي القرارات بعد مراجعة داخلية مطولة، وتيرة أبطأ في البداية مقارنة بالخليج، لكن تنفيذاً ملتزماً بعد الاتفاق."],
@@ -1178,7 +1182,7 @@ function AmbientCrystalRows() {
 function CrystalPhoto({ size = 300 }) {
   const small = size <= 100;
   return <div style={{ width: small ? size : Math.round(size * 1.45), maxWidth: "100%", margin: "0 auto" }}>
-      <img src={small ? MARK_IMG : CRYSTAL_STAR_TEAL} alt="Gulf States ↔ Europe – Market Entry" style={{ width: "100%", height: "auto", display: "block", objectFit: "contain" }} />
+      <img src={small ? MARK_IMG : CRYSTAL_STAR_TEAL} alt="Gulf States ↔ Europe, Market Entry" style={{ width: "100%", height: "auto", display: "block", objectFit: "contain" }} />
     </div>;
 }
 
@@ -1326,12 +1330,12 @@ const T = {
     heroSubtext: "Regelbasierte Marktanalyse, strategische Planung und nachvollziehbare Empfehlungen für Ihren Markteintritt.",
     rememberMe: "Angemeldet bleiben",
     forgotPassword: "Passwort vergessen?",
-    forgotPasswordNote: "In dieser Demo-Version ohne echtes Backend nicht funktional.",
-    demoNotice: "Demo-Build. Konten sind nur für diese Sitzung gespeichert (kein echtes Backend). Produktivversion nutzt Supabase-Auth mit echter Nutzertrennung.",
+    forgotPasswordNote: "In dieser Demo Version ohne echtes Backend nicht funktional.",
+    demoNotice: "Demo Build. Konten sind nur für diese Sitzung gespeichert (kein echtes Backend). Produktivversion nutzt Supabase Auth mit echter Nutzertrennung.",
     login: "Anmelden",
     register: "Konto erstellen",
     loginHint: "Mit Namen und Passwort anmelden.",
-    registerHint: "Nur Name und Passwort, keine E-Mail nötig.",
+    registerHint: "Nur Name und Passwort, keine Mail nötig.",
     logout: "Abmelden",
     email: "E-Mail",
     password: "Passwort",
@@ -1378,19 +1382,19 @@ const T = {
     entryStrategy: "Entry Strategy",
     prioritySector: "Prioritätsbranche",
     timeline: "Geschätzter Zeitrahmen",
-    timelineShort: "6–9 Monate",
-    timelineMedium: "9–14 Monate",
+    timelineShort: "6 bis 9 Monate",
+    timelineMedium: "9 bis 14 Monate",
     timelineLong: "14+ Monate",
     mainRisks: "Hauptrisiken",
     potentialPartners: "Potenzielle Partner",
     nextSteps: "Nächste Schritte",
     exportCsv: "Als CSV exportieren",
     exportPdf: "Als PDF exportieren",
-    exportPdfAnalysis: "PDF: Markt- & Unternehmensanalyse",
+    exportPdfAnalysis: "PDF: Markt & Unternehmensanalyse",
     exportPdfStrategy: "PDF: Markteintrittsstrategie",
-    exportPdfSummary: "Kompletter Entry-Plan als PDF", reportSummaryTitle: "Plan-Kurzfassung", sumScore: "Gesamtscore", sumBudget: "Budget", sumPeriod: "Zeitraum", sumBreakEven: "Break-even", sumPhase: "Phase", infoRank: "Rang", infoStrongest: "Stärkster Faktor", infoWeakest: "Schwächster Faktor", infoTrigger: "Auslöser", infoAvg: "Ø aller Märkte", infoVsTarget: "zum Zielmarkt", infoClick: "Anklicken für Details", chartHint: "Tipp: Auf Punkte, Segmente und Balken tippen für Details.", chShare: "Anteil am Budget", chSteps: "Schritte in dieser Kategorie", chNet: "Netto (kumuliert)", chCost: "Kosten kumuliert", chRev: "Umsatz kumuliert", chBE: "Break-even erreicht", chNoBE: "Break-even noch nicht erreicht", chScoreAt: "Score bei diesem Budget", chVsNow: "gegenüber aktuellem Budget", chClose: "Schließen", infoTotal: "von",
-    exportPdfPlan: "PDF: Optimaler Entry-Plan", reportPlanTitle: "Optimaler Entry-Plan", planSectionTarget: "Zielmarkt und Einstieg", planSectionPhases: "Phasen und Meilensteine", planSectionGantt: "Zeitplan nach Wochen", planSectionBudget: "Budget nach Kategorie", planSectionBreakEven: "Break-even", planMilestone: "Meilenstein", planTotal: "Gesamt", planAllPhases: "Alle Phasen", planClickHint: "Phase anklicken, um die Schritte zu filtern", planStepHint: "Schritt anklicken für Details", planDuration: "Dauer", planWeeks: "Wochen", planShare: "Anteil am Budget", planSteps: "Schritte", planBudgetLabel: "Budget (€M)", planNoBreakEven: "Kein Break-even innerhalb von 3 Jahren",
-    reportAnalysisTitle: "Markt- & Unternehmensanalyse",
+    exportPdfSummary: "Kompletter Eintrittsplan als PDF", reportSummaryTitle: "Plan-Kurzfassung", sumScore: "Gesamtscore", sumBudget: "Budget", sumPeriod: "Zeitraum", sumBreakEven: "Break-even", sumPhase: "Phase", infoRank: "Rang", infoStrongest: "Stärkster Faktor", infoWeakest: "Schwächster Faktor", infoTrigger: "Auslöser", infoAvg: "Ø aller Märkte", infoVsTarget: "zum Zielmarkt", infoClick: "Anklicken für Details", chartHint: "Tipp: Auf Punkte, Segmente und Balken tippen für Details.", chShare: "Anteil am Budget", chSteps: "Schritte in dieser Kategorie", chNet: "Netto (kumuliert)", chCost: "Kosten kumuliert", chRev: "Umsatz kumuliert", chBE: "Gewinnschwelle erreicht", chNoBE: "Gewinnschwelle noch nicht erreicht", chScoreAt: "Score bei diesem Budget", chVsNow: "gegenüber aktuellem Budget", chClose: "Schließen", infoTotal: "von",
+    exportPdfPlan: "PDF: Optimaler Eintrittsplan", reportPlanTitle: "Optimaler Eintrittsplan", planSectionTarget: "Zielmarkt und Einstieg", planSectionPhases: "Phasen und Meilensteine", planSectionGantt: "Zeitplan nach Wochen", planSectionBudget: "Budget nach Kategorie", planSectionBreakEven: "Break-even", planMilestone: "Meilenstein", planTotal: "Gesamt", planAllPhases: "Alle Phasen", planClickHint: "Phase anklicken, um die Schritte zu filtern", planStepHint: "Schritt anklicken für Details", planDuration: "Dauer", planWeeks: "Wochen", planShare: "Anteil am Budget", planSteps: "Schritte", planBudgetLabel: "Budget (€M)", planNoBreakEven: "Keine Gewinnschwelle innerhalb von 3 Jahren",
+    reportAnalysisTitle: "Markt & Unternehmensanalyse",
     reportStrategyTitle: "Markteintrittsstrategie",
     reportGeneratedOn: "Erstellt am",
     reportFor: "Erstellt für",
@@ -1434,31 +1438,31 @@ const T = {
     riskText: {
       market: "Marktnachfrage ist noch nicht validiert, Pilotprojekt empfohlen.",
       competition: "Hohe Wettbewerbsdichte etablierter lokaler Anbieter in diesem Segment.",
-      regulatory: "EU-/nationale Regulatorik (z. B. Finanzaufsicht, CE-Kennzeichnung) kann den Zeitplan verzögern.",
+      regulatory: "EU und nationale Regulatorik (z. B. Finanzaufsicht, CE Kennzeichnung) kann den Zeitplan verzögern.",
       partner: "Geeignete lokale Partner sind begrenzt verfügbar.",
       investment: "Kapitalbedarf für nachhaltige Marktdurchdringung ist hoch."
     },
     nextStepText: {
       nextValidatePilot: "Marktvalidierung via Pilotkunde",
-      nextLegalReview: "Rechtsform, & Compliance-Prüfung",
-      nextPartnerShortlist: "Partnerauswahl (2–3 Kandidaten)",
+      nextLegalReview: "Rechtsform, & Compliance Prüfung",
+      nextPartnerShortlist: "Partnerauswahl (2 bis 3 Kandidaten)",
       nextMarketEntry: "Markteintritt im Zielquartal"
     },
     partnersText: {
       realEstate: "Europäische Immobilienfonds, Projektentwickler, nationale Handelskammern.",
-      sovereignInvestment: "Europäische Banken, Private-Equity-Häuser, nationale Förderbanken.",
-      halalFood: "Halal-zertifizierte Einzelhändler, muslimische Communitys, Lebensmittelverbände.",
-      islamicFinance: "Sharia-konforme Finanzinstitute und Aufsichtsberater im Zielland (z. B. KT Bank AG in Frankfurt).",
-      logistics: "Große Flug- und Seehäfen, Logistikzentren, Speditionen, Zollagenturen.",
+      sovereignInvestment: "Europäische Banken, Private Equity Häuser, nationale Förderbanken.",
+      halalFood: "Halal zertifizierte Einzelhändler, muslimische Communitys, Lebensmittelverbände.",
+      islamicFinance: "Sharia konforme Finanzinstitute und Aufsichtsberater im Zielland (z. B. KT Bank AG in Frankfurt).",
+      logistics: "Große Flug und Seehäfen, Logistikzentren, Speditionen, Zollagenturen.",
       renewableEnergy: "Stadtwerke, Energieversorger, Forschungsinstitute.",
-      luxuryRetail: "Premium-Einkaufsstraßen der europäischen Metropolen, Luxus-Handelsverbände."
+      luxuryRetail: "Premium Einkaufsstraßen der europäischen Metropolen, Luxus Handelsverbände."
     },
     reqField: "Pflichtfeld",
     invalidLogin: "Name oder Passwort falsch.",
-    emailInUse: "Diese E-Mail ist bereits registriert.",
+    emailInUse: "Diese Mail ist bereits registriert.",
     nameInUse: "Dieser Name ist bereits registriert.",
     saveFailed: "Konto konnte nicht gespeichert werden (Verbindungsproblem). Bitte erneut versuchen.",
-    authUnexpectedError: "Anmeldung in dieser Vorschau nicht möglich (fehlender sicherer Browser-Kontext, z. B. in einer eingebetteten Vorschau). Bitte auf der echten Live-Seite testen.",
+    authUnexpectedError: "Anmeldung in dieser Vorschau nicht möglich (fehlender sicherer Browser Kontext, z. B. in einer eingebetteten Vorschau). Bitte auf der echten Live Seite testen.",
     entryPlanTitle: "Planüberblick zum Markteintritt",
     sourcesTitle: "Datenquellen",
     phaseValidation: "Marktvalidierung",
@@ -1477,7 +1481,7 @@ const T = {
     pdfUploadHint: "Firmenprofil, Pitch Deck oder Datenblatt als PDF. Felder werden automatisch befüllt.",
     scanningText: "Dokument wird gescannt …",
     extractedBadge: "Automatisch erkannt, bitte prüfen",
-    csvImportLabel: "CSV-Datei einfügen oder hochladen",
+    csvImportLabel: "CSV Datei einfügen oder hochladen",
     csvPlaceholder: "companyName,industry,product,revenue,budget\nAl Waha Investment Holding (fiktiv),realEstate,Wohnimmobilienportfolio (fiktiv),25,2",
     csvParseBtn: "CSV übernehmen",
     csvParseError: "CSV konnte nicht gelesen werden. Bitte Format prüfen.",
@@ -1497,15 +1501,15 @@ const T = {
     extractNoFields: "Es konnten keine Felder erkannt werden. Bitte Angaben unten manuell eintragen.",
     extractPartial: "Nicht alle Felder konnten erkannt werden. Bitte unten ergänzen.",
     extractFailed: "PDF konnte nicht gelesen werden (evtl. gescanntes Bild ohne Textebene). Bitte Angaben manuell eintragen.",
-    detailedRoadmapTitle: "Detaillierter Schritt-für-Schritt-Plan",
+    detailedRoadmapTitle: "Detaillierter Schritt für Schritt Plan",
     financialModelTitle: "Finanzmodell",
     costBreakdownTitle: "Kostenverteilung nach Kategorie",
-    projectionTitle: "3,Jahres-Prognose: Kosten vs. Umsatz",
+    projectionTitle: "Prognose über 3 Jahre: Kosten vs. Umsatz",
     breakEvenLabel: "Break-even",
-    breakEvenNote: "Geschätzter Break-even",
-    noBreakEven: "Kein Break-even innerhalb von 3 Jahren",
+    breakEvenNote: "Geschätzter Gewinnschwelle",
+    noBreakEven: "Keine Gewinnschwelle innerhalb von 3 Jahren",
     countryFundamentalsTitle: "Standortkennzahlen (echte Daten)",
-    growthTrendTitle: "BIP-Wachstum im Zeitverlauf",
+    growthTrendTitle: "BIP Wachstum im Zeitverlauf",
     marketOpportunityTitle: "Markt-Chance",
     marketOpportunitySubtitle: "Zielgruppe, Nachfragetreiber und aktueller Trend je Land",
     targetAudienceLabel: "Zielgruppe",
@@ -1525,13 +1529,13 @@ const T = {
     forecastLabel: "Prognose",
     germanyFocusTitle: "Deutschland & DACH",
     dachSubtitle: "Hinweise für Unternehmen aus Deutschland, Österreich und der Schweiz",
-    dachBody: "Für DACH-Unternehmen: Deutschland ist mit rund 84 Mio. Einwohnern der größte Binnenmarkt der EU und der natürliche Heimatmarkt für Gründung, Zulassung und Kapitalaufnahme. Österreich und die Schweiz ergänzen ihn mit hoher Kaufkraft und kurzen Wegen. Golf-Kapital nach Sharia-Prinzipien (kein Riba, keine unzulässigen Branchen) findet in Frankfurt Partner wie die KT Bank AG sowie BaFin-regulierte Anlageprodukte (z. B. Murabaha-Strukturen).",
+    dachBody: "Für DACH Unternehmen: Deutschland ist mit rund 84 Mio. Einwohnern der größte Binnenmarkt der EU und der natürliche Heimatmarkt für Gründung, Zulassung und Kapitalaufnahme. Österreich und die Schweiz ergänzen ihn mit hoher Kaufkraft und kurzen Wegen. Kapital aus der Golfregion nach Prinzipien der Scharia (kein Riba, keine unzulässigen Branchen) findet in Frankfurt Partner wie die KT Bank AG sowie BaFin regulierte Anlageprodukte (z. B. Murabaha Strukturen).",
     germanyFocusWinner: "Deutschland ist für dieses Profil auch der empfohlene Zielmarkt.",
     germanyFocusNotWinner: "Empfohlener Zielmarkt für dieses Profil: {country}. Zum Vergleich: Deutschland.",
     germanyFocusRank: "Rang {rank} von {total} im aktuellen Vergleich",
     giiTitle: "GII, Islamic Finance Bereitschaft",
-    giiSubtitle: "Sharia-konforme Finanzierungsoptionen für den europäischen Markt",
-    giiBody: "Golf-Kapital, das nach Sharia-Prinzipien verwaltet wird (kein Riba/Zins, kein Investment in unzulässige Branchen), findet in Deutschland einen etablierten Partner: die KT Bank AG in Frankfurt, Deutschlands erste vollständig Sharia-konforme Bank, 2015 als Tochter der Kuveyt Türk / Kuwait Finance House Gruppe gegründet. Für Finanzierungen ohne Zinsstruktur (z. B. Murabaha) und BaFin-regulierte Anlageprodukte ist Frankfurt als Standort besonders geeignet.",
+    giiSubtitle: "Sharia konforme Finanzierungsoptionen für den europäischen Markt",
+    giiBody: "Kapital aus der Golfregion, das nach Prinzipien der Scharia verwaltet wird (kein Riba/Zins, kein Investment in unzulässige Branchen), findet in Deutschland einen etablierten Partner: die KT Bank AG in Frankfurt, Deutschlands erste vollständig Sharia konforme Bank, 2015 als Tochter der Kuveyt Türk / Kuwait Finance House Gruppe gegründet. Für Finanzierungen ohne Zinsstruktur (z. B. Murabaha) und BaFin regulierte Anlageprodukte ist Frankfurt als Standort besonders geeignet.",
     weekLabel: "Woche",
     weeksLabel: "Wochen",
     yearLabel: "Jahr",
@@ -1541,8 +1545,8 @@ const T = {
     populationLabel: "Bevölkerung (Mio.)",
     gdpPerCapitaLabel: "BIP pro Kopf (USD)",
     gdpGrowthLabel: "BIP-Wachstum",
-    financialDisclaimer: "Vereinfachtes, illustratives Modell auf Basis von Umsatz, Budget und Match-Score, kein Ersatz für einen vollständigen Businessplan.",
-    radarTitle: "Faktor-Vergleich, alle Länder",
+    financialDisclaimer: "Vereinfachtes, illustratives Modell auf Basis von Umsatz, Budget und Match Score, kein Ersatz für einen vollständigen Businessplan.",
+    radarTitle: "Faktor Vergleich, alle Länder",
     radarSubtitle: "Alle fünf Bewertungsfaktoren auf einen Blick",
     positioningTitle: "Strategische Positionierung",
     positioningSubtitle: "Marktattraktivität vs. Wettbewerb, Blasengröße = Investitionspotenzial",
@@ -1557,15 +1561,15 @@ const T = {
     collapseSteps: "Einklappen",
     expandSteps: "Alle Schritte anzeigen",
     steps_: {
-      stepDeskResearch: "Desk Research & Markt-Scoring",
+      stepDeskResearch: "Desk Research & Markt Scoring",
       stepPilotCustomer: "Pilotkunde / Absichtserklärung (LOI)",
       stepJurisdiction: "Rechtsformwahl: GmbH vs. Zweigniederlassung",
       stepCompanyReg: "Gesellschaftsgründung & Handelsregistereintragung im Zielland",
       stepBankAccount: "Eröffnung Geschäftskonto",
-      stepRegulatoryApproval: "Regulatorische Zulassung (z. B. Finanzaufsicht, CE-Kennzeichnung)",
+      stepRegulatoryApproval: "Regulatorische Zulassung (z. B. Finanzaufsicht, CE Kennzeichnung)",
       stepInvestorVisa: "Aufenthaltstitel / Blaue Karte EU",
       stepKeyHires: "Schlüsselpositionen besetzen",
-      stepPartnerShortlist: "Partner-Shortlist erstellen",
+      stepPartnerShortlist: "Partner Shortlist erstellen",
       stepDistributionAgreement: "Vertriebsvertrag unterzeichnen",
       stepSoftLaunch: "Soft Launch",
       stepMarketingLaunch: "Marketing-Launch",
@@ -1582,11 +1586,11 @@ const T = {
     appName: "Europe Market Entry",
     corridorLabel: "Gulf → Europe",
     tagline: "From company profile to European market entry plan",
-    heroSubtext: "Rule-based market analysis, strategic planning and traceable recommendations for your market entry.",
+    heroSubtext: "Rule based market analysis, strategic planning and traceable recommendations for your market entry.",
     rememberMe: "Stay signed in",
     forgotPassword: "Forgot password?",
     forgotPasswordNote: "Not functional in this demo build (no real backend).",
-    demoNotice: "Demo build. Accounts are stored for this session only (no real backend). The production version uses Supabase auth with real per-user data separation.",
+    demoNotice: "Demo build. Accounts are stored for this session only (no real backend). The production version uses Supabase auth with real per user data separation.",
     login: "Log in",
     register: "Create account",
     loginHint: "Sign in with your name and password.",
@@ -1609,10 +1613,10 @@ const T = {
     revenue: "Annual Revenue (€M)",
     budget: "Expansion Budget (€M)",
     employees: "Number of Employees",
-    certifications: "Certifications (comma-separated)",
-    customerSegments: "Customer Segments (comma-separated)",
-    salesChannels: "Sales Channels (comma-separated)",
-    productsText: "Additional Products (comma-separated)",
+    certifications: "Certifications (comma separated)",
+    customerSegments: "Customer Segments (comma separated)",
+    salesChannels: "Sales Channels (comma separated)",
+    productsText: "Additional Products (comma separated)",
     analyze: "Calculate Score",
     back: "Back",
     resultTitle: "Market Entry Score",
@@ -1637,8 +1641,8 @@ const T = {
     entryStrategy: "Entry Strategy",
     prioritySector: "Priority Sector",
     timeline: "Estimated Timeline",
-    timelineShort: "6–9 months",
-    timelineMedium: "9–14 months",
+    timelineShort: "6 to 9 months",
+    timelineMedium: "9 to 14 months",
     timelineLong: "14+ months",
     mainRisks: "Main Risks",
     potentialPartners: "Potential Partners",
@@ -1647,8 +1651,8 @@ const T = {
     exportPdf: "Export as PDF",
     exportPdfAnalysis: "PDF: Market & Company Analysis",
     exportPdfStrategy: "PDF: Market Entry Strategy",
-    exportPdfSummary: "Complete entry plan as PDF", reportSummaryTitle: "Plan Summary", sumScore: "Overall score", sumBudget: "Budget", sumPeriod: "Timeframe", sumBreakEven: "Break-even", sumPhase: "Phase", infoRank: "Rank", infoStrongest: "Strongest factor", infoWeakest: "Weakest factor", infoTrigger: "Trigger", infoAvg: "Avg. of all markets", infoVsTarget: "vs. target market", infoClick: "Click for details", chartHint: "Tip: tap points, segments and bars for details.", chShare: "Share of budget", chSteps: "Steps in this category", chNet: "Net (cumulative)", chCost: "Cumulative cost", chRev: "Cumulative revenue", chBE: "Break-even reached", chNoBE: "Break-even not yet reached", chScoreAt: "Score at this budget", chVsNow: "vs. current budget", chClose: "Close", infoTotal: "of",
-    exportPdfPlan: "PDF: Optimal Entry Plan", reportPlanTitle: "Optimal Entry Plan", planSectionTarget: "Target market and entry", planSectionPhases: "Phases and milestones", planSectionGantt: "Timeline by week", planSectionBudget: "Budget by category", planSectionBreakEven: "Break-even", planMilestone: "Milestone", planTotal: "Total", planAllPhases: "All phases", planClickHint: "Click a phase to filter its steps", planStepHint: "Click a step for details", planDuration: "Duration", planWeeks: "weeks", planShare: "Share of budget", planSteps: "steps", planBudgetLabel: "Budget (€M)", planNoBreakEven: "No break-even within 3 years",
+    exportPdfSummary: "Complete entry plan as PDF", reportSummaryTitle: "Plan Summary", sumScore: "Overall score", sumBudget: "Budget", sumPeriod: "Timeframe", sumBreakEven: "Break-even", sumPhase: "Phase", infoRank: "Rank", infoStrongest: "Strongest factor", infoWeakest: "Weakest factor", infoTrigger: "Trigger", infoAvg: "Avg. of all markets", infoVsTarget: "vs. target market", infoClick: "Click for details", chartHint: "Tip: tap points, segments and bars for details.", chShare: "Share of budget", chSteps: "Steps in this category", chNet: "Net (cumulative)", chCost: "Cumulative cost", chRev: "Cumulative revenue", chBE: "Break even reached", chNoBE: "Break even not yet reached", chScoreAt: "Score at this budget", chVsNow: "vs. current budget", chClose: "Close", infoTotal: "of",
+    exportPdfPlan: "PDF: Optimal Entry Plan", reportPlanTitle: "Optimal Entry Plan", planSectionTarget: "Target market and entry", planSectionPhases: "Phases and milestones", planSectionGantt: "Timeline by week", planSectionBudget: "Budget by category", planSectionBreakEven: "Break-even", planMilestone: "Milestone", planTotal: "Total", planAllPhases: "All phases", planClickHint: "Click a phase to filter its steps", planStepHint: "Click a step for details", planDuration: "Duration", planWeeks: "weeks", planShare: "Share of budget", planSteps: "steps", planBudgetLabel: "Budget (€M)", planNoBreakEven: "No break even within 3 years",
     reportAnalysisTitle: "Market & Company Analysis",
     reportStrategyTitle: "Market Entry Strategy",
     reportGeneratedOn: "Generated on",
@@ -1700,14 +1704,14 @@ const T = {
     nextStepText: {
       nextValidatePilot: "Market validation via pilot customer",
       nextLegalReview: "Legal structure & compliance review",
-      nextPartnerShortlist: "Partner shortlisting (2–3 candidates)",
+      nextPartnerShortlist: "Partner shortlisting (2 to 3 candidates)",
       nextMarketEntry: "Market entry in target quarter"
     },
     partnersText: {
       realEstate: "European real estate funds, project developers, national chambers of commerce.",
       sovereignInvestment: "European banks, private equity firms, national development banks.",
-      halalFood: "Halal-certified retailers, Muslim community networks, food associations.",
-      islamicFinance: "Sharia-compliant financial institutions and supervisory advisors in the target country (e.g. KT Bank AG in Frankfurt).",
+      halalFood: "Halal certified retailers, Muslim community networks, food associations.",
+      islamicFinance: "Sharia compliant financial institutions and supervisory advisors in the target country (e.g. KT Bank AG in Frankfurt).",
       logistics: "Frankfurt Airport logistics centers, freight forwarders, customs agencies.",
       renewableEnergy: "Municipal utilities (Stadtwerke), energy providers, Fraunhofer institutes.",
       luxuryRetail: "Premium shopping districts (Maximilianstraße, Kurfürstendamm), luxury retail associations."
@@ -1735,7 +1739,7 @@ const T = {
     pdfUploadCta: "Upload PDF",
     pdfUploadHint: "Company profile, pitch deck, or data sheet as PDF. Fields are filled in automatically.",
     scanningText: "Scanning document …",
-    extractedBadge: "Auto-detected, please review",
+    extractedBadge: "Auto detected, please review",
     csvImportLabel: "Paste or upload CSV file",
     csvPlaceholder: "companyName,industry,product,revenue,budget\nAl Waha Investment Holding (fictional),realEstate,Residential property portfolio (fictional),25,2",
     csvParseBtn: "Import CSV",
@@ -1756,13 +1760,13 @@ const T = {
     extractNoFields: "No fields could be recognized. Please fill in the details below manually.",
     extractPartial: "Not all fields could be recognized. Please complete the rest below.",
     extractFailed: "The PDF could not be read (it may be a scanned image without a text layer). Please fill in the details manually.",
-    detailedRoadmapTitle: "Detailed Step-by-Step Plan",
+    detailedRoadmapTitle: "Detailed Step by Step Plan",
     financialModelTitle: "Financial Model",
     costBreakdownTitle: "Cost Breakdown by Category",
-    projectionTitle: "3,Year Projection: Cost vs. Revenue",
+    projectionTitle: "Three Year Projection: Cost vs. Revenue",
     breakEvenLabel: "Break-even",
-    breakEvenNote: "Estimated break-even",
-    noBreakEven: "No break-even within 3 years",
+    breakEvenNote: "Estimated break even",
+    noBreakEven: "No break even within 3 years",
     countryFundamentalsTitle: "Hub Fundamentals (Real Data)",
     growthTrendTitle: "GDP Growth Over Time",
     marketOpportunityTitle: "Market Opportunity",
@@ -1784,13 +1788,13 @@ const T = {
     forecastLabel: "Forecast",
     germanyFocusTitle: "Germany & DACH",
     dachSubtitle: "Notes for companies from Germany, Austria and Switzerland",
-    dachBody: "For DACH companies: with roughly 84 million people Germany is the EU's largest single market and the natural home base for incorporation, licensing and raising capital. Austria and Switzerland add high purchasing power and short distances. Gulf capital managed under Sharia principles (no riba, no prohibited sectors) finds partners in Frankfurt such as KT Bank AG as well as BaFin-regulated investment products (e.g. Murabaha structures).",
+    dachBody: "For DACH companies: with roughly 84 million people Germany is the EU's largest single market and the natural home base for incorporation, licensing and raising capital. Austria and Switzerland add high purchasing power and short distances. Gulf capital managed under Sharia principles (no riba, no prohibited sectors) finds partners in Frankfurt such as KT Bank AG as well as BaFin regulated investment products (e.g. Murabaha structures).",
     germanyFocusWinner: "Germany is also the recommended target market for this profile.",
     germanyFocusNotWinner: "Recommended target market for this profile: {country}. For comparison: Germany.",
     germanyFocusRank: "Rank {rank} of {total} in the current comparison",
-    giiTitle: "GII — Islamic Finance Readiness",
-    giiSubtitle: "Sharia-compliant financing options for the European market",
-    giiBody: "Gulf capital managed under Sharia principles (no riba/interest, no investment in prohibited sectors) has an established partner in Germany: KT Bank AG in Frankfurt, Germany's first fully Sharia-compliant bank, founded 2015 as a subsidiary of the Kuveyt Türk / Kuwait Finance House group. For interest-free financing structures (e.g. Murabaha) and BaFin-regulated investment products, Frankfurt is a particularly well-suited location.",
+    giiTitle: "GII, Islamic Finance Readiness",
+    giiSubtitle: "Sharia compliant financing options for the European market",
+    giiBody: "Gulf capital managed under Sharia principles (no riba/interest, no investment in prohibited sectors) has an established partner in Germany: KT Bank AG in Frankfurt, Germany's first fully Sharia compliant bank, founded 2015 as a subsidiary of the Kuveyt Türk / Kuwait Finance House group. For interest free financing structures (e.g. Murabaha) and BaFin regulated investment products, Frankfurt is a particularly well suited location.",
     weekLabel: "week",
     weeksLabel: "weeks",
     yearLabel: "Year",
@@ -1959,7 +1963,7 @@ const T = {
     nextStepText: {
       nextValidatePilot: "التحقق من السوق عبر عميل تجريبي",
       nextLegalReview: "مراجعة الهيكل القانوني والامتثال",
-      nextPartnerShortlist: "اختيار شركاء (٢-٣ مرشحين)",
+      nextPartnerShortlist: "اختيار شركاء (٢ إلى ٣ مرشحين)",
       nextMarketEntry: "دخول السوق في الربع المستهدف"
     },
     partnersText: {
@@ -2047,7 +2051,7 @@ const T = {
     germanyFocusWinner: "ألمانيا هي أيضًا السوق المستهدف الموصى به لهذا الملف.",
     germanyFocusNotWinner: "السوق المستهدف الموصى به لهذا الملف: {country}. للمقارنة: ألمانيا.",
     germanyFocusRank: "المرتبة {rank} من {total} في المقارنة الحالية",
-    giiTitle: "GII — جاهزية التمويل الإسلامي",
+    giiTitle: "GII, جاهزية التمويل الإسلامي",
     giiSubtitle: "خيارات تمويل متوافقة مع الشريعة للسوق الأوروبي",
     giiBody: "رأس المال الخليجي المدار وفق مبادئ الشريعة (بدون ربا، وبدون استثمار في قطاعات محظورة) يجد شريكًا راسخًا في ألمانيا: بنك KT في فرانكفورت، أول بنك ألماني متوافق بالكامل مع الشريعة، تأسس عام ٢٠١٥ كشركة تابعة لمجموعة كويت تورك / بيت التمويل الكويتي. بالنسبة للتمويل الخالي من الفائدة (مثل المرابحة) والمنتجات الاستثمارية الخاضعة لرقابة BaFin، تُعد فرانكفورت موقعًا مناسبًا بشكل خاص.",
     weekLabel: "أسبوع",
@@ -2100,20 +2104,20 @@ const T = {
 /** Illustrative source references shown per target market in the result view. */
 const SOURCES = {
   Germany: [{
-    name: "GTAI – Germany Trade & Invest",
+    name: "GTAI, Germany Trade & Invest",
     url: "gtai.de"
   }, {
-    name: "Destatis – Statistisches Bundesamt",
+    name: "Destatis, Statistisches Bundesamt",
     url: "destatis.de"
   }, {
-    name: "BaFin – Bundesanstalt für Finanzdienstleistungsaufsicht",
+    name: "BaFin, Bundesanstalt für Finanzdienstleistungsaufsicht",
     url: "bafin.de"
   }],
   France: [{
     name: "Business France",
     url: "businessfrance.fr"
   }, {
-    name: "INSEE – Institut national de la statistique",
+    name: "INSEE, Institut national de la statistique",
     url: "insee.fr"
   }, {
     name: "Banque de France",
@@ -2130,20 +2134,20 @@ const SOURCES = {
     url: "fca.org.uk"
   }],
   Italy: [{
-    name: "ITA – Italian Trade Agency",
+    name: "ITA, Italian Trade Agency",
     url: "ice.it"
   }, {
-    name: "ISTAT – Istituto Nazionale di Statistica",
+    name: "ISTAT, Istituto Nazionale di Statistica",
     url: "istat.it"
   }, {
     name: "Banca d'Italia",
     url: "bancaditalia.it"
   }],
   Spain: [{
-    name: "ICEX – Spain Trade and Investment",
+    name: "ICEX, Spain Trade and Investment",
     url: "icex.es"
   }, {
-    name: "INE – Instituto Nacional de Estadística",
+    name: "INE, Instituto Nacional de Estadística",
     url: "ine.es"
   }, {
     name: "Banco de España",
@@ -2153,7 +2157,7 @@ const SOURCES = {
     name: "Netherlands Foreign Investment Agency (NFIA)",
     url: "investinholland.com"
   }, {
-    name: "CBS – Centraal Bureau voor de Statistiek",
+    name: "CBS, Centraal Bureau voor de Statistiek",
     url: "cbs.nl"
   }, {
     name: "De Nederlandsche Bank",
@@ -2330,7 +2334,7 @@ async function extractTextFromPdf(file) {
   }
   const raw = latin(bytes);
   if (/\/Encrypt\b/.test(raw.slice(Math.max(0, raw.length - 4000)))) {
-    throw new Error("PDF is password-protected / encrypted");
+    throw new Error("PDF is password protected / encrypted");
   }
   const objs = new Map();
   const objRe = /(\d+)\s+(\d+)\s+obj\b/g;
@@ -2895,30 +2899,30 @@ function ReportSources({ sources, t }) {
 
 const PL = {
   de: {
-    kind: "Kompletter Entry-Plan", cover: "Umsetzungsplan für den Markteintritt", exec: "Zusammenfassung", why: "Warum dieser Markt?", ranking: "Vergleich aller Märkte", factor: "Faktor", overall: "Gesamt",
+    kind: "Kompletter Eintrittsplan", cover: "Umsetzungsplan für den Markteintritt", exec: "Zusammenfassung", why: "Warum dieser Markt?", ranking: "Vergleich aller Märkte", factor: "Faktor", overall: "Gesamt",
     whyText: "{c} erzielt mit {s}/100 den höchsten Gesamtscore aller geprüften Märkte. Stärkste Faktoren: {a} ({av}) und {b} ({bv}); schwächster Faktor: {w} ({wv}).", strat: "Eintrittsstrategie & Partner", market: "Marktprofil",
     pop: "Einwohner (Mio.)", gdpc: "BIP pro Kopf (USD)", growth: "BIP-Wachstum", gdp: "BIP (Mrd. USD)", audience: "Zielgruppe", drivers: "Wachstumstreiber", trend: "Trend", players: "Wichtige Wettbewerber", gap: "Marktlücke", tax: "Körperschaftsteuer", vat: "Umsatzsteuer", lic: "Genehmigungen / Gründung", culture: "Geschäftskultur",
-    timeline: "Zeitplan & Entscheidungspunkte", gantt: "Wochenplan (Gantt)", steps: "Detailplan: alle Schritte", step: "Schritt", phase: "Phase", cat: "Kategorie", weeks: "Wochen", cost: "Kosten", first90: "Die ersten 90 Tage", first90Intro: "Diese Schritte starten innerhalb der ersten 13 Wochen und müssen zuerst beauftragt werden:", budget: "Budget & Finanzplan", year: "Jahr", c: "Kosten kum.", r: "Umsatz kum.", n: "Netto", risks: "Risiken & Gegenmaßnahmen", next: "Nächste Schritte (sofort)", gate: "Go/No-Go", assumptions: "Annahmen: vereinfachtes, illustratives Modell – Umsatz = Anteil des Heimatumsatzes, skaliert mit dem Marktscore; Kosten = Setup-Budget im ersten Jahr, danach reduzierte Betriebskosten.", sources: "Quellen", of: "von", wk: "Woche", page: "Seite",
-    gates: ["Pilotkunde bestätigt Nachfrage, Zielmarkt und Budget freigegeben", "Rechtsform gegründet, Konto eröffnet, Genehmigungen beantragt/erteilt", "Partner unter Vertrag, Kernteam besetzt, Preise & Vertragsrahmen stehen", "Soft-Launch ausgewertet, erste Umsätze, Skalierungsentscheidung"],
-    mit: { market: "Pilotprojekt mit 1–2 Kunden vor Vollinvestition; Nachfrage-KPIs (Angebote, Pilotumsatz) definieren.", competition: "Klare Nischenpositionierung; Differenzierung über Spezialisierung statt Preis.", regulatory: "Frühzeitig Rechts- und Steuerberater vor Ort einbinden; Genehmigungen parallel zum Setup beantragen.", partner: "2–3 Partnerkandidaten parallel prüfen; Exklusivität erst nach Pilotphase vergeben.", investment: "Budget in Tranchen freigeben, gekoppelt an die Go/No-Go-Punkte der Phasen." }, mitL: "Gegenmaßnahme",
-    notice: "Hinweis: Dieser Plan ist eine regelbasierte Entscheidungsgrundlage und ersetzt keine individuelle Rechts-, Steuer- oder Unternehmensberatung."
+    timeline: "Zeitplan & Entscheidungspunkte", gantt: "Wochenplan (Gantt)", steps: "Detailplan: alle Schritte", step: "Schritt", phase: "Phase", cat: "Kategorie", weeks: "Wochen", cost: "Kosten", first90: "Die ersten 90 Tage", first90Intro: "Diese Schritte starten innerhalb der ersten 13 Wochen und müssen zuerst beauftragt werden:", budget: "Budget & Finanzplan", year: "Jahr", c: "Kosten kum.", r: "Umsatz kum.", n: "Netto", risks: "Risiken & Gegenmaßnahmen", next: "Nächste Schritte (sofort)", gate: "Go/No-Go", assumptions: "Annahmen: vereinfachtes, illustratives Modell, Umsatz = Anteil des Heimatumsatzes, skaliert mit dem Marktscore; Kosten = Setup Budget im ersten Jahr, danach reduzierte Betriebskosten.", sources: "Quellen", of: "von", wk: "Woche", page: "Seite",
+    gates: ["Pilotkunde bestätigt Nachfrage, Zielmarkt und Budget freigegeben", "Rechtsform gegründet, Konto eröffnet, Genehmigungen beantragt/erteilt", "Partner unter Vertrag, Kernteam besetzt, Preise & Vertragsrahmen stehen", "Soft Launch ausgewertet, erste Umsätze, Skalierungsentscheidung"],
+    mit: { market: "Pilotprojekt mit 1 bis 2 Kunden vor Vollinvestition; Nachfrage KPIs (Angebote, Pilotumsatz) definieren.", competition: "Klare Nischenpositionierung; Differenzierung über Spezialisierung statt Preis.", regulatory: "Frühzeitig Rechts und Steuerberater vor Ort einbinden; Genehmigungen parallel zum Setup beantragen.", partner: "2 bis 3 Partnerkandidaten parallel prüfen; Exklusivität erst nach Pilotphase vergeben.", investment: "Budget in Tranchen freigeben, gekoppelt an die Go/No Go Punkte der Phasen." }, mitL: "Gegenmaßnahme",
+    notice: "Hinweis: Dieser Plan ist eine regelbasierte Entscheidungsgrundlage und ersetzt keine individuelle Rechtsberatung, Steuerberatung oder Unternehmensberatung."
   },
   en: {
     kind: "Complete Entry Plan", cover: "Market entry execution plan", exec: "Executive summary", why: "Why this market?", ranking: "Comparison of all markets", factor: "Factor", overall: "Overall",
     whyText: "{c} scores {s}/100, the highest overall score of all markets reviewed. Strongest factors: {a} ({av}) and {b} ({bv}); weakest factor: {w} ({wv}).", strat: "Entry strategy & partners", market: "Market profile",
     pop: "Population (m)", gdpc: "GDP per capita (USD)", growth: "GDP growth", gdp: "GDP (bn USD)", audience: "Target audience", drivers: "Growth drivers", trend: "Trend", players: "Key competitors", gap: "Market gap", tax: "Corporate tax", vat: "VAT", lic: "Licensing / incorporation", culture: "Business culture",
-    timeline: "Timeline & decision gates", gantt: "Week plan (Gantt)", steps: "Detailed plan: all steps", step: "Step", phase: "Phase", cat: "Category", weeks: "Weeks", cost: "Cost", first90: "The first 90 days", first90Intro: "These steps start within the first 13 weeks and have to be commissioned first:", budget: "Budget & financial plan", year: "Year", c: "Cum. cost", r: "Cum. revenue", n: "Net", risks: "Risks & mitigation", next: "Next steps (immediately)", gate: "Go/No-Go", assumptions: "Assumptions: simplified, illustrative model – revenue = share of home revenue scaled by the market score; cost = set-up budget in year one, reduced operating cost afterwards.", sources: "Sources", of: "of", wk: "Week", page: "Page",
-    gates: ["Pilot customer confirms demand, target market and budget approved", "Entity formed, bank account open, permits applied for/granted", "Partner contracted, core team in place, pricing and contract framework set", "Soft launch reviewed, first revenue, scale-up decision"],
-    mit: { market: "Run a pilot with 1–2 customers before full investment; define demand KPIs (offers, pilot revenue).", competition: "Position clearly in a niche; differentiate by specialisation, not price.", regulatory: "Involve local legal and tax advisers early; apply for permits in parallel with set-up.", partner: "Evaluate 2–3 partner candidates in parallel; grant exclusivity only after the pilot.", investment: "Release the budget in tranches tied to the phase go/no-go gates." }, mitL: "Mitigation",
-    notice: "Note: this plan is a rule-based basis for decisions and does not replace individual legal, tax or business advice."
+    timeline: "Timeline & decision gates", gantt: "Week plan (Gantt)", steps: "Detailed plan: all steps", step: "Step", phase: "Phase", cat: "Category", weeks: "Weeks", cost: "Cost", first90: "The first 90 days", first90Intro: "These steps start within the first 13 weeks and have to be commissioned first:", budget: "Budget & financial plan", year: "Year", c: "Cum. cost", r: "Cum. revenue", n: "Net", risks: "Risks & mitigation", next: "Next steps (immediately)", gate: "Go/No-Go", assumptions: "Assumptions: simplified, illustrative model, revenue = share of home revenue scaled by the market score; cost = set up budget in year one, reduced operating cost afterwards.", sources: "Sources", of: "of", wk: "Week", page: "Page",
+    gates: ["Pilot customer confirms demand, target market and budget approved", "Entity formed, bank account open, permits applied for/granted", "Partner contracted, core team in place, pricing and contract framework set", "Soft launch reviewed, first revenue, scale up decision"],
+    mit: { market: "Run a pilot with 1 to 2 customers before full investment; define demand KPIs (offers, pilot revenue).", competition: "Position clearly in a niche; differentiate by specialisation, not price.", regulatory: "Involve local legal and tax advisers early; apply for permits in parallel with set up.", partner: "Evaluate 2 to 3 partner candidates in parallel; grant exclusivity only after the pilot.", investment: "Release the budget in tranches tied to the phase go/no go gates." }, mitL: "Mitigation",
+    notice: "Note: this plan is a rule based basis for decisions and does not replace individual legal, tax or business advice."
   },
   ar: {
     kind: "خطة الدخول الكاملة", cover: "خطة تنفيذ دخول السوق", exec: "ملخص تنفيذي", why: "لماذا هذا السوق؟", ranking: "مقارنة جميع الأسواق", factor: "العامل", overall: "الإجمالي",
     whyText: "حقق {c} {s}/100، وهي أعلى نتيجة إجمالية بين الأسواق التي تمت مراجعتها. أقوى العوامل: {a} ({av}) و{b} ({bv})؛ وأضعف عامل: {w} ({wv}).", strat: "استراتيجية الدخول والشركاء", market: "نبذة عن السوق",
     pop: "السكان (مليون)", gdpc: "الناتج للفرد (دولار)", growth: "نمو الناتج", gdp: "الناتج المحلي (مليار دولار)", audience: "الجمهور المستهدف", drivers: "محركات النمو", trend: "الاتجاه", players: "أبرز المنافسين", gap: "فجوة السوق", tax: "ضريبة الشركات", vat: "ضريبة القيمة المضافة", lic: "التراخيص / التأسيس", culture: "ثقافة الأعمال",
-    timeline: "الجدول الزمني ونقاط القرار", gantt: "الخطة الأسبوعية", steps: "الخطة التفصيلية: كل الخطوات", step: "الخطوة", phase: "المرحلة", cat: "الفئة", weeks: "الأسابيع", cost: "التكلفة", first90: "أول ٩٠ يومًا", first90Intro: "تبدأ هذه الخطوات خلال أول ١٣ أسبوعًا ويجب إطلاقها أولًا:", budget: "الميزانية والخطة المالية", year: "السنة", c: "التكلفة التراكمية", r: "الإيرادات التراكمية", n: "الصافي", risks: "المخاطر وإجراءات المعالجة", next: "الخطوات التالية (فورًا)", gate: "قرار المتابعة", assumptions: "الافتراضات: نموذج مبسّط توضيحي – الإيرادات = نسبة من إيرادات السوق الأم مضروبة في تقييم السوق؛ التكلفة = ميزانية التأسيس في السنة الأولى ثم تكاليف تشغيل أقل.", sources: "المصادر", of: "من", wk: "أسبوع", page: "صفحة",
+    timeline: "الجدول الزمني ونقاط القرار", gantt: "الخطة الأسبوعية", steps: "الخطة التفصيلية: كل الخطوات", step: "الخطوة", phase: "المرحلة", cat: "الفئة", weeks: "الأسابيع", cost: "التكلفة", first90: "أول ٩٠ يومًا", first90Intro: "تبدأ هذه الخطوات خلال أول ١٣ أسبوعًا ويجب إطلاقها أولًا:", budget: "الميزانية والخطة المالية", year: "السنة", c: "التكلفة التراكمية", r: "الإيرادات التراكمية", n: "الصافي", risks: "المخاطر وإجراءات المعالجة", next: "الخطوات التالية (فورًا)", gate: "قرار المتابعة", assumptions: "الافتراضات: نموذج مبسّط توضيحي، الإيرادات = نسبة من إيرادات السوق الأم مضروبة في تقييم السوق؛ التكلفة = ميزانية التأسيس في السنة الأولى ثم تكاليف تشغيل أقل.", sources: "المصادر", of: "من", wk: "أسبوع", page: "صفحة",
     gates: ["عميل تجريبي يؤكد الطلب واعتماد السوق والميزانية", "تأسيس الكيان وفتح الحساب وتقديم/منح التراخيص", "التعاقد مع الشريك واكتمال الفريق الأساسي وتحديد الأسعار والإطار التعاقدي", "تقييم الإطلاق التجريبي وأولى الإيرادات وقرار التوسع"],
-    mit: { market: "تنفيذ مشروع تجريبي مع عميل أو اثنين قبل الاستثمار الكامل وتحديد مؤشرات الطلب.", competition: "التموضع الواضح في نيش محدد والتميّز بالتخصص لا بالسعر.", regulatory: "إشراك مستشارين قانونيين وضريبيين محليين مبكرًا وتقديم التراخيص بالتوازي مع التأسيس.", partner: "تقييم ٢–٣ شركاء محتملين بالتوازي ومنح الحصرية بعد المرحلة التجريبية فقط.", investment: "صرف الميزانية على دفعات مرتبطة بنقاط القرار في كل مرحلة." }, mitL: "المعالجة",
+    mit: { market: "تنفيذ مشروع تجريبي مع عميل أو اثنين قبل الاستثمار الكامل وتحديد مؤشرات الطلب.", competition: "التموضع الواضح في نيش محدد والتميّز بالتخصص لا بالسعر.", regulatory: "إشراك مستشارين قانونيين وضريبيين محليين مبكرًا وتقديم التراخيص بالتوازي مع التأسيس.", partner: "تقييم ٢ إلى ٣ شركاء محتملين بالتوازي ومنح الحصرية بعد المرحلة التجريبية فقط.", investment: "صرف الميزانية على دفعات مرتبطة بنقاط القرار في كل مرحلة." }, mitL: "المعالجة",
     notice: "ملاحظة: هذه الخطة أساس قرار قائم على قواعد ولا تغني عن الاستشارة القانونية أو الضريبية أو التجارية."
   }
 };
@@ -3023,7 +3027,7 @@ function PlanReportDoc({ rec, t, lang, entryPlanDisplay, detailedSteps, finModel
           <thead><tr><th style={th}>{L.phase}</th><th style={th}>{t.month}</th><th style={th}>{L.gate}</th></tr></thead>
           <tbody>{entryPlanDisplay.map((p, i) => <tr key={i} style={{ breakInside: "avoid" }}>
             <td style={{ ...td, fontWeight: 700 }}><span style={{ display: "inline-block", width: 8, height: 8, borderRadius: 4, background: phaseColors[i % 4], marginInlineEnd: 6, ...exact }} />{p.label}</td>
-            <td style={{ ...td, whiteSpace: "nowrap" }}>{p.startMonth}–{p.endMonth}</td>
+            <td style={{ ...td, whiteSpace: "nowrap" }}>{p.startMonth} {RANGE[lang]} {p.endMonth}</td>
             <td style={td}>{L.gates[i % 4]}</td></tr>)}</tbody>
         </table>
         <p style={{ fontWeight: 700, margin: "0 0 6px" }}>{L.gantt}</p>
@@ -3043,13 +3047,13 @@ function PlanReportDoc({ rec, t, lang, entryPlanDisplay, detailedSteps, finModel
           <thead><tr><th style={th}>#</th><th style={th}>{L.step}</th><th style={th}>{L.phase}</th><th style={th}>{L.cat}</th><th style={th}>{L.weeks}</th><th style={th}>{L.cost} ({t.costEurLabel})</th></tr></thead>
           <tbody>{detailedSteps.map((s, i) => <tr key={s.key} style={{ breakInside: "avoid" }}>
             <td style={td}>{i + 1}</td><td style={{ ...td, fontWeight: 600 }}>{t.steps_[s.key]}</td><td style={td}>{t[s.phase]}</td><td style={td}>{t[s.category]}</td>
-            <td style={{ ...td, whiteSpace: "nowrap" }}>{s.startWeek + 1}–{s.startWeek + s.durationWeeks}</td><td style={td}>{s.costEurM}</td></tr>)}</tbody>
+            <td style={{ ...td, whiteSpace: "nowrap" }}>{s.startWeek + 1} {RANGE[lang]} {s.startWeek + s.durationWeeks}</td><td style={td}>{s.costEurM}</td></tr>)}</tbody>
         </table>
       </Sec>
       {/* 7 FIRST 90 */}
       <Sec title={`7. ${L.first90}`}>
         <p style={{ margin: "0 0 6px" }}>{L.first90Intro}</p>
-        <ol style={{ margin: 0, paddingInlineStart: 18, listStyle: "decimal" }}>{first90.map(s => <li key={s.key} style={{ marginBottom: 2 }}><strong>{t.steps_[s.key]}</strong> – {L.wk} {s.startWeek + 1}–{s.startWeek + s.durationWeeks} · {s.costEurM} {t.costEurLabel}</li>)}</ol>
+        <ol style={{ margin: 0, paddingInlineStart: 18, listStyle: "decimal" }}>{first90.map(s => <li key={s.key} style={{ marginBottom: 2 }}><strong>{t.steps_[s.key]}</strong> – {L.wk} {s.startWeek + 1} {RANGE[lang]} {s.startWeek + s.durationWeeks} · {s.costEurM} {t.costEurLabel}</li>)}</ol>
       </Sec>
       {/* 8 BUDGET */}
       <Sec title={`8. ${L.budget}`} newPage>
@@ -3087,9 +3091,9 @@ function PlanReportDoc({ rec, t, lang, entryPlanDisplay, detailedSteps, finModel
 }
 
 const SB_TEXT = {
-  de: { unconfirmed: "Mail noch nicht bestätigt. Bitte den Link in der Mail öffnen.", network: "Keine Verbindung. Bitte Netz prüfen.", loginHint: "Mit E-Mail und Passwort anmelden.", regHint: "Konto mit E-Mail und Passwort erstellen.", email: "E-Mail", name: "Name", pw: "Passwort", pwHint: "Mindestens 10 Zeichen.", confirmSent: "Fast geschafft: Wir haben dir eine Bestätigungs-E-Mail geschickt. Bitte bestätige sie und melde dich dann an.", invalid: "E-Mail oder Passwort stimmt nicht.", rate: "Zu viele Versuche. Bitte warte einen Moment.", locked: "Zu viele Fehlversuche. Bitte warte eine Minute.", weak: "Bitte ein Passwort mit mindestens 10 Zeichen verwenden.", generic: "Das hat nicht geklappt. Bitte versuche es erneut.", forgot: "Passwort vergessen?", forgotTitle: "Passwort zurücksetzen", forgotSend: "Link senden", forgotSent: "Wenn ein Konto zu dieser E-Mail existiert, ist ein Link unterwegs.", back: "Zurück zur Anmeldung", newPw: "Neues Passwort", savePw: "Passwort speichern", pwSaved: "Passwort geändert.", or: "oder", cont: "Weiter mit", account: "Konto", del: "Konto löschen", delSure: "Wirklich alle Daten löschen? Zum Bestätigen erneut klicken.", deleted: "Dein Konto und alle Daten wurden gelöscht.", consent: "Mit der Registrierung stimmst du der", privacy: "Datenschutzerklärung", and: "und den", terms: "AGB", agree: "zu." },
-  en: { unconfirmed: "Email not confirmed yet. Please open the link in the email.", network: "No connection. Please check your network.", loginHint: "Sign in with email and password.", regHint: "Create an account with email and password.", email: "Email", name: "Name", pw: "Password", pwHint: "At least 10 characters.", confirmSent: "Almost done: we sent you a confirmation email. Please confirm it, then sign in.", invalid: "Email or password is incorrect.", rate: "Too many attempts. Please wait a moment.", locked: "Too many failed attempts. Please wait a minute.", weak: "Please use a password with at least 10 characters.", generic: "That did not work. Please try again.", forgot: "Forgot password?", forgotTitle: "Reset password", forgotSend: "Send link", forgotSent: "If an account exists for this email, a link is on its way.", back: "Back to sign in", newPw: "New password", savePw: "Save password", pwSaved: "Password changed.", or: "or", cont: "Continue with", account: "Account", del: "Delete account", delSure: "Delete all data for good? Click again to confirm.", deleted: "Your account and all data were deleted.", consent: "By registering you agree to the", privacy: "Privacy Policy", and: "and the", terms: "Terms", agree: "." },
-  ar: { unconfirmed: "لم يتم تأكيد البريد بعد. افتح الرابط في الرسالة.", network: "لا يوجد اتصال. تحقق من الشبكة.", loginHint: "سجّل الدخول بالبريد الإلكتروني وكلمة المرور.", regHint: "أنشئ حسابًا بالبريد الإلكتروني وكلمة المرور.", email: "البريد الإلكتروني", name: "الاسم", pw: "كلمة المرور", pwHint: "10 أحرف على الأقل.", confirmSent: "اقتربت من الإنهاء: أرسلنا لك رسالة تأكيد. يرجى تأكيدها ثم تسجيل الدخول.", invalid: "البريد الإلكتروني أو كلمة المرور غير صحيحة.", rate: "محاولات كثيرة. يرجى الانتظار قليلًا.", locked: "محاولات فاشلة كثيرة. يرجى الانتظار دقيقة.", weak: "يرجى استخدام كلمة مرور من 10 أحرف على الأقل.", generic: "لم تنجح العملية. يرجى المحاولة مرة أخرى.", forgot: "نسيت كلمة المرور؟", forgotTitle: "إعادة تعيين كلمة المرور", forgotSend: "إرسال الرابط", forgotSent: "إذا كان هناك حساب لهذا البريد، فالرابط في الطريق.", back: "العودة إلى تسجيل الدخول", newPw: "كلمة مرور جديدة", savePw: "حفظ كلمة المرور", pwSaved: "تم تغيير كلمة المرور.", or: "أو", cont: "المتابعة عبر", account: "الحساب", del: "حذف الحساب", delSure: "هل تريد حذف كل البيانات نهائيًا؟ انقر مرة أخرى للتأكيد.", deleted: "تم حذف حسابك وكل بياناتك.", consent: "بالتسجيل فإنك توافق على", privacy: "سياسة الخصوصية", and: "و", terms: "الشروط", agree: "." }
+  de: { unconfirmed: "Mail noch nicht bestätigt. Bitte den Link in der Mail öffnen.", network: "Keine Verbindung. Bitte Netz prüfen.", loginHint: "Anmeldung mit Ihrem Google Konto.", regHint: "Konto mit Mail und Passwort erstellen.", email: "E-Mail", name: "Name", pw: "Passwort", pwHint: "Mindestens 10 Zeichen.", confirmSent: "Fast geschafft: Wir haben dir eine Bestätigungs Mail geschickt. Bitte bestätige sie und melde dich dann an.", invalid: "Mail oder Passwort stimmt nicht.", rate: "Zu viele Versuche. Bitte warte einen Moment.", locked: "Zu viele Fehlversuche. Bitte warte eine Minute.", weak: "Bitte ein Passwort mit mindestens 10 Zeichen verwenden.", generic: "Das hat nicht geklappt. Bitte versuche es erneut.", forgot: "Passwort vergessen?", forgotTitle: "Passwort zurücksetzen", forgotSend: "Link senden", forgotSent: "Wenn ein Konto zu dieser Mail existiert, ist ein Link unterwegs.", back: "Zurück zur Anmeldung", newPw: "Neues Passwort", savePw: "Passwort speichern", pwSaved: "Passwort geändert.", or: "oder", cont: "Weiter mit", account: "Konto", del: "Konto löschen", delSure: "Wirklich alle Daten löschen? Zum Bestätigen erneut klicken.", deleted: "Dein Konto und alle Daten wurden gelöscht.", consent: "Mit der Registrierung stimmst du der", privacy: "Datenschutzerklärung", and: "und den", terms: "AGB", agree: "zu." },
+  en: { unconfirmed: "Email not confirmed yet. Please open the link in the email.", network: "No connection. Please check your network.", loginHint: "Sign in with your Google account.", regHint: "Create an account with email and password.", email: "Email", name: "Name", pw: "Password", pwHint: "At least 10 characters.", confirmSent: "Almost done: we sent you a confirmation email. Please confirm it, then sign in.", invalid: "Email or password is incorrect.", rate: "Too many attempts. Please wait a moment.", locked: "Too many failed attempts. Please wait a minute.", weak: "Please use a password with at least 10 characters.", generic: "That did not work. Please try again.", forgot: "Forgot password?", forgotTitle: "Reset password", forgotSend: "Send link", forgotSent: "If an account exists for this email, a link is on its way.", back: "Back to sign in", newPw: "New password", savePw: "Save password", pwSaved: "Password changed.", or: "or", cont: "Continue with", account: "Account", del: "Delete account", delSure: "Delete all data for good? Click again to confirm.", deleted: "Your account and all data were deleted.", consent: "By registering you agree to the", privacy: "Privacy Policy", and: "and the", terms: "Terms", agree: "." },
+  ar: { unconfirmed: "لم يتم تأكيد البريد بعد. افتح الرابط في الرسالة.", network: "لا يوجد اتصال. تحقق من الشبكة.", loginHint: "سجّل الدخول عبر حساب Google.", regHint: "أنشئ حسابًا بالبريد الإلكتروني وكلمة المرور.", email: "البريد الإلكتروني", name: "الاسم", pw: "كلمة المرور", pwHint: "10 أحرف على الأقل.", confirmSent: "اقتربت من الإنهاء: أرسلنا لك رسالة تأكيد. يرجى تأكيدها ثم تسجيل الدخول.", invalid: "البريد الإلكتروني أو كلمة المرور غير صحيحة.", rate: "محاولات كثيرة. يرجى الانتظار قليلًا.", locked: "محاولات فاشلة كثيرة. يرجى الانتظار دقيقة.", weak: "يرجى استخدام كلمة مرور من 10 أحرف على الأقل.", generic: "لم تنجح العملية. يرجى المحاولة مرة أخرى.", forgot: "نسيت كلمة المرور؟", forgotTitle: "إعادة تعيين كلمة المرور", forgotSend: "إرسال الرابط", forgotSent: "إذا كان هناك حساب لهذا البريد، فالرابط في الطريق.", back: "العودة إلى تسجيل الدخول", newPw: "كلمة مرور جديدة", savePw: "حفظ كلمة المرور", pwSaved: "تم تغيير كلمة المرور.", or: "أو", cont: "المتابعة عبر", account: "الحساب", del: "حذف الحساب", delSure: "هل تريد حذف كل البيانات نهائيًا؟ انقر مرة أخرى للتأكيد.", deleted: "تم حذف حسابك وكل بياناتك.", consent: "بالتسجيل فإنك توافق على", privacy: "سياسة الخصوصية", and: "و", terms: "الشروط", agree: "." }
 };
 const AUTH_TEXT = {
   de: { hint: "Falls das dein Konto ist, melde dich an. Mit gleichem Passwort wirst du automatisch angemeldet.", reset: "Gespeicherte Konten auf diesem Gerät zurücksetzen", resetSure: "Wirklich alle Konten auf diesem Gerät löschen? Zum Bestätigen erneut klicken.", resetDone: "Alle Konten auf diesem Gerät wurden gelöscht. Du kannst neu starten." },
@@ -3102,20 +3106,20 @@ const LAND_TEXT = {
     feats: [
       ["Marktscoring", "Fünf Bewertungsfaktoren pro Land: Attraktivität, Wettbewerb, Regulatorik, Partner und Investitionsklima."],
       ["Unternehmensprofil", "Kennzahlen, Zertifizierungen, Kundensegmente und Vertriebskanäle werden strukturiert erfasst."],
-      ["PDF- und CSV-Import", "Unternehmensdaten aus Dokumenten oder Tabellen übernehmen, statt alles neu einzutippen."],
+      ["PDF und CSV Import", "Unternehmensdaten aus Dokumenten oder Tabellen übernehmen, statt alles neu einzutippen."],
       ["Empfehlung mit Begründung", "Zielmarkt, Einstiegsstrategie, Risiken und potenzielle Partner nachvollziehbar hergeleitet."],
-      ["Roadmap und Break-even", "Schritt-für-Schritt-Plan, Jahresprognose und Budget-Sensitivität."],
-      ["Kompletter Entry-Plan als PDF", "Mehrseitiger Umsetzungsplan für den bestplatzierten Markt: Begründung, Marktprofil, Zeitplan, alle Schritte, Budget, Risiken und Quellen."]
+      ["Roadmap und Gewinnschwelle", "Schritt für Schritt Plan, Jahresprognose und Budgetsensitivität."],
+      ["Kompletter Eintrittsplan als PDF", "Mehrseitiger Umsetzungsplan für den bestplatzierten Markt: Begründung, Marktprofil, Zeitplan, alle Schritte, Budget, Risiken und Quellen."]
     ],
     flowTitle: "Ablauf der Analyse",
     flow: ["Profil erfassen", "Score berechnen", "Märkte vergleichen", "Empfehlung prüfen", "Report exportieren"],
     reportTitle: "Was ein Report enthält",
-    report: ["Ländervergleich mit Gesamtscore", "Faktor-Vergleich aller Länder", "Strategische Positionierung", "Empfehlung mit Zeitrahmen", "Risiken und nächste Schritte", "Planüberblick zum Markteintritt"],
+    report: ["Ländervergleich mit Gesamtscore", "Faktor Vergleich aller Länder", "Strategische Positionierung", "Empfehlung mit Zeitrahmen", "Risiken und nächste Schritte", "Planüberblick zum Markteintritt"],
     trustTitle: "Methodik und Datenschutz",
     trust: [
       ["Methodik", "Der Score gewichtet fünf Faktoren je Zielmarkt. Die Herleitung ist im Ergebnis einsehbar."],
       ["Datengrundlage", "Ihre eigenen Unternehmensangaben und hinterlegte Länderkennzahlen wie Bevölkerung und BIP."],
-      ["Datenschutz", (backend.enabled ? "Konten und Analysen liegen in einer geschützten Datenbank. Jede Person sieht nur ihre eigenen Daten. Details in der Datenschutzerklärung." : "Demo-Version: Konten und Analysen bleiben in Ihrem Browser. Kein Server, kein E-Mail-Versand.")]
+      ["Datenschutz", (backend.enabled ? "Konten und Analysen liegen in einer geschützten Datenbank. Jede Person sieht nur ihre eigenen Daten. Details in der Datenschutzerklärung." : "Demo Version: Konten und Analysen bleiben in Ihrem Browser. Kein Server, kein MailVersand.")]
     ],
     footer: "Konzept, Datenmodell und Design von Nadin Okil · Demo mit fiktiven Testdaten"
   },
@@ -3126,8 +3130,8 @@ const LAND_TEXT = {
       ["Company profile", "Key figures, certifications, customer segments and sales channels captured in a structured way."],
       ["PDF and CSV import", "Take company data from documents or spreadsheets instead of retyping it."],
       ["Reasoned recommendation", "Target market, entry strategy, risks and potential partners, traceably derived."],
-      ["Roadmap and break-even", "Step-by-step plan, annual forecast and budget sensitivity."],
-      ["Complete entry plan as PDF", "Multi-page execution plan for the best-ranked market: rationale, market profile, timeline, all steps, budget, risks and sources."]
+      ["Roadmap and break even", "Step by step plan, annual forecast and budget sensitivity."],
+      ["Complete entry plan as PDF", "Multi page execution plan for the best ranked market: rationale, market profile, timeline, all steps, budget, risks and sources."]
     ],
     flowTitle: "How the analysis works",
     flow: ["Capture profile", "Calculate score", "Compare markets", "Review recommendation", "Export report"],
@@ -3271,7 +3275,7 @@ function Header({
     borderBottom: `1px solid ${lineColor}`
   }}>
       <div className="flex items-center gap-3 cursor-pointer" onClick={onLogoClick}>
-        <img src={MARK_IMG} alt="" style={{ height: 30, width: "auto" }} />
+        <img src={COIN} alt="" style={{ height: 32, width: 32, borderRadius: "50%" }} />
         <span style={{
         fontFamily: "'Inter','Noto Sans Arabic',system-ui,sans-serif",
         color: ink,
@@ -3285,6 +3289,7 @@ function Header({
         color: subtleInk,
         fontFamily: "'Inter','Noto Sans Arabic',system-ui,sans-serif"
       }}>{lang === "ar" ? "كل الأدوات" : lang === "en" ? "All tools" : "Alle Tools"}</button>}
+        <ThemeToggle dark={dark} lang={lang} onToggle={() => setDark(!dark)} color={subtleInk} border={lineColor} />
         <div className="flex rounded-md overflow-hidden" style={{
         border: `1px solid ${lineColor}`
       }}>
@@ -3481,7 +3486,8 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
   });
   useEffect(() => { try { window.localStorage.setItem("ui_lang", lang); } catch (e) { /* ignore */ } }, [lang]);
   const { REGULATORY_CHECK, COMPETITOR_ANALYSIS, MARKET_OPPORTUNITY } = intelFor(lang);
-  const [dark, setDark] = useState(true);
+  const [dark, setDark] = useState(readTheme);
+  useEffect(() => { writeTheme(dark); }, [dark]);
   /** Real, persisted multi-user accounts via the artifact storage API — survives reloads and works across visitors of this tool link. Accounts are stored under a shared key so anyone who registers can log back in from any session; each account only needs a name + password. This is still a demo-grade auth (no hashing, no real backend server) — good enough for a working multi-user prototype, not for handling sensitive real passwords. */
   const [db, setDb] = useState({});
   const [dbLoaded, setDbLoaded] = useState(false);
@@ -3814,7 +3820,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
   });
   async function sbSocial(p) {
     setAuthError("");
-    if (view === "register" && !consent) { setConsentErr(legalPack(lang).consent.error); return; }
+    if (!consent) { setConsentErr(legalPack(lang).consent.error); return; }
     const r = await backend.signInOAuth(p);
     if (!r.ok) setAuthError(SBT.generic);
   }
@@ -4190,6 +4196,14 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
     setView("newAnalysis");
   }
 
+  // Start option chosen in the hub ("Mit Demodaten testen" / "Eigene Daten hochladen"): consumed once after sign in.
+  useEffect(() => {
+    if (!session || view !== "dashboard") return;
+    let s = "";
+    try { s = window.localStorage.getItem("me_start") || ""; window.localStorage.removeItem("me_start"); } catch (e) { /* ignore */ }
+    if (s === "testdata" || s === "upload") { openNewAnalysis(); if (s === "testdata") fillTestData(); else setInputMethod("pdf"); }
+  }, [session, view]);
+
   /* ---------------- shared UI bits ---------------- */
   const inputStyle = {
     width: "100%",
@@ -4374,39 +4388,15 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
             fontWeight: 600,
             marginBottom: 6
           }}>
-              {isLogin ? t.login : t.register}
+              {backend.enabled || isLogin ? t.login : t.register}
             </h1>
-            <p style={{ color: subtleInk, fontSize: 12, marginBottom: 20 }}>{backend.enabled ? (isLogin ? SBT.loginHint : SBT.regHint) : (isLogin ? t.loginHint : t.registerHint)}</p>
+            <p style={{ color: subtleInk, fontSize: 12, marginBottom: 20 }}>{backend.enabled ? SBT.loginHint : (isLogin ? t.loginHint : t.registerHint)}</p>
             {backend.enabled ? <div>
                 <style>{`.sb-btn{min-height:44px;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border-radius:6px;font-size:14px;cursor:pointer}.sb-btn:focus-visible,.sb-link:focus-visible,.sb-in:focus-visible{outline:2px solid #fff;outline-offset:2px;box-shadow:0 0 0 4px var(--accent,#C8A96B)}.sb-link{min-height:44px;display:inline-flex;align-items:center;text-decoration:underline;text-underline-offset:3px;cursor:pointer}`}</style>
-                <form onSubmit={e => { e.preventDefault(); syncAuthDom(e.currentTarget); authMode === "recovery" ? sbRecover() : authMode === "forgot" ? sbForgot() : isLogin ? sbLogin() : sbRegister(); }} noValidate>
-                  {authMode === "forgot" && <p style={{ color: ink, fontSize: 14, marginBottom: 12 }}>{SBT.forgotTitle}</p>}
-                  {authMode === "recovery" && <p style={{ color: ink, fontSize: 14, marginBottom: 12 }}>{SBT.newPw}</p>}
-                  {!isLogin && !authMode && <Field label={SBT.name} subtleInk={subtleInk} fontBody={fontBody}>
-                    <input className="sb-in" aria-label={SBT.name} name="name" autoComplete="name" style={{ ...inputStyle, minHeight: 44 }} value={authForm.name} onChange={e => setAuthForm({ ...authForm, name: e.target.value })} />
-                  </Field>}
-                  {authMode !== "recovery" && <Field label={SBT.email} subtleInk={subtleInk} fontBody={fontBody}>
-                    <input className="sb-in" aria-label={SBT.email} name="email" type="email" autoComplete="email" inputMode="email" style={{ ...inputStyle, minHeight: 44 }} value={authForm.email} onChange={e => setAuthForm({ ...authForm, email: e.target.value })} />
-                  </Field>}
-                  {authMode !== "forgot" && <Field label={authMode === "recovery" ? SBT.newPw : SBT.pw} subtleInk={subtleInk} fontBody={fontBody}>
-                    <input className="sb-in" aria-label={SBT.pw} name="password" type="password" autoComplete={isLogin && !authMode ? "current-password" : "new-password"} style={{ ...inputStyle, minHeight: 44 }} value={authForm.password} onChange={e => setAuthForm({ ...authForm, password: e.target.value })} />
-                    {(!isLogin || authMode === "recovery") && <span style={{ color: subtleInk, fontSize: 12 }}>{SBT.pwHint}</span>}
-                  </Field>}
-                  {authError && <p role="alert" className="text-xs mb-3" style={{ color: palette.coral, lineHeight: 1.6 }}>{authError}</p>}
-                  {authNotice && <p role="status" className="text-xs mb-3" style={{ color: palette.gold, lineHeight: 1.6 }}>{authNotice}</p>}
-                  <button type="submit" disabled={authSubmitting} className="sb-btn font-medium" style={{ background: palette.gold, color: "#0B0D12", fontFamily: fontBody, opacity: authSubmitting ? 0.6 : 1 }}>
-                    {authSubmitting ? "..." : authMode === "recovery" ? SBT.savePw : authMode === "forgot" ? SBT.forgotSend : (isLogin ? t.login : t.register)}
-                  </button>
-                  {isLogin && !authMode && <div className="mt-2"><button type="button" className="sb-link" onClick={() => { setAuthError(""); setAuthNotice(""); setAuthMode("forgot"); }} style={{ color: subtleInk, fontSize: 13 }}>{SBT.forgot}</button></div>}
-                  {authMode === "forgot" && <div className="mt-2"><button type="button" className="sb-link" onClick={() => { setAuthError(""); setAuthMode(""); }} style={{ color: subtleInk, fontSize: 13 }}>{SBT.back}</button></div>}
-                  {!isLogin && !authMode && <ConsentBox lang={lang} th={{ ink, subtleInk, lineColor, cardBg, accent: palette.gold, fontBody, fontDisplay, isRTL }} checked={consent} onChange={v => { setConsent(v); if (v) setConsentErr(""); }} onOpenLegal={() => openLegal("datenschutz")} error={consentErr} />}
-                </form>
-                {!authMode && <>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "18px 0", color: subtleInk, fontSize: 12 }}><span style={{ flex: 1, height: 1, background: lineColor }} />{SBT.or}<span style={{ flex: 1, height: 1, background: lineColor }} /></div>
-                  <div style={{ display: "grid", gap: 8 }}>
-                    {[["google", "Google"], ["apple", "Apple"], ["github", "GitHub"]].map(([id, label]) => <button key={id} type="button" className="sb-btn" onClick={() => sbSocial(id)} style={{ background: "transparent", color: ink, border: `1px solid ${lineColor}`, fontFamily: fontBody }}>{SOCIAL_ICONS[id]}<span>{SBT.cont} {label}</span></button>)}
-                  </div>
-                </>}
+                <ConsentBox lang={lang} th={{ ink, subtleInk, lineColor, cardBg, accent: palette.gold, fontBody, fontDisplay, isRTL }} checked={consent} onChange={v => { setConsent(v); if (v) setConsentErr(""); }} onOpenLegal={() => openLegal("datenschutz")} error={consentErr} />
+                {authError && <p role="alert" className="text-xs mb-3" style={{ color: palette.coral, lineHeight: 1.6 }}>{authError}</p>}
+                {authNotice && <p role="status" className="text-xs mb-3" style={{ color: palette.gold, lineHeight: 1.6 }}>{authNotice}</p>}
+                <button type="button" data-testid="tool-google" className="sb-btn font-medium" onClick={() => sbSocial("google")} style={{ background: palette.gold, color: "#0B0D12", fontFamily: fontBody, marginTop: 12 }}>{SOCIAL_ICONS.google}<span>{SBT.cont} Google</span></button>
               </div> : <form onSubmit={e => { syncAuthDom(e.currentTarget); (isLogin ? handleLogin : handleRegister)(e); }}>
               <Field label={t.name} subtleInk={subtleInk} fontBody={fontBody}>
                   <div className="relative">
@@ -4563,7 +4553,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
                 color: ink,
                 fontWeight: 600,
                 fontFamily: fontDisplay
-              }}>{rec.input.companyName || "—"}</p>
+              }}>{rec.input.companyName || "n/a"}</p>
                     <p style={{
                 color: subtleInk,
                 fontSize: 12
@@ -4821,7 +4811,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
       let be = null; try { be = buildFinancialModel({ ...rec.input, revenue: Number(rec.input.revenue), budget }, sc[r2.targetMarket].overall).breakEvenYear; } catch (e) { /* model unavailable */ }
       return { target: r2.targetMarket, overall: sc[r2.targetMarket].overall, breakEven: be, timeline: r2.timelineMonths, strategy: r2.entryStrategy };
     };
-    const intelBE = (() => { try { return buildFinancialModel({ ...rec.input, revenue: Number(rec.input.revenue), budget: Number(rec.input.budget) }, targetOverall).breakEvenYear || t.planNoBreakEven; } catch (e) { return "–"; } })();
+    const intelBE = (() => { try { return buildFinancialModel({ ...rec.input, revenue: Number(rec.input.revenue), budget: Number(rec.input.budget) }, targetOverall).breakEvenYear || t.planNoBreakEven; } catch (e) { return "n/a"; } })();
     const detailedSteps = buildDetailedSteps(rec.rec, Number(rec.input.budget));
     const finModel = buildFinancialModel({
       ...rec.input,
@@ -4865,7 +4855,7 @@ const renderCountryDetail = (country, s) => {
         <div className="flex items-center justify-between"><p style={{ color: palette.gold, fontWeight: 700, fontSize: 13 }}>{t[chartSel.id]} · {cb.amount} {t.costEurLabel}</p><button type="button" onClick={() => setChartSel(null)} style={{ color: subtleInk, fontSize: 11 }}>{t.chClose} ✕</button></div>
         <p style={{ color: subtleInk, fontSize: 11.5, margin: "4px 0 8px" }}>{t.chShare}: {Math.round(cb.amount / tot * 100)}%</p>
         <p style={{ color: ink, fontSize: 11.5, fontWeight: 600, marginBottom: 4 }}>{t.chSteps}</p>
-        {sts.map(x => <div key={x.key} className="flex items-center justify-between" style={{ fontSize: 11.5, padding: "3px 0", borderTop: `1px solid ${lineColor}` }}><span style={{ color: ink }}>{t.steps_[x.key]}</span><span style={{ color: subtleInk }}>{t.weekLabel} {x.startWeek + 1}–{x.startWeek + x.durationWeeks} · {x.costEurM} {t.costEurLabel}</span></div>)}
+        {sts.map(x => <div key={x.key} className="flex items-center justify-between" style={{ fontSize: 11.5, padding: "3px 0", borderTop: `1px solid ${lineColor}` }}><span style={{ color: ink }}>{t.steps_[x.key]}</span><span style={{ color: subtleInk }}>{t.weekLabel} {x.startWeek + 1} {RANGE[lang]} {x.startWeek + x.durationWeeks} · {x.costEurM} {t.costEurLabel}</span></div>)}
       </div>;
     })() : null;
     const yearPanel = chartSel && chartSel.kind === "year" ? (() => {
@@ -5326,8 +5316,8 @@ const renderCountryDetail = (country, s) => {
                 return <div key={i} style={{ marginBottom: 4 }}>
                   <button type="button" aria-expanded={openNext === k} onClick={() => setOpenNext(v => v === k ? null : k)} className="text-start" style={{ color: ink, fontSize: 13, cursor: "pointer", minHeight: 28 }}>{i + 1}. {t.nextStepText[k]} <span style={{ color: subtleInk }}>{openNext === k ? "▴" : "▾"}</span></button>
                   {openNext === k && ph && <div style={{ color: subtleInk, fontSize: 12, margin: "2px 0 4px", paddingInlineStart: 12 }}>
-                    <p>{t.sumPhase}: {ph.label} · {t.month} {ph.startMonth}–{ph.endMonth}</p>
-                    {phSteps.map(x => <p key={x.key}>· {t.steps_[x.key]} ({t.weekLabel} {x.startWeek}–{x.startWeek + x.durationWeeks})</p>)}
+                    <p>{t.sumPhase}: {ph.label} · {t.month} {ph.startMonth} {RANGE[lang]} {ph.endMonth}</p>
+                    {phSteps.map(x => <p key={x.key}>· {t.steps_[x.key]} ({t.weekLabel} {x.startWeek} {RANGE[lang]} {x.startWeek + x.durationWeeks})</p>)}
                   </div>}
                 </div>;
               })}
@@ -5397,7 +5387,7 @@ const renderCountryDetail = (country, s) => {
                 fontFamily: "'Inter','Noto Sans Arabic',system-ui,sans-serif",
                 marginTop: 2
               }}>
-                    {t.month} {phase.startMonth}–{phase.endMonth}
+                    {t.month} {phase.startMonth} {RANGE[lang]} {phase.endMonth}
                   </p>
                 </button>)}
             </div>
@@ -5510,12 +5500,12 @@ const renderCountryDetail = (country, s) => {
                     <p style={{
                   color: subtleInk,
                   fontSize: 10
-                }}>{t.weekLabel} {step.startWeek}–{step.startWeek + step.durationWeeks}</p>
+                }}>{t.weekLabel} {step.startWeek} {RANGE[lang]} {step.startWeek + step.durationWeeks}</p>
                   </div>
                   </button>
                   {isOpen && <div className="grid grid-cols-3 gap-3 px-3 pb-3" style={{ borderTop: `1px solid ${lineColor}`, paddingTop: 10 }}>
                     <div><p style={{ color: subtleInk, fontSize: 10 }}>{t.planDuration}</p><p style={{ color: ink, fontSize: 12, fontWeight: 600 }}>{step.durationWeeks} {t.planWeeks}</p></div>
-                    <div><p style={{ color: subtleInk, fontSize: 10 }}>{t.weekLabel}</p><p style={{ color: ink, fontSize: 12, fontWeight: 600 }}>{step.startWeek}–{step.startWeek + step.durationWeeks}</p></div>
+                    <div><p style={{ color: subtleInk, fontSize: 10 }}>{t.weekLabel}</p><p style={{ color: ink, fontSize: 12, fontWeight: 600 }}>{step.startWeek} {RANGE[lang]} {step.startWeek + step.durationWeeks}</p></div>
                     <div><p style={{ color: subtleInk, fontSize: 10 }}>{t.planShare}</p><p style={{ color: ink, fontSize: 12, fontWeight: 600 }}>{share}%</p></div>
                   </div>}
                 </div>;
@@ -6226,7 +6216,7 @@ const renderCountryDetail = (country, s) => {
     userAnalyses.forEach(r => {
       marketCounts[r.rec.targetMarket] = (marketCounts[r.rec.targetMarket] || 0) + 1;
     });
-    const topMarket = Object.keys(marketCounts).length ? Object.entries(marketCounts).sort((a, b) => b[1] - a[1])[0][0] : "—";
+    const topMarket = Object.keys(marketCounts).length ? Object.entries(marketCounts).sort((a, b) => b[1] - a[1])[0][0] : "n/a";
     return <div dir={isRTL ? "rtl" : "ltr"} style={{
       minHeight: "100vh",
       background: bg,

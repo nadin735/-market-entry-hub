@@ -13,7 +13,7 @@ Bewerbungsprojekt von Nadin Okil (nicht kommerziell, keine Einnahmen). Es zeigt,
 - Methodik und Grenzen offen dargelegt (regelbasiert, vereinfacht, keine Beratung).
 - PDF-Report (Druckdialog), Datenexport (JSON), Konto- und Datenlöschung.
 - Demo ohne Login (alles lokal im Browser) mit Button "Mit Testdaten ausprobieren".
-- Version mit Login (Supabase E-Mail/Passwort), ein Konto für beide Tools.
+- Version mit Login über Google (Supabase Auth), ein Konto für beide Tools.
 - Sprachen DE, EN, AR (rechts nach links).
 - Impressum und Datenschutzerklärung in der App.
 

@@ -653,7 +653,7 @@
         <source src="demo/market-entry-demo.webm" type="video/webm">
         <source src="demo/market-entry-demo.mp4" type="video/mp4">
       </video>
-      <div class="video-bar"><button type="button" id="ttsBtn" class="tts-btn" aria-pressed="false" data-i18n="vid_tts_on">Erklärung vorlesen</button><p id="vidDesc" class="video-note" data-i18n="vid_note">Aufnahme des Programms mit Beispieldaten und eingeblendeten Untertiteln. Auf Wunsch liest Ihr Browser die Erklärung dazu vor.</p></div>
+      <div class="video-bar"><p id="vidDesc" class="video-note" data-i18n="vid_note">Aufnahme des Programms mit Beispieldaten, englischer Sprecherstimme und englischen Untertiteln.</p></div>
     </div>
   </div>
 </section>
@@ -1115,9 +1115,7 @@ const I18N = {
     "vid_eyebrow": "Das Programm im Überblick",
     "vid_h2": "Eine Minute Market Entry.",
     "vid_p": "Vom Start ohne Login über die Bewertung bis zum Ergebnis, in beiden Tools und drei Sprachen.",
-    "vid_note": "Aufnahme des Programms mit Beispieldaten und eingeblendeten Untertiteln. Auf Wunsch liest Ihr Browser die Erklärung dazu vor.",
-    "vid_tts_on": "Erklärung vorlesen",
-    "vid_tts_off": "Vorlesen beenden",
+    "vid_note": "Aufnahme des Programms mit Beispieldaten, englischer Sprecherstimme und englischen Untertiteln.",,
     "demo_h2": "Zwei Demo PDFs.",
     "demo_p": "Direkt einsehbar, mit echter PDF zum Herunterladen. Hinweis: Beide Firmenprofile sind vollständig fiktiv und dienen ausschließlich der Demonstration.",
     "demo1_h": "PDF Firmenprofil Scan · Nordlicht AI Systems GmbH",
@@ -1264,9 +1262,7 @@ const I18N = {
     "vid_eyebrow": "The program at a glance",
     "vid_h2": "One minute of Market Entry.",
     "vid_p": "From a start without login through scoring to the result, in both tools and three languages.",
-    "vid_note": "Recording of the program with sample data and on screen captions. On request your browser reads the explanation aloud.",
-    "vid_tts_on": "Read the explanation aloud",
-    "vid_tts_off": "Stop reading aloud",
+    "vid_note": "Recording of the program with sample data, English voice over and English captions.",,
     "demo_h2": "Two demo PDFs.",
     "demo_p": "View it directly, with the real PDF available to download. Note: both company profiles are entirely fictional and used solely for demonstration purposes.",
     "demo1_h": "PDF company profile scan · Nordlicht AI Systems GmbH",
@@ -1413,9 +1409,7 @@ const I18N = {
     "vid_eyebrow": "نظرة عامة على البرنامج",
     "vid_h2": "دقيقة واحدة مع Market Entry.",
     "vid_p": "من البدء دون تسجيل دخول إلى التقييم ثم النتيجة، في الأداتين وبثلاث لغات.",
-    "vid_note": "تسجيل للبرنامج ببيانات تجريبية وترجمة مكتوبة على الشاشة. عند الطلب يقرأ المتصفح الشرح بصوت عالٍ.",
-    "vid_tts_on": "قراءة الشرح بصوت عالٍ",
-    "vid_tts_off": "إيقاف القراءة",
+    "vid_note": "تسجيل للبرنامج ببيانات تجريبية مع تعليق صوتي وترجمة مكتوبة بالإنجليزية.",,
     "demo_h2": "ملفا PDF تجريبيان.",
     "demo_p": "معروضة مباشرة، مع ملف PDF حقيقي متاح للتحميل. ملاحظة: كلا ملفي الشركتين وهميان بالكامل ويُستخدمان لأغراض العرض التوضيحي فقط.",
     "demo1_h": "مسح ملف شركة PDF · Nordlicht AI Systems GmbH",
@@ -1580,33 +1574,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 2600);
   }
 });
-</script>
-<script>
-(function(){
-  var CUES=[{"t": 0.8, "de": "Das ist der Market Entry Hub. Er verbindet zwei Tools: Europa nach Golfregion und Golfregion nach Europa. Ohne Login startet man direkt mit Demodaten.", "en": "This is the Market Entry Hub. It connects two tools: Europe to the Gulf region and the Gulf region to Europe. Without a login you start right away with demo data.", "ar": "هذا هو مركز Market Entry. يجمع أداتين: من أوروبا إلى الخليج ومن الخليج إلى أوروبا. دون تسجيل دخول تبدأ مباشرة ببيانات تجريبية."}, {"t": 13.8, "de": "Hell und dunkel lassen sich mit einem Klick umschalten.", "en": "Light and dark mode switch with one click.", "ar": "يمكن التبديل بين الوضع الفاتح والداكن بنقرة واحدة."}, {"t": 19.2, "de": "Die beiden Karten zeigen, was das jeweilige Tool leistet.", "en": "The two cards show what each tool offers.", "ar": "تعرض البطاقتان ما تقدمه كل أداة."}, {"t": 24.7, "de": "Im GCC Tool sind Beispieldaten schon eingetragen, so lässt sich alles sofort ausprobieren.", "en": "In the GCC tool, sample data is already filled in, so you can try everything immediately.", "ar": "في أداة GCC البيانات التجريبية مدخلة مسبقًا، فيمكن تجربة كل شيء فورًا."}, {"t": 33.0, "de": "Ein Klick auf Score berechnen startet die Bewertung über fünf Faktoren.", "en": "One click on calculate score starts the assessment across five factors.", "ar": "نقرة واحدة على حساب التقييم تبدأ التقييم وفق خمسة عوامل."}, {"t": 39.6, "de": "Das Ergebnis ist ein Ranking der sechs Golfmärkte, jeweils mit nachvollziehbarer Begründung.", "en": "The result is a ranking of the six Gulf markets, each with a traceable rationale.", "ar": "النتيجة ترتيب للأسواق الخليجية الستة، لكل منها تعليل يمكن تتبعه."}, {"t": 48.0, "de": "Darunter stehen die Quellen mit Datenstatus, das Finanzmodell und der Eintrittsplan, der sich als PDF exportieren lässt.", "en": "Below are the sources with their data status, the financial model and the entry plan, which can be exported as a PDF.", "ar": "في الأسفل المصادر مع حالة البيانات والنموذج المالي وخطة الدخول التي يمكن تصديرها بصيغة PDF."}, {"t": 58.6, "de": "Das zweite Tool wendet dieselbe Logik in Gegenrichtung an, für Unternehmen aus der Golfregion mit Ziel Europa.", "en": "The second tool applies the same logic in the opposite direction, for companies from the Gulf region targeting Europe.", "ar": "تطبّق الأداة الثانية المنطق نفسه في الاتجاه المعاكس، للشركات الخليجية التي تستهدف أوروبا."}, {"t": 68.4, "de": "Alle Inhalte gibt es auch auf Englisch und auf Arabisch, mit Layout von rechts nach links.", "en": "Everything is also available in English and in Arabic, with a right to left layout.", "ar": "كل المحتوى متاح أيضًا بالإنجليزية والعربية بتخطيط من اليمين إلى اليسار."}, {"t": 76.6, "de": "Das Programm öffnet sich direkt im Browser, ohne Installation.", "en": "The program opens right in the browser, with no installation.", "ar": "يعمل البرنامج مباشرة في المتصفح دون تثبيت."}];
-  var v=document.querySelector('#video video'), b=document.getElementById('ttsBtn');
-  if(!v||!b) return;
-  if(!('speechSynthesis' in window)){ b.hidden=true; return; }
-  var on=false, last=-1, VL={de:'de-DE',en:'en-US',ar:'ar-SA'};
-  function lang(){ var l=document.documentElement.lang||'de'; return VL[l]?l:'de'; }
-  function label(){ var t=(typeof I18N!=='undefined'&&I18N[lang()])||{}; var k=on?'vid_tts_off':'vid_tts_on'; b.setAttribute('data-i18n',k); b.textContent=t[k]||b.textContent; b.setAttribute('aria-pressed',on?'true':'false'); }
-  function say(i){
-    speechSynthesis.cancel(); if(i<0) return;
-    var l=lang(), u=new SpeechSynthesisUtterance(CUES[i][l]); u.lang=VL[l]; u.rate=1;
-    var vs=speechSynthesis.getVoices().filter(function(x){return x.lang&&x.lang.toLowerCase().indexOf(l)===0;});
-    if(vs.length) u.voice=vs[0];
-    speechSynthesis.speak(u);
-  }
-  function idx(){ var t=v.currentTime, k=-1; for(var i=0;i<CUES.length;i++){ if(t>=CUES[i].t-0.2) k=i; } return k; }
-  b.addEventListener('click',function(){ on=!on; label(); if(!on){ speechSynthesis.cancel(); } else { last=idx(); if(!v.paused) say(last); } });
-  v.addEventListener('timeupdate',function(){ if(!on||v.paused) return; var k=idx(); if(k!==last){ last=k; say(k); } });
-  v.addEventListener('pause',function(){ speechSynthesis.cancel(); });
-  v.addEventListener('play',function(){ if(on){ last=idx(); say(last); } });
-  v.addEventListener('seeked',function(){ if(on&&!v.paused){ last=idx(); say(last); } });
-  v.addEventListener('ended',function(){ speechSynthesis.cancel(); last=-1; });
-  document.addEventListener('click',function(e){ if(e.target.closest&&e.target.closest('[data-lang]')) setTimeout(label,0); });
-  label();
-})();
 </script>
 </body>
 </html>

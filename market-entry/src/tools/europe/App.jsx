@@ -1484,6 +1484,7 @@ const T = {
     csvImportLabel: "CSV Datei einfügen oder hochladen",
     csvPlaceholder: "companyName,industry,product,revenue,budget\nAl Waha Investment Holding (fiktiv),realEstate,Wohnimmobilienportfolio (fiktiv),25,2",
     csvParseBtn: "CSV übernehmen",
+    csvFileLbl: "CSV-Datei",
     csvParseError: "CSV konnte nicht gelesen werden. Bitte Format prüfen.",
     csvTemplateHint: "Erste Zeile: Spaltennamen. Zweite Zeile: deine Werte.",
     overviewTitle: "Übersicht",
@@ -1743,6 +1744,7 @@ const T = {
     csvImportLabel: "Paste or upload CSV file",
     csvPlaceholder: "companyName,industry,product,revenue,budget\nAl Waha Investment Holding (fictional),realEstate,Residential property portfolio (fictional),25,2",
     csvParseBtn: "Import CSV",
+    csvFileLbl: "CSV file",
     csvParseError: "Could not read CSV. Please check the format.",
     csvTemplateHint: "First row: column names. Second row: your values.",
     overviewTitle: "Overview",
@@ -2002,6 +2004,7 @@ const T = {
     csvImportLabel: "الصق أو ارفع ملف CSV",
     csvPlaceholder: "companyName,industry,product,revenue,budget\nAl Waha Investment Holding (fictional),realEstate,محفظة عقارات سكنية (وهمية),25,2",
     csvParseBtn: "استيراد CSV",
+    csvFileLbl: "ملف CSV",
     csvParseError: "تعذّرت قراءة CSV. يرجى التحقق من التنسيق.",
     csvTemplateHint: "السطر الأول: أسماء الأعمدة. السطر الثاني: قيمك.",
     overviewTitle: "نظرة عامة",
@@ -4082,7 +4085,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${record.input.companyName || "analysis"}-gcc-market-entry.csv`;
+    a.download = `${record.input.companyName || "analysis"}-europe-market-entry.csv`;
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -4161,7 +4164,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "gcc-market-entry-all-analyses.csv";
+    a.download = "europe-market-entry-all-analyses.csv";
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -4689,7 +4692,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
               border: `1px solid ${lineColor}`,
               color: subtleInk
             }}>
-                  CSV-Datei
+                  {t.csvFileLbl}
                   <input type="file" accept=".csv,text/csv" className="hidden" onChange={handleCsvFileUpload} />
                 </label>
                 <button type="button" onClick={handleCsvImport} className="px-4 py-1.5 rounded-md text-xs font-medium" style={{
@@ -4974,7 +4977,7 @@ const renderCountryDetail = (country, s) => {
                 fontFamily: "'Inter','Noto Sans Arabic',system-ui,sans-serif",
                 color: palette.gold,
                 fontSize: 13
-              }}>{s.overall}/100 {openCountry === country ? "▴" : "▾"}</span>
+              }}>{s.overall}/100 {openCountry === country ? <ChevronUp size={13} style={{ verticalAlign: "-2px" }} /> : <ChevronDown size={13} style={{ verticalAlign: "-2px" }} />}</span>
                 </button>
                 <div style={{
               height: 8,
@@ -5276,7 +5279,7 @@ const renderCountryDetail = (country, s) => {
                 const sc = rec.scores[rec.rec.targetMarket];
                 const avg = Math.round(Object.values(rec.scores).reduce((a, x) => a + x[k], 0) / Object.keys(rec.scores).length);
                 return <div key={i} style={{ marginBottom: 4 }}>
-                  <button type="button" aria-expanded={openRisk === k} onClick={() => setOpenRisk(v => v === k ? null : k)} className="text-start" style={{ color: ink, fontSize: 13, cursor: "pointer", minHeight: 28 }}>· {t.riskText[k]} <span style={{ color: subtleInk }}>{openRisk === k ? "▴" : "▾"}</span></button>
+                  <button type="button" aria-expanded={openRisk === k} onClick={() => setOpenRisk(v => v === k ? null : k)} className="text-start" style={{ color: ink, fontSize: 13, cursor: "pointer", minHeight: 28 }}>· {t.riskText[k]} <span style={{ color: subtleInk }}>{openRisk === k ? <ChevronUp size={13} style={{ verticalAlign: "-2px" }} /> : <ChevronDown size={13} style={{ verticalAlign: "-2px" }} />}</span></button>
                   {openRisk === k && <p style={{ color: subtleInk, fontSize: 12, margin: "2px 0 4px", paddingInlineStart: 12 }}>{t.infoTrigger}: {t.scoreDims[k]} {Math.round(sc[k])}/100 · {t.infoAvg}: {avg}/100</p>}
                 </div>;
               })}
@@ -5298,7 +5301,7 @@ const renderCountryDetail = (country, s) => {
                 const ph = entryPlanDisplay[i];
                 const phSteps = ph ? detailedSteps.filter(x => x.phase === ph.key) : [];
                 return <div key={i} style={{ marginBottom: 4 }}>
-                  <button type="button" aria-expanded={openNext === k} onClick={() => setOpenNext(v => v === k ? null : k)} className="text-start" style={{ color: ink, fontSize: 13, cursor: "pointer", minHeight: 28 }}>{i + 1}. {t.nextStepText[k]} <span style={{ color: subtleInk }}>{openNext === k ? "▴" : "▾"}</span></button>
+                  <button type="button" aria-expanded={openNext === k} onClick={() => setOpenNext(v => v === k ? null : k)} className="text-start" style={{ color: ink, fontSize: 13, cursor: "pointer", minHeight: 28 }}>{i + 1}. {t.nextStepText[k]} <span style={{ color: subtleInk }}>{openNext === k ? <ChevronUp size={13} style={{ verticalAlign: "-2px" }} /> : <ChevronDown size={13} style={{ verticalAlign: "-2px" }} />}</span></button>
                   {openNext === k && ph && <div style={{ color: subtleInk, fontSize: 12, margin: "2px 0 4px", paddingInlineStart: 12 }}>
                     <p>{t.sumPhase}: {ph.label} · {t.month} {ph.startMonth} {RANGE[lang]} {ph.endMonth}</p>
                     {phSteps.map(x => <p key={x.key}>· {t.steps_[x.key]} ({t.weekLabel} {x.startWeek} {RANGE[lang]} {x.startWeek + x.durationWeeks})</p>)}

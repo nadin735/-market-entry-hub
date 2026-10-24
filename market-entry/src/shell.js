@@ -13,7 +13,11 @@ export function mountDemoBanner() {
   const st = document.createElement("style");
   st.textContent = "@media print{#demo-banner{display:none!important}}";
   document.head.appendChild(st);
-  const b = el("div", "background:#0B0D12;border-bottom:1px solid rgba(200,169,107,.35);color:#C8A96B;font:500 12px/28px Inter,'Noto Sans Arabic',system-ui,sans-serif;text-align:center;letter-spacing:.04em;height:28px;overflow:hidden", "Demo Modus · Läuft offline, kein Konto nötig");
+  const b = el("div", "background:#0B0D12;border-bottom:1px solid rgba(200,169,107,.35);color:#C8A96B;font:500 12px/28px Inter,'Noto Sans Arabic',system-ui,sans-serif;text-align:center;letter-spacing:.04em;height:28px;overflow:hidden", "");
+  const TXT = { de: "Demo Modus · Läuft offline, kein Konto nötig", en: "Demo mode · Runs offline, no account needed", ar: "وضع تجريبي · يعمل دون اتصال ودون حساب" };
+  const paint = () => { let l = "de"; try { l = window.localStorage.getItem("ui_lang") || "de"; } catch (e) { /* blocked */ } const v = TXT[l] || TXT.de; if (b.textContent !== v) b.textContent = v; };
+  paint();
+  setInterval(paint, 400);
   b.id = "demo-banner";
   b.setAttribute("role", "status");
   document.body.insertBefore(b, document.body.firstChild);

@@ -5,7 +5,7 @@ const RANGE = { de: "bis", en: "to", ar: "إلى" };
 import ThemeToggle from "../../ThemeToggle.jsx";
 import { COIN } from "../../hubAssets.js";
 import { EUROPE_I18N, localizeIntel } from "../../dataI18n.js";
-import { KpiStrip, WhyPanel, ScoringSuite, ScenarioCompare, MemoDoc, CompetitorBlock, IntelPrint, SourceLine, StatusLegend, analyze } from "../../intel.jsx";
+import { KpiStrip, WhyPanel, ScoringSuite, ScenarioCompare, MemoDoc, CompetitorBlock, IntelPrint, SourceLine, SourcesJump, SourceNote, StatusLegend, analyze } from "../../intel.jsx";
 import { LegalPage, LegalNotice, ConsentBox, DataCenter, downloadJSON, legalPack } from "../../legal.jsx";
 import { LogOut, ChevronLeft, ChevronDown, ChevronUp } from "lucide-react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ComposedChart, Line, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ScatterChart, Scatter, ZAxis, ReferenceLine } from "recharts";
@@ -4948,6 +4948,7 @@ const renderCountryDetail = (country, s) => {
 
 
           <KpiStrip A={intelA} rec={rec} th={intelTh} lang={lang} t={t} getTimelineLabel={getTimelineLabel} breakEven={intelBE} />
+          <SourcesJump lang={lang} th={intelTh} />
           <WhyPanel A={intelA} th={intelTh} lang={lang} />
           <div className="mb-4"><StatusLegend lang={lang} th={intelTh} /></div>
           {/* comparison */}
@@ -4963,6 +4964,7 @@ const renderCountryDetail = (country, s) => {
             fontWeight: 600,
             marginBottom: 18
           }}>{t.comparisonTitle}</h3>
+          <SourceNote kind="score" lang={lang} th={intelTh} />
             {Object.entries(rec.scores).map(([country, s]) => <div key={country} className="mb-5">
                 <button type="button" aria-expanded={openCountry === country} onClick={() => setOpenCountry(v => v === country ? null : country)} className="flex items-center justify-between mb-1.5 w-full text-start" style={{ cursor: "pointer" }}>
                   <span style={{
@@ -5410,7 +5412,7 @@ const renderCountryDetail = (country, s) => {
           <ScenarioCompare rec={rec} A={intelA} th={intelTh} lang={lang} t={t} factorLabels={intelLabels} data={intelData} simulate={intelSim} getTimelineLabel={getTimelineLabel} />
           <CompetitorBlock rec={rec} A={intelA} th={intelTh} lang={lang} data={intelData} t={t} />
           {/* sources */}
-          <div className="p-6 facet-card mt-6" style={{
+          <div id="ei-sources" className="p-6 facet-card mt-6" style={{
           background: cardBg,
           border: `1px solid ${lineColor}`
         }}>
@@ -5522,6 +5524,7 @@ const renderCountryDetail = (country, s) => {
           }}>
               {t.financialModelTitle}
             </h3>
+            <SourceNote kind="fin" lang={lang} th={intelTh} />
             <p style={{
             color: subtleInk,
             fontSize: 10.5,

@@ -37,7 +37,7 @@ const I = {
     st: { s1: "Pilotkunde (1 bis 2) in {c} gewinnen und Nachfrage messen (Monat 0 bis 2). KPI: Angebote, Pilotumsatz.", s2: "Rechtsform und Genehmigung klären: {lic}", s3: "Steuern vor Ort prüfen lassen: Körperschaftsteuer {tax}, Umsatzsteuer {vat}{date}.", s4: "Partner ansprechen: {p}", s5: "Budget von {b} €M in Tranchen an die Phasen Entscheidungspunkte koppeln.", s6: "Nach 3 Monaten Review: Annahmen und Scores mit realen Pilotdaten aktualisieren." },
     status: { sourced: "Quelle", estimate: "Schätzung", assumption: "Annahme" },
     statusDef: { sourced: "Veröffentlichte Statistik mit genannter Quelle und Jahr. Hier nicht live nachgeprüft: vor Entscheidungen bei der Originalquelle prüfen.", estimate: "Analysten Einschätzung oder Prognose, keine gemessene Größe.", assumption: "Modellannahme (z. B. Finanzmodell, Zeitplan), vereinfacht und illustrativ." },
-    legend: "Datenstatus", srcLabel: "Quelle", asOf: "Stand", noLink: "kein direkter Link", linkNote: "Links führen zur Startseite des Herausgebers, nicht zur Einzelseite.",
+    legend: "Datenstatus", srcJump: "Alle Quellen ansehen", noteScore: "Datenbasis: Länderkennzahlen, Markt-Chance und Regulatorik-Check mit Quellen unten. Gewichtung und Gesamtscore sind eigene Berechnung (Status Schätzung).", noteFin: "Datenbasis: deine Eingaben und Modellannahmen (Status Annahme), keine Marktstatistik. Marktdaten mit Quellen stehen unten.", srcLabel: "Quelle", asOf: "Stand", noLink: "kein direkter Link", linkNote: "Links führen zur Startseite des Herausgebers, nicht zur Einzelseite.",
     compTitle: "Wettbewerbsstruktur", cPlayer: "Anbieter", cSeg: "Segment", cOverlap: "Überschneidung mit Ihrer Branche", ovD: "direkt", ovA: "angrenzend", ovL: "gering", cGap: "Marktlücke / Chance", cPos: "Empfohlene Positionierung", posNiche: "Spezialisierte Nische statt Breitenwettbewerb: Großkonzerne nicht frontal angreifen.", posPartner: "Über einen lokalen Partner eintreten und dessen Kundenzugang nutzen.", posDirect: "Direkter Eintritt mit klarer Differenzierung gegenüber den überlappenden Anbietern.", heur: "Heuristik: Zuordnung über Schlagworte, kein Marktanteilswert.", compNote: "Zielkunden und Geschäftsmodelle der Anbieter sind hier nicht belegt; dafür wäre eine lizenzierte Marktdatenquelle nötig.",
     langNote: "",
     mapTitle: "Score-Karte",
@@ -107,7 +107,7 @@ const I = {
     st: { s1: "Win 1 to 2 pilot customers in {c} and measure demand (month 0 to 2). KPIs: offers, pilot revenue.", s2: "Clarify legal form and approvals: {lic}", s3: "Have taxes checked locally: corporate tax {tax}, VAT {vat}{date}.", s4: "Approach partners: {p}", s5: "Tie the {b} €M budget in tranches to the phase decision gates.", s6: "Review after 3 months: update assumptions and scores with real pilot data." },
     status: { sourced: "Sourced", estimate: "Estimate", assumption: "Assumption" },
     statusDef: { sourced: "Published statistic with named source and year. Not re verified live here: check the original source before decisions.", estimate: "Analyst judgement or forecast, not a measured quantity.", assumption: "Model assumption (e.g. financial model, timeline), simplified and illustrative." },
-    legend: "Data status", srcLabel: "Source", asOf: "As of", noLink: "no direct link", linkNote: "Links go to the publisher's home page, not the individual page.",
+    legend: "Data status", srcJump: "View all sources", noteScore: "Data basis: country fundamentals, market opportunity and regulatory check, with sources below. Weights and the overall score are our own calculation (status estimate).", noteFin: "Data basis: your inputs and model assumptions (status assumption), not market statistics. Sourced market data is listed below.", srcLabel: "Source", asOf: "As of", noLink: "no direct link", linkNote: "Links go to the publisher's home page, not the individual page.",
     compTitle: "Competitive structure", cPlayer: "Player", cSeg: "Segment", cOverlap: "Overlap with your industry", ovD: "direct", ovA: "adjacent", ovL: "low", cGap: "Market gap / opportunity", cPos: "Recommended positioning", posNiche: "Specialised niche instead of broad competition: do not attack the large groups head on.", posPartner: "Enter through a local partner and use its customer access.", posDirect: "Direct entry with clear differentiation against the overlapping players.", heur: "Heuristic: matched by keywords, not a market share figure.", compNote: "Players' target customers and business models are not evidenced here; that would need a licensed market data source.",
     langNote: "",
     mapTitle: "Score map",
@@ -177,7 +177,7 @@ const I = {
     st: { s1: "اكسب عميلًا تجريبيًا أو اثنين في {c} وقِس الطلب (الشهر 0 إلى 2). المؤشرات: العروض والإيراد التجريبي.", s2: "وضّح الشكل القانوني والتراخيص: {lic}", s3: "اطلب مراجعة الضرائب محليًا: ضريبة الشركات {tax}، القيمة المضافة {vat}{date}.", s4: "تواصل مع الشركاء: {p}", s5: "اربط ميزانية {b} مليون يورو بنقاط القرار بين المراحل على دفعات.", s6: "مراجعة بعد 3 أشهر: حدّث الافتراضات والتقييمات ببيانات تجريبية حقيقية." },
     status: { sourced: "مصدر", estimate: "تقدير", assumption: "افتراض" },
     statusDef: { sourced: "إحصاءة منشورة بمصدر وسنة معلنين. لم يُعاد التحقق منها هنا مباشرة: راجع المصدر الأصلي قبل اتخاذ القرار.", estimate: "تقدير محلل أو توقع، وليس كمية مقاسة.", assumption: "افتراض نموذج (مثل النموذج المالي والجدول الزمني)، مبسّط وتوضيحي." },
-    legend: "حالة البيانات", srcLabel: "المصدر", asOf: "التاريخ", noLink: "لا يوجد رابط مباشر", linkNote: "الروابط تؤدي إلى الصفحة الرئيسية للجهة الناشرة وليس إلى الصفحة المحددة.",
+    legend: "حالة البيانات", srcJump: "عرض كل المصادر", noteScore: "أساس البيانات: المؤشرات القُطرية وفرص السوق والفحص التنظيمي مع المصادر أدناه. الأوزان والنتيجة الإجمالية حساب خاص (الحالة تقدير).", noteFin: "أساس البيانات: مدخلاتك وافتراضات النموذج (الحالة افتراض)، وليست إحصاءات سوق. بيانات السوق مع مصادرها مدرجة أدناه.", srcLabel: "المصدر", asOf: "التاريخ", noLink: "لا يوجد رابط مباشر", linkNote: "الروابط تؤدي إلى الصفحة الرئيسية للجهة الناشرة وليس إلى الصفحة المحددة.",
     compTitle: "هيكل المنافسة", cPlayer: "اللاعب", cSeg: "القطاع", cOverlap: "التداخل مع قطاعك", ovD: "مباشر", ovA: "مجاور", ovL: "منخفض", cGap: "فجوة السوق / الفرصة", cPos: "التموضع الموصى به", posNiche: "نيش متخصص بدل المنافسة الواسعة: لا تهاجم المجموعات الكبرى مباشرة.", posPartner: "ادخل عبر شريك محلي واستفد من وصوله إلى العملاء.", posDirect: "دخول مباشر مع تمايز واضح عن اللاعبين المتداخلين.", heur: "استدلال: مطابقة بالكلمات المفتاحية وليس حصة سوقية.", compNote: "العملاء المستهدفون ونماذج أعمال اللاعبين غير موثّقة هنا؛ يتطلب ذلك مصدر بيانات سوق مرخّصًا.",
     langNote: "",
     mapTitle: "خريطة التقييم",
@@ -315,6 +315,14 @@ export function Tip({ text, th }) {
 export function Status({ kind, lang, th }) {
   const L = tx(lang);
   return <span style={{ display: "inline-flex", alignItems: "center", gap: 2 }}><span style={{ fontSize: 9.5, padding: "2px 7px", borderRadius: 2, background: th.dark ? "rgba(255,255,255,.05)" : "rgba(0,0,0,.05)", color: th.ink, fontWeight: 600, whiteSpace: "nowrap" }}>{L.status[kind]}</span><Tip th={th} text={L.statusDef[kind]} /></span>;
+}
+export function SourcesJump({ lang, th }) {
+  const L = tx(lang);
+  return <button type="button" data-testid="sources-jump" onClick={() => document.getElementById("ei-sources")?.scrollIntoView({ behavior: "smooth", block: "start" })} style={{ background: "none", border: `1px solid ${th.lineColor}`, borderRadius: 999, padding: "6px 14px", fontSize: 12, color: th.accent, cursor: "pointer", margin: "0 0 16px" }}>{L.srcJump} ↓</button>;
+}
+export function SourceNote({ kind, lang, th }) {
+  const L = tx(lang);
+  return <p data-testid="source-note" style={{ color: th.subtleInk, fontSize: 10.5, margin: "4px 0 10px" }}>{kind === "fin" ? L.noteFin : L.noteScore}</p>;
 }
 export function StatusLegend({ lang, th }) {
   const L = tx(lang);

@@ -494,7 +494,7 @@ const COMPETITOR_ANALYSIS = {
     gap: "Bankensektor stark konsolidiert (KFH/AUB Fusion 2024); außerhalb Finanzsektor vergleichsweise wenig internationale Konkurrenz etabliert."
   },
   Bahrain: {
-    players: ["Ahli United Bank (historisch ca. 21% des Bankensektors, jetzt Teil der KFH Gruppe)", "Al Salam Bank (Islamic Banking)"],
+    players: ["Ahli United Bank (historisch großer Anteil am Bankensektor, jetzt Teil der KFH Gruppe)", "Al Salam Bank (Islamic Banking)"],
     gap: "Bahrain positioniert sich bewusst als regionaler Finanz und Logistik Hub mit niedrigeren Eintrittshürden als die größeren Nachbarmärkte, Einstiegspunkt für kleinere ausländische Anbieter."
   },
   Oman: {

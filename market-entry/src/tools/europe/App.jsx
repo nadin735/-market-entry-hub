@@ -373,7 +373,7 @@ const COMPETITOR_ANALYSIS = {
     gap: "Stark konsolidierter Finanz und Energiesektor; Expansion in neue Geografien/Sprachen ist laut Branchenumfragen eine der größten eigenen Herausforderungen französischer B2B Marketer, Chance für internationale Partner mit lokaler Expertise."
   },
   UK: {
-    players: ["Shell (Energie, umsatzstärkster Konzern Europas)", "HSBC (Banking)"],
+    players: ["Shell (Energie, nach Umsatz Platz 2 in Europa)", "HSBC (Banking)"],
     gap: "Höchste Investitionsbereitschaft unter den großen EU Volkswirtschaften (82% planen Budget Erhöhung >10%), stark technologiegetrieben, offen für neue Tech und Digital Anbieter."
   },
   Italy: {

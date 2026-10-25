@@ -287,6 +287,7 @@ export function analyze(rec, t, lang, data, factorLabels) {
 
 /* ---------- source links ---------- */
 const PUB = [
+  [/Fortune 500 Europe/i, "Fortune", "fortune.com/europe/ranking/fortune500-europe"], [/KFH Pressemitteilung|KFH press release/i, "KFH", "kfh.com"],
   [/World Bank/i, "World Bank", "worldbank.org"], [/Trading Economics/i, "Trading Economics", "tradingeconomics.com"], [/Deloitte/i, "Deloitte", "deloitte.com"],
   [/Dubai Chamber/i, "Dubai Chamber of Commerce", "dubaichamber.com"], [/Euromonitor/i, "Euromonitor", "euromonitor.com"], [/ResearchAndMarkets/i, "ResearchAndMarkets", "researchandmarkets.com"],
   [/MISA/i, "MISA", "misa.gov.sa"], [/Vision 2030/i, "Vision 2030", "vision2030.gov.sa"], [/FCSC/i, "FCSC", "fcsc.gov.ae"], [/GASTAT/i, "GASTAT", "stats.gov.sa"], [/PSA\b/, "PSA", "psa.gov.qa"],
@@ -442,6 +443,7 @@ export function ScoringPanel({ rec, A, th, lang, factorLabels, parts, w, setW })
 
 /* ---------- competitor structure ---------- */
 const OVERLAP = { medtech: /health|med|pharma|hospital/i, manufacturing: /industr|chem|manufact|auto/i, software: /software|digital|telecom|it\b|tech/i, consumer: /retail|consumer|food|e-?commerce|duty/i, energy: /energy|oil|power|aramco/i, finance: /bank|financ|insur|islamic/i, logistics: /logist|port|freight|dp world|aviation/i, realEstate: /real estate|immobil|property|emaar/i, sovereignInvestment: /invest|sovereign|fund/i, halalFood: /food|halal|retail/i, islamicFinance: /bank|financ|islamic/i, renewableEnergy: /energy|power|renew/i, luxuryRetail: /retail|luxur|fashion/i };
+const COMP_SRC = { Germany: "Fortune 500 Europe 2025 (Umsatzrangfolge)", UK: "Fortune 500 Europe 2025 (Umsatzrangfolge)", Kuwait: "KFH Pressemitteilung 2024 (Fusion mit Ahli United Bank Kuwait)", Bahrain: "KFH Pressemitteilung 2022 bis 2024 (Übernahme Ahli United Bank)" };
 export function CompetitorBlock({ rec, A, th, lang, data, t }) {
   const L = A.L, ca = (data.COMPETITOR_ANALYSIS || {})[A.target]; if (!ca) return null;
   const re = OVERLAP[rec.rec.prioritySector] || OVERLAP[rec.input.industry];
@@ -455,6 +457,7 @@ export function CompetitorBlock({ rec, A, th, lang, data, t }) {
       <tbody>{rows.map((r, i) => <tr key={i}><td style={{ ...td, fontWeight: 600 }}>{r.name}</td><td style={td}>{r.seg}</td><td style={{ ...td, color: r.hit ? th.neg : th.subtleInk }}>{r.ov}</td></tr>)}</tbody>
     </table></div>
     <p style={{ color: th.subtleInk, fontSize: 10.5, margin: "6px 0 10px" }}>{L.heur} {L.compNote}</p>
+    {COMP_SRC[A.target] && <SourceLine source={COMP_SRC[A.target]} lang={lang} th={th} />}
     <p style={{ color: th.ink, fontSize: 12.5, margin: "0 0 6px" }}><strong>{L.cGap}:</strong> {ca.gap}</p>
     <p style={{ color: th.ink, fontSize: 12.5, margin: 0 }}><strong>{L.cPos}:</strong> {pos} <Status kind="estimate" lang={lang} th={th} /></p>
   </section>;

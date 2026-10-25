@@ -233,8 +233,6 @@ export default function Root() {
     <footer style={{ padding: "22px 24px 30px", borderTop: `1px solid ${P.edge}`, color: P.sub, fontSize: 12.5, lineHeight: 1.7, textAlign: "center" }}>
       <p style={{ margin: "0 0 6px" }}>{T.disc}</p>
       <a href="#rechtliches" onClick={e => { e.preventDefault(); nav("legal"); }} style={{ color: P.sub, textDecoration: "underline", textUnderlineOffset: 3, minHeight: 44, display: "inline-flex", alignItems: "center" }}>{T.legal}</a>
-      <span aria-hidden> · </span>
-      <a href="https://nadin.dev" style={{ color: P.sub, textDecoration: "underline", textUnderlineOffset: 3, minHeight: 44, display: "inline-flex", alignItems: "center" }}>nadin.dev</a>
     </footer>
   </div>;
 }

@@ -11,7 +11,7 @@ import { LogOut, ChevronLeft, ChevronDown, ChevronUp } from "lucide-react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ComposedChart, Line, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ScatterChart, Scatter, ZAxis, ReferenceLine } from "recharts";
 
 /* ============================================================================
- * BACKEND-TAUSCHPUNKT — HIER ERSETZEN, SOBALD EIN ECHTES BACKEND BEREIT IST
+ * BACKEND-TAUSCHPUNKT, HIER ERSETZEN, SOBALD EIN ECHTES BACKEND BEREIT IST
  * ============================================================================
  * Aktuell (Demo-Modus): Diese Datei speichert Accounts/Analysen im
  * Browser-localStorage. Das funktioniert für Tests, aber Accounts sind nur
@@ -21,7 +21,7 @@ import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Toolti
  * Ersetze NUR den Block zwischen den Linien unten durch echte API-Aufrufe.
  * Der Rest der Datei (Login, Registrierung, Speichern von Analysen) ruft
  * ausschließlich window.storage.get/set/delete/list auf und muss NICHT
- * angefasst werden — Kopieren, Datei austauschen, fertig.
+ * angefasst werden, Kopieren, Datei austauschen, fertig.
  *
  * Die Ersatz-Implementierung muss folgende vier Funktionen mit exakt diesen
  * Signaturen und Rückgabewerten bereitstellen:
@@ -92,7 +92,7 @@ if (typeof window !== "undefined") {
     }
   };
   // If the host environment (e.g. a Claude artifact runtime) already
-  // provides window.storage, we still don't fully trust it — a network
+  // provides window.storage, we still don't fully trust it, a network
   // hiccup or a temporarily unreachable backend would otherwise take down
   // registration/login entirely. So EVERY call tries the host's storage
   // first (to get real persistence when it's actually available), and
@@ -145,18 +145,18 @@ if (typeof window !== "undefined") {
 
 
 /**
- * GCC Market Entry Tool — Core Analytical Engine
+ * GCC Market Entry Tool, Core Analytical Engine
  * -----------------------------------------------
  * Pure, framework-free business logic: scoring, recommendations,
  * entry-plan sequencing, detailed step roadmap, and the financial model.
- * No React, no DOM — fully unit-testable in isolation, which is the point.
+ * No React, no DOM, fully unit-testable in isolation, which is the point.
  *
  * IMPORTANT (read this before presenting the tool):
  * The country/sector scores in BASE and SECTOR_FIT are an illustrative
  * MVP rubric, not live market data. They are structured so that swapping
  * in a real data feed (GTAI sector reports, World Bank indicators, a
  * paid market-intelligence API) only requires replacing these two
- * constants — every downstream function (recommendation, entry plan,
+ * constants, every downstream function (recommendation, entry plan,
  * financial model) is agnostic to where the scores came from.
  */
 
@@ -273,7 +273,7 @@ const SECTOR_FIT = {
   }
 };
 
-/** World Bank (current US$, 2024). Population derived from GDP ÷ GDP-per-capita where a direct WB total wasn't quoted. Growth figures: World Bank / national statistics offices, 2024. Germany's 2024 GDP growth was genuinely negative (-0.5%, Destatis) — shown as-is, not smoothed over. Verified Aug 2026. */
+/** World Bank (current US$, 2024). Population derived from GDP ÷ GDP-per-capita where a direct WB total wasn't quoted. Growth figures: World Bank / national statistics offices, 2024. Germany's 2024 GDP growth was genuinely negative (-0.5%, Destatis), shown as-is, not smoothed over. Verified Aug 2026. */
 const COUNTRY_FUNDAMENTALS = {
   Germany: {
     populationMillions: 83.5,
@@ -322,7 +322,7 @@ const COUNTRY_FUNDAMENTALS = {
 const GROWTH_HISTORY_SOURCE = "Eurostat / national statistics offices (hist.) · Trading Economics + national forecasts through early 2026 (forecast)";
 const clamp = n => Math.max(0, Math.min(100, Math.round(n)));
 
-/** Regulatory Check — corporate tax, VAT and licensing per country. Real, sourced (Trading Economics, HMRC, national tax authorities). Verified Aug 2026. */
+/** Regulatory Check, corporate tax, VAT and licensing per country. Real, sourced (Trading Economics, HMRC, national tax authorities). Verified Aug 2026. */
 const REGULATORY_CHECK = {
   Germany: {
     corporateTax: "30% (Körperschaft + Gewerbesteuer kombiniert)",
@@ -362,7 +362,7 @@ const REGULATORY_CHECK = {
   }
 };
 
-/** Competitor Analysis — real, named market leaders per country (verified via search, not invented), plus a qualitative market-structure/gap note. Aug 2026. */
+/** Competitor Analysis, real, named market leaders per country (verified via search, not invented), plus a qualitative market-structure/gap note. Aug 2026. */
 const COMPETITOR_ANALYSIS = {
   Germany: {
     players: ["Volkswagen (Automobil, größter Konzern Europas nach Umsatz)", "Allianz (Versicherung/Finanzdienstleistungen)", "SAP (Software, größter Softwarekonzern Europas)"],
@@ -390,7 +390,7 @@ const COMPETITOR_ANALYSIS = {
   }
 };
 
-/** Market Opportunity — target audience, demand drivers, current trend per country. Real, sourced (see each entry), not modeled. Verified Aug 2026. */
+/** Market Opportunity, target audience, demand drivers, current trend per country. Real, sourced (see each entry), not modeled. Verified Aug 2026. */
 const MARKET_OPPORTUNITY = {
   Germany: {
     audience: "Mittelstand auf der Suche nach KI und Digitalisierungslösungen",
@@ -818,7 +818,7 @@ function round2(n) {
 /**
  * Three-month post-entry review: compares actual performance against a
  * linear quarter-of-Year-1 slice of the original forecast (a documented
- * approximation — the tool never modeled a separate quarterly forecast, so
+ * approximation, the tool never modeled a separate quarterly forecast, so
  * this is honest about being a quarter of the annual number, not a distinct
  * prediction). Produces a small set of rule-based observations purely from
  * the deviation pattern in the numbers the user just entered; no external
@@ -887,7 +887,7 @@ function computeThreeMonthReview(finModel, input) {
 /* ---------------------------------------------------------
    BUDGET SENSITIVITY ANALYSIS
    Answers "how would the target market's score change if the
-   expansion budget were higher or lower?" — recomputes computeScores
+   expansion budget were higher or lower?", recomputes computeScores
    at each multiplier of the current budget, holding industry and
    revenue fixed. Pure and testable: no UI, no randomness.
 --------------------------------------------------------- */
@@ -910,7 +910,7 @@ function computeBudgetSensitivity(input, targetMarket) {
     // The public ScoreBoard rounds `overall` to an integer for display consistency elsewhere in
     // the app; that rounding can hide real (if small) budget effects across nearby multipliers.
     // For a sensitivity *trend* line specifically, one decimal of precision on the same five
-    // already-rounded factor scores is the honest choice — it's the same data, just not
+    // already-rounded factor scores is the honest choice, it's the same data, just not
     // re-rounded away, not a different or inflated calculation.
     if (!s) return { budgetMultiplier: m, budget, overallScore: 0 };
     const preciseOverall = Math.round((s.market + s.competition + s.regulatory + s.partner + s.investment) / 5 * 10) / 10;
@@ -929,7 +929,7 @@ function computeBudgetSensitivity(input, targetMarket) {
 /**
  * Robust-enough CSV parsing for a single-row template: auto-detects
  * comma vs. semicolon as the delimiter (German-locale Excel exports
- * CSV with semicolons by default — the most common real-world cause
+ * CSV with semicolons by default, the most common real-world cause
  * of "import doesn't work"), strips a UTF-8 BOM if present, and
  * tolerates \r\n line endings.
  */
@@ -1012,7 +1012,7 @@ const fontImport = `@keyframes opalPulse { 0%, 100% { opacity: 0.55; transform: 
 @keyframes crystalDrift { from { transform: translateX(-15%); } to { transform: translateX(-55%); } }
 @keyframes crystalDriftRev { from { transform: translateX(-55%); } to { transform: translateX(-15%); } }
 @keyframes crystalWobble3D { 0% { transform: rotateY(-16deg) rotateX(5deg); } 50% { transform: rotateY(16deg) rotateX(-5deg); } 100% { transform: rotateY(-16deg) rotateX(5deg); } }
-.opal-live-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #527FB8; box-shadow: 0 0 6px 1px rgba(82,127,184,0.9); animation: opalPulse 1.8s ease-in-out infinite; }
+.opal-live-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: 0.8; }
 .facet-card { clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px)); }
 .facet-card-sm { clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px)); }
 
@@ -1043,7 +1043,7 @@ body, button, input, select, textarea { font-family: 'Inter','Noto Sans Arabic',
 `;
 
 /**
- * A genuinely 3D rotating faceted gem — real CSS 3D (perspective +
+ * A genuinely 3D rotating faceted gem, real CSS 3D (perspective +
  * preserve-3d + translateZ per facet), not a flat shape with a drop
  * shadow. Reused both full-size in the intro and mini-size in the
  * header, so the "3D crystal" feeling stays present throughout the
@@ -1089,7 +1089,7 @@ function Crystal3D({ size = 120, color = "#527FB8", colorLight = "#FFFFFF", spin
 }
 
 /**
- * A large, centered, radially-symmetric crystal "flower" — real 3D
+ * A large, centered, radially-symmetric crystal "flower", real 3D
  * (perspective + preserve-3d + translateZ per petal), used as the
  * signature intro/login visual. Petals are arranged with in-plane
  * rotate() around a shared center (the flower silhouette) while the
@@ -1138,7 +1138,7 @@ function CrystalFlower({ size = 260, color = "#527FB8", colorLight = "#FFFFFF", 
           background: `radial-gradient(circle, ${colorLight}, ${color})`,
           clipPath: "polygon(50% 0%, 100% 38%, 50% 100%, 0% 38%)",
           transform: "translateZ(24px)",
-          boxShadow: `0 0 34px ${color}`
+          boxShadow: "none"
         }} />
       </div>
     </div>
@@ -1146,7 +1146,7 @@ function CrystalFlower({ size = 260, color = "#527FB8", colorLight = "#FFFFFF", 
 }
 
 /**
- * Ambient background — small faceted crystals drifting sideways in a
+ * Ambient background, small faceted crystals drifting sideways in a
  * few staggered rows, purely decorative and behind all content.
  */
 function AmbientCrystalRows() {
@@ -1177,7 +1177,7 @@ function AmbientCrystalRows() {
  * Real photographic crystal (cropped from Nadin's own AI-generated
  * reference art, feathered to a transparent edge), not a CSS shape.
  * Replaces the earlier hand-drawn CrystalFlower/CrystalStar for the
- * hero visual — genuine faceted-gem detail instead of flat polygons.
+ * hero visual, genuine faceted-gem detail instead of flat polygons.
  */
 function CrystalPhoto({ size = 300 }) {
   const small = size <= 100;
@@ -1218,7 +1218,7 @@ function CrystalMini({ size = 30, color = "#527FB8" }) {
 }
 
 /**
- * Crystalline circular "Executive Score" ring — a premium alternative to a
+ * Crystalline circular "Executive Score" ring, a premium alternative to a
  * plain progress bar. Renders a gold/teal gradient arc proportional to
  * `score` (0-100) around a large centered number, with a faceted glow.
  * Pure presentational component; no external deps beyond inline SVG.
@@ -1240,7 +1240,7 @@ function ExecutiveScoreRing({
   const tone = clamped >= 75 ? gold : clamped >= 50 ? teal : "#C97B5C";
   return (
     <div style={{ position: "relative", width: size, height: size, margin: "0 auto" }}>
-      <svg width={size} height={size} style={{ transform: "rotate(-90deg)", filter: `drop-shadow(0 0 10px ${tone}55)` }}>
+      <svg width={size} height={size} style={{ transform: "rotate(-90deg)", filter: "none" }}>
         <defs>
           <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor={teal} />
@@ -2170,7 +2170,7 @@ const SOURCES = {
 
 /**
  * Demo-only PDF extraction simulation. No real OCR/LLM document parsing
- * happens here — the uploaded filename is hashed to pick one of these
+ * happens here, the uploaded filename is hashed to pick one of these
  * fictional company profiles, purely so the "PDF Scan" input method has
  * something to demonstrate. Every entry is explicitly labeled fictional;
  * see README for the production-version plan (real document analysis via AI).
@@ -2181,7 +2181,7 @@ const SOURCES = {
  * of the uploaded PDF and looks for the labeled fields used by this tool's
  * company-profile format. This only works on PDFs that have a real text layer
  * (i.e. not a photographed/scanned image without OCR, and not a PDF whose
- * Arabic glyphs were embedded without a proper Unicode mapping) — for
+ * Arabic glyphs were embedded without a proper Unicode mapping), for
  * anything else it returns as much as it could find and leaves the rest for
  * manual entry, rather than inventing data.
  */
@@ -2695,7 +2695,7 @@ function guessIndustryKey(text) {
 function extractLabeledField(text, label, stopLabels) {
   // Values in these company-profile documents always sit on a single line
   // ("LABEL: value"), so capturing to end-of-line is simpler and far more
-  // robust than looking ahead to the next known label — that approach
+  // robust than looking ahead to the next known label, that approach
   // breaks as soon as a free-text narrative section (e.g. a market
   // performance paragraph) sits between two labeled fields, or when a
   // field's own value happens to contain another label's literal text.
@@ -2719,7 +2719,7 @@ function parseListField(rawText, label, stopLabels) {
 /**
  * Splits the raw PDF text into one block per "PRODUCT N" section and parses
  * NAME / CATEGORY / PRICE / USP / TARGET CUSTOMER / PERFORMANCE out of each.
- * English labels only for now — most GCC-origin company profiles prepared
+ * English labels only for now, most GCC-origin company profiles prepared
  * for international/European buyers are already written in English;
  * Arabic product-field labels can be added the same way as the bilingual
  * company-level fields above if real documents need it.
@@ -2753,7 +2753,7 @@ function parseProductBlocks(rawText) {
 
 /**
  * Confidence classification for every field this scanner can populate.
- * VERIFIED / ESTIMATED / INFERRED / MISSING — never present an inference as
+ * VERIFIED / ESTIMATED / INFERRED / MISSING, never present an inference as
  * a verified fact.
  */
 function classifyFieldConfidence({ companyName, industryRaw, industry, revenueRaw, revenue, budgetRaw, budget, employeesRaw, products, certifications, customerSegments, salesChannels }) {
@@ -2868,7 +2868,7 @@ function parseCompanyProfileText(rawTextIn) {
     confidence
   };
 }
-/** Hoisted to module scope for the same reason as Header — see Header.tsx. */
+/** Hoisted to module scope for the same reason as Header, see Header.tsx. */
 /**
  * Small print-only building blocks shared by both report documents below.
  * Kept deliberately plain (serif headings, simple borders, no dark theme,
@@ -3247,7 +3247,7 @@ function Field({
  * component's render body gives them a new identity on every render, which
  * makes React unmount+remount their DOM subtree (losing input focus/value)
  * on every keystroke of unrelated state elsewhere in the parent. Keeping
- * this here, with explicit props, is the fix — see README for the bug this
+ * this here, with explicit props, is the fix, see README for the bug this
  * caused when Header briefly lived inside the main App component.
  */
 
@@ -3333,10 +3333,10 @@ function getTimelineLabel(timelineMonths, t) {
 }
 
 /* ---------------------------------------------------------
-   CRYSTAL INTRO — plays once per load. Shards fly in from the
+   CRYSTAL INTRO, plays once per load. Shards fly in from the
    edges, converge into a faceted crystal, then reveal the logo
    letter. A short generated chime (Web Audio API, no audio file)
-   plays alongside — wrapped in try/catch since some browsers
+   plays alongside, wrapped in try/catch since some browsers
    block audio before any user gesture.
 --------------------------------------------------------- */
 function CrystalIntro({ onDone, appName, isRTL }) {
@@ -3363,7 +3363,7 @@ function CrystalIntro({ onDone, appName, isRTL }) {
         osc.stop(t0 + 1.2);
       });
     } catch (e) {
-      /* autoplay blocked or unsupported — silent, animation still plays */
+      /* autoplay blocked or unsupported, silent, animation still plays */
     }
     const t1 = setTimeout(() => setPhase("formed"), 1300);
     const t2 = setTimeout(() => setPhase("fading"), 2300);
@@ -3491,7 +3491,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
   const { REGULATORY_CHECK, COMPETITOR_ANALYSIS, MARKET_OPPORTUNITY } = intelFor(lang);
   const [dark, setDark] = useState(readTheme);
   useEffect(() => { writeTheme(dark); }, [dark]);
-  /** Real, persisted multi-user accounts via the artifact storage API — survives reloads and works across visitors of this tool link. Accounts are stored under a shared key so anyone who registers can log back in from any session; each account only needs a name + password. This is still a demo-grade auth (no hashing, no real backend server) — good enough for a working multi-user prototype, not for handling sensitive real passwords. */
+  /** Real, persisted multi-user accounts via the artifact storage API, survives reloads and works across visitors of this tool link. Accounts are stored under a shared key so anyone who registers can log back in from any session; each account only needs a name + password. This is still a demo-grade auth (no hashing, no real backend server), good enough for a working multi-user prototype, not for handling sensitive real passwords. */
   const [db, setDb] = useState({});
   const [dbLoaded, setDbLoaded] = useState(false);
   const [storageWarning, setStorageWarning] = useState(false);
@@ -3561,7 +3561,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
     scannedProducts: [] // full rich product objects from a PDF scan, kept alongside productsText so scanned detail (price/USP/target customer) survives even though the visible field is a simple comma list
   });
   const [activeResult, setActiveResult] = useState(null);
-  const [printMode, setPrintMode] = useState(null); // null | "summary" — selects which of the two dedicated print documents is shown to the browser's print dialog
+  const [printMode, setPrintMode] = useState(null); // null | "summary", selects which of the two dedicated print documents is shown to the browser's print dialog
   const [reviewForm, setReviewForm] = useState({
     revenueActual: "",
     costsActual: "",
@@ -3603,7 +3603,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
         const res = await backend.accountsGet();
         if (res && res.value) accounts = JSON.parse(res.value);
       } catch (e) {
-        /* key doesn't exist yet on first-ever run, or storage unavailable — start with an empty account list */
+        /* key doesn't exist yet on first-ever run, or storage unavailable, start with an empty account list */
       }
       if (cancelled) return;
       if (!backend.enabled) setDb(accounts);
@@ -3617,7 +3617,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
           restored = true;
         }
       } catch (e) {
-        /* no remembered session on this device — normal for a first visit */
+        /* no remembered session on this device, normal for a first visit */
       }
       if (!restored && backend.IS_DEMO && !cancelled) {
         // Demo build: no login needed, open the tool directly with a local demo account.
@@ -3638,7 +3638,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
    * Opens the browser's native print dialog once React has actually rendered
    * the chosen report's DOM (a raw window.print() called in the same tick as
    * setPrintMode would still see the old DOM). The dialog itself lets the
-   * person "Save as PDF" — this is a real, working export, not a simulation,
+   * person "Save as PDF", this is a real, working export, not a simulation,
    * just without an extra PDF-generation library. printMode resets once the
    * dialog closes (afterprint fires whether the person printed or cancelled).
    */
@@ -3886,7 +3886,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
         const res = await backend.accountsGet();
         if (res && res.value) latestDb = JSON.parse(res.value);
       } catch (e) {
-        /* no accounts saved yet, or storage temporarily unreachable — fall back to local state */
+        /* no accounts saved yet, or storage temporarily unreachable, fall back to local state */
       }
       if (latestDb[key]) {
         await finishExistingName(key, latestDb);
@@ -3948,7 +3948,7 @@ function GCCMarketEntryApp({ onHub, skipIntro }) {
         const res = await backend.accountsGet();
         if (res && res.value) latestDb = JSON.parse(res.value);
       } catch (e) {
-        /* no accounts saved yet, or storage temporarily unreachable — fall back to local state */
+        /* no accounts saved yet, or storage temporarily unreachable, fall back to local state */
       }
       const record = latestDb[key];
       const enteredHash = authRef.current.password ? await hashPassword(authRef.current.password) : "";
@@ -5162,7 +5162,7 @@ const renderCountryDetail = (country, s) => {
             {hintLine}{countryPanel}
           </div>
 
-          {/* executive score ring — premium crystalline "at a glance" score */}
+          {/* executive score ring, premium crystalline "at a glance" score */}
           <div className="p-6 facet-card flex flex-col items-center" style={{
           background: cardBg,
           border: `1px solid ${palette.gold}`
@@ -5835,7 +5835,7 @@ const renderCountryDetail = (country, s) => {
             })()}
           </div>
 
-          {/* Market Opportunity — audience, demand drivers, trend per country */}
+          {/* Market Opportunity, audience, demand drivers, trend per country */}
           <div className="p-6 facet-card mt-6" style={{
           background: cardBg,
           border: `1px solid ${lineColor}`
@@ -5881,7 +5881,7 @@ const renderCountryDetail = (country, s) => {
             </div>
           </div>
 
-          {/* Competitor Analysis — real market leaders + market gap note per country */}
+          {/* Competitor Analysis, real market leaders + market gap note per country */}
           <div className="p-6 facet-card mt-6" style={{
           background: cardBg,
           border: `1px solid ${lineColor}`
@@ -5924,7 +5924,7 @@ const renderCountryDetail = (country, s) => {
             </div>
           </div>
 
-          {/* Regulatory Check — corporate tax, VAT, licensing per country */}
+          {/* Regulatory Check, corporate tax, VAT, licensing per country */}
           <div className="p-6 facet-card mt-6" style={{
           background: cardBg,
           border: `1px solid ${lineColor}`

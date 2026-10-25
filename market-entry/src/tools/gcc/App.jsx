@@ -5211,6 +5211,7 @@ const renderCountryDetail = (country, s) => {
               </button>
             </div>
           </div>
+          <p className="no-print" style={{ color: subtleInk, fontSize: 12, margin: "0 0 6px" }}>{lang === "ar" ? "يفتح الزر نافذة الطباعة في المتصفح، اختر هناك «حفظ كملف PDF»." : lang === "en" ? "The buttons open your browser\u2019s print dialog: choose \u201cSave as PDF\u201d there." : "Die Knöpfe öffnen den Druckdialog des Browsers: dort „Als PDF speichern“ wählen."}</p>
           <p style={{
           color: subtleInk,
           marginBottom: 28

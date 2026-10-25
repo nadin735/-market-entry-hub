@@ -303,6 +303,9 @@
     padding:22px 18px; background:var(--obsidian-2); border:1px solid var(--hairline-strong);
   }
   .precedent-icon{ width:36px; height:36px; object-fit:contain; margin-bottom:14px; }
+  .prec-src{ margin-top:10px !important; font-size:11.5px !important; }
+  .prec-src a{ color:var(--champagne); text-decoration:underline; text-underline-offset:2px; }
+  .prec-note{ margin:18px 0 0; font-size:12px; color:var(--stone); }
   .precedent-card p{ font-size:12.5px; line-height:1.6; color:var(--stone); margin:0; }
   @media (max-width:900px){ .precedents-grid{ grid-template-columns:repeat(2,1fr); } }
   @media (max-width:520px){ .precedents-grid{ grid-template-columns:1fr; } }
@@ -720,7 +723,7 @@
     <div class="info-grid">
       <div class="info-card reveal"><h4 data-i18n="m1_h">Datenbasis</h4><p data-i18n="m1_p">Wirtschaftsdaten stammen aus Veröffentlichungen der Weltbank (2024) und weiteren genannten Quellen. Sie sind als Momentaufnahme hinterlegt, nicht live abgerufen. Jede Angabe zeigt Quelle und Datenstatus.</p></div>
       <div class="info-card reveal"><h4 data-i18n="m2_h">Scoring</h4><p data-i18n="m2_p">Fünf Kriterien: Markt, Wettbewerb, Regulatorik, Partner, Investition. Standard ist Gleichgewichtung (20 % je Kriterium) als neutrale Ausgangsposition. Die Gewichte lassen sich im Tool per Schieberegler ändern.</p></div>
-      <div class="info-card reveal"><h4 data-i18n="m3_h">Robustheit</h4><p data-i18n="m3_p">Das Ranking wird mit 10 Gewichtungsszenarien und 1.000 zufälligen Gewichtungen (Monte Carlo, reproduzierbar) geprüft. So sieht man, ob eine Empfehlung stabil ist oder vom Gewicht abhängt.</p></div>
+      <div class="info-card reveal"><h4 data-i18n="m3_h">Robustheit</h4><p data-i18n="m3_p">Das Ranking wird mit 10 Gewichtungsszenarien und 1.000 zufälligen Gewichtungen (Monte Carlo, fester Seed 20261016, reproduzierbar) geprüft. So sieht man, ob eine Empfehlung stabil ist oder vom Gewicht abhängt.</p></div>
       <div class="info-card reveal"><h4 data-i18n="m4_h">Grenzen</h4><p data-i18n="m4_p">Die Länderwerte sind ein Analystenraster (Schätzung) und nicht an realen Markteintritten validiert. Das Finanzmodell ist illustrativ. Nächste Schritte: Live Datenquellen und Validierung mit Praxisfällen.</p></div>
     </div>
   </div>
@@ -829,7 +832,7 @@
         <p data-i18n="br_p">Der Golf und Europa sind zwei wirtschaftlich sehr unterschiedliche, aber komplementäre Räume, mit eigenem Kapital, eigener Regulatorik und eigenem Marktverständnis. Beide Tools sind bewusst als Spiegelpaar gebaut, nicht als zwei unabhängige Produkte.</p>
         <ul class="bridge-list">
           <li data-i18n-html="br_li1"><b>Wirtschaftliche Partnerschaft</b>, Handel und Investitionen in beide Richtungen strukturiert bewerten.</li>
-          <li data-i18n-html="br_li2"><b>Reale Daten statt Annahmen</b>, Zeitreihen von Weltbank und IMF für beide Regionen, konsistent recherchiert.</li>
+          <li data-i18n-html="br_li2"><b>Belegte Quellen</b>: Veröffentlichungen der Weltbank als hinterlegte Momentaufnahme; Schätzungen und Annahmen sind gekennzeichnet.</li>
           <li data-i18n-html="br_li3"><b>Regulatorische Klarheit</b>, Steuern, Lizenzpflichten und Hürden beim Markteintritt auf einen Blick.</li>
           <li data-i18n-html="br_li4"><b>Zwei Richtungen, ein Modell</b>, dieselbe Scoring Logik, gespiegelt auf beide Zielmärkte.</li>
         </ul>
@@ -847,34 +850,39 @@
   <div class="wrap">
     <div class="section-head reveal">
       <h2 data-i18n="prec_h2">Es passiert bereits, in beide Richtungen.</h2>
-      <p data-i18n="prec_p">Acht real recherchierte Beispiele, keine Simulation, zur Einordnung, warum die Verbindung GCC und Europa wirtschaftlich real und aktiv ist.</p>
+      <p data-i18n="prec_p">Sieben recherchierte Beispiele, keine Simulation, zur Einordnung, warum die Verbindung GCC und Europa wirtschaftlich real und aktiv ist. Zu jedem Beispiel ist die Quelle verlinkt.</p>
     </div>
     <div class="precedents-grid">
       <div class="precedent-card reveal">
-        <p data-i18n="prec_1">Katar Investment Authority hält seit 2009 rund 17&nbsp;% der Stimmrechte an Volkswagen, eines der bekanntesten Beispiele für Kapital aus der Golfregion in der europäischen Industrie.</p>
+        <p data-i18n="prec_1">Die Qatar Investment Authority erwarb 2009 über Qatar Holding rund 17 % der Stammaktien von Volkswagen, eines der bekanntesten Beispiele für Kapital aus der Golfregion in der europäischen Industrie.</p>
+        <p class="prec-src"><span data-i18n="prec_src">Quelle:</span> <a dir="ltr" href="https://www.industryweek.com/finance/software-systems/article/21949371/qatar-acquires-17-of-vw" target="_blank" rel="noopener noreferrer">IndustryWeek, 18.12.2009</a></p>
       </div>
       <div class="precedent-card reveal">
-        <p data-i18n="prec_2">Abu Dhabis Staatsfonds Aabar erwarb 2009 rund 9&nbsp;% an Daimler (Mercedes Benz).</p>
+        <p data-i18n="prec_2">Abu Dhabis Staatsfonds Aabar erwarb 2009 gut 9 % an Daimler (Mercedes Benz) und wurde damit größter Einzelaktionär.</p>
+        <p class="prec-src"><span data-i18n="prec_src">Quelle:</span> <a dir="ltr" href="https://www.npr.org/2009/03/23/102229795/mideast-investor-buys-big-stake-in-daimler" target="_blank" rel="noopener noreferrer">NPR, 23.03.2009</a></p>
       </div>
       <div class="precedent-card reveal">
-        <p data-i18n="prec_3">Allein in den ersten sieben Monaten 2024 exportierte Deutschland Fahrzeuge im Wert von 4,8&nbsp;Mrd. Euro nach Saudi Arabien.</p>
+        <p data-i18n="prec_4">Siemens baute ab 2012 gemeinsam mit dem lokalen Partner E.A. Juffali &amp; Brothers ein Werk für Gasturbinen und Kompressoren in Dammam (Saudi Arabien), geplant für Ende 2013.</p>
+        <p class="prec-src"><span data-i18n="prec_src">Quelle:</span> <a dir="ltr" href="https://www.hydrocarbonprocessing.com/news/2012/05/siemens-breaks-ground-on-new-saudi-plant-for-gas-turbines-compressors/" target="_blank" rel="noopener noreferrer">Hydrocarbon Processing, 05/2012</a></p>
       </div>
       <div class="precedent-card reveal">
-        <p data-i18n="prec_4">Siemens ist seit über 80 Jahren in Saudi Arabien aktiv und eröffnete 2013 ein eigenes Turbinenwerk in Dammam, gemeinsam mit dem lokalen Partner E.A. Juffali &amp; Brothers.</p>
+        <p data-i18n="prec_5">BASF leitet das Geschäft für den Nahen Osten und Ägypten aus Dubai (Jebel Ali), dort sitzt die Regionalzentrale.</p>
+        <p class="prec-src"><span data-i18n="prec_src">Quelle:</span> <a dir="ltr" href="https://www.basf.com/ae/en/who-we-are/BASF-in-the-UAE.html" target="_blank" rel="noopener noreferrer">BASF UAE</a></p>
       </div>
       <div class="precedent-card reveal">
-        <p data-i18n="prec_5">BASF hat seine Zentrale für den Nahen Osten in Dubai und ist über ein Joint Venture mit der National Industrialisation Company an einer Propandehydrierungsanlage in Jubail (Saudi Arabien) beteiligt.</p>
+        <p data-i18n="prec_6">Adidas strebt über 100 eigene Filialen in Saudi Arabien bis 2025 an und hat dafür sein erstes Büro in Riad eröffnet.</p>
+        <p class="prec-src"><span data-i18n="prec_src">Quelle:</span> <a dir="ltr" href="https://www.arabianbusiness.com/gcc/saudi-arabia/exclusive-adidas-saudi-targets-massive-expansion-100-stores-partnerships-with-al-nassr-saudi-pro-league-al-ahli" target="_blank" rel="noopener noreferrer">Arabian Business</a></p>
       </div>
       <div class="precedent-card reveal">
-        <p data-i18n="prec_6">Adidas plant über 100 eigene Filialen in Saudi Arabien bis 2025 und hat dafür ein eigenes Büro in Riad eröffnet.</p>
+        <p data-i18n="prec_7">Abu Dhabis Staatsfonds Mubadala kündigte 2018 einen Fonds über 400 Mio USD an, der in europäische Technologieunternehmen investiert.</p>
+        <p class="prec-src"><span data-i18n="prec_src">Quelle:</span> <a dir="ltr" href="https://arabianbusiness.com/industries/technology/398675-mubadala-to-launch-400m-european-tech-fund" target="_blank" rel="noopener noreferrer">Arabian Business, 13.06.2018</a></p>
       </div>
       <div class="precedent-card reveal">
-        <p data-i18n="prec_7">Abu Dhabis Staatsfonds Mubadala kündigte einen Fonds über 400 Mio USD an, der gezielt in europäische und britische Technologieunternehmen investiert.</p>
-      </div>
-      <div class="precedent-card reveal">
-        <p data-i18n="prec_8">Die fünf größten Staatsfonds der Golfregion (PIF, QIA, ADIA, Mubadala, ADQ) zählen laut einer Studie der Stiftung Wissenschaft und Politik seit 2024 drei Jahre in Folge zu den zehn aktivsten Staatsfonds weltweit, Europa gilt dabei als besonders attraktiver Zielmarkt.</p>
+        <p data-i18n="prec_8">Laut SWP Studie zählten die fünf Staatsfonds PIF, QIA, ADIA, Mubadala und ADQ 2024 zum dritten Mal in Folge zu den zehn aktivsten Staatsfonds weltweit. Europa gilt als zunehmend attraktiver Zielmarkt.</p>
+        <p class="prec-src"><span data-i18n="prec_src">Quelle:</span> <a dir="ltr" href="https://www.swp-berlin.org/10.18449/2025S18/" target="_blank" rel="noopener noreferrer">SWP Studie 2025/S 18, 04.12.2025</a></p>
       </div>
     </div>
+    <p class="prec-note" data-i18n="prec_note">Quellen am 25.10.2026 abgerufen. Angaben nach den Quellen, ohne eigene Berechnung.</p>
   </div>
 </section>
 
@@ -1042,7 +1050,7 @@ const I18N = {
     "m2_h": "Scoring",
     "m2_p": "Fünf Kriterien: Markt, Wettbewerb, Regulatorik, Partner, Investition. Standard ist Gleichgewichtung (20 % je Kriterium) als neutrale Ausgangsposition. Die Gewichte lassen sich im Tool per Schieberegler ändern.",
     "m3_h": "Robustheit",
-    "m3_p": "Das Ranking wird mit 10 Gewichtungsszenarien und 1.000 zufälligen Gewichtungen (Monte Carlo, reproduzierbar) geprüft. So sieht man, ob eine Empfehlung stabil ist oder vom Gewicht abhängt.",
+    "m3_p": "Das Ranking wird mit 10 Gewichtungsszenarien und 1.000 zufälligen Gewichtungen (Monte Carlo, fester Seed 20261016, reproduzierbar) geprüft. So sieht man, ob eine Empfehlung stabil ist oder vom Gewicht abhängt.",
     "m4_h": "Grenzen",
     "m4_p": "Die Länderwerte sind ein Analystenraster (Schätzung) und nicht an realen Markteintritten validiert. Das Finanzmodell ist illustrativ. Nächste Schritte: Live Datenquellen und Validierung mit Praxisfällen.",
     "case_eyebrow": "Fallstudie",
@@ -1154,15 +1162,16 @@ const I18N = {
     "re_3": "Allein in den ersten sieben Monaten 2024 exportierte Deutschland Fahrzeuge im Wert von 4,8 Mrd. Euro nach Saudi Arabien.",
     "prec_eyebrow": "Reale Präzedenzfälle",
     "prec_h2": "Es passiert bereits, in beide Richtungen.",
-    "prec_p": "Acht real recherchierte Beispiele, keine Simulation, zur Einordnung, warum die Verbindung GCC und Europa wirtschaftlich real und aktiv ist.",
-    "prec_1": "Katar Investment Authority hält seit 2009 rund 17 % der Stimmrechte an Volkswagen, eines der bekanntesten Beispiele für Kapital aus der Golfregion in der europäischen Industrie.",
-    "prec_2": "Abu Dhabis Staatsfonds Aabar erwarb 2009 rund 9 % an Daimler (Mercedes Benz).",
-    "prec_3": "Allein in den ersten sieben Monaten 2024 exportierte Deutschland Fahrzeuge im Wert von 4,8 Mrd. Euro nach Saudi Arabien.",
-    "prec_4": "Siemens ist seit über 80 Jahren in Saudi Arabien aktiv und eröffnete 2013 ein eigenes Turbinenwerk in Dammam, gemeinsam mit dem lokalen Partner E.A. Juffali & Brothers.",
-    "prec_5": "BASF hat seine Zentrale für den Nahen Osten in Dubai und ist über ein Joint Venture mit der National Industrialisation Company an einer Propandehydrierungsanlage in Jubail (Saudi Arabien) beteiligt.",
-    "prec_6": "Adidas plant über 100 eigene Filialen in Saudi Arabien bis 2025 und hat dafür ein eigenes Büro in Riad eröffnet.",
-    "prec_7": "Abu Dhabis Staatsfonds Mubadala kündigte einen Fonds über 400 Mio USD an, der gezielt in europäische und britische Technologieunternehmen investiert.",
-    "prec_8": "Die fünf größten Staatsfonds der Golfregion (PIF, QIA, ADIA, Mubadala, ADQ) zählen laut einer Studie der Stiftung Wissenschaft und Politik seit 2024 drei Jahre in Folge zu den zehn aktivsten Staatsfonds weltweit, Europa gilt dabei als besonders attraktiver Zielmarkt.",
+    "prec_p": "Sieben recherchierte Beispiele, keine Simulation, zur Einordnung, warum die Verbindung GCC und Europa wirtschaftlich real und aktiv ist. Zu jedem Beispiel ist die Quelle verlinkt.",
+    "prec_1": "Die Qatar Investment Authority erwarb 2009 über Qatar Holding rund 17 % der Stammaktien von Volkswagen, eines der bekanntesten Beispiele für Kapital aus der Golfregion in der europäischen Industrie.",
+    "prec_2": "Abu Dhabis Staatsfonds Aabar erwarb 2009 gut 9 % an Daimler (Mercedes Benz) und wurde damit größter Einzelaktionär.",
+    "prec_4": "Siemens baute ab 2012 gemeinsam mit dem lokalen Partner E.A. Juffali & Brothers ein Werk für Gasturbinen und Kompressoren in Dammam (Saudi Arabien), geplant für Ende 2013.",
+    "prec_5": "BASF leitet das Geschäft für den Nahen Osten und Ägypten aus Dubai (Jebel Ali), dort sitzt die Regionalzentrale.",
+    "prec_6": "Adidas strebt über 100 eigene Filialen in Saudi Arabien bis 2025 an und hat dafür sein erstes Büro in Riad eröffnet.",
+    "prec_7": "Abu Dhabis Staatsfonds Mubadala kündigte 2018 einen Fonds über 400 Mio USD an, der in europäische Technologieunternehmen investiert.",
+    "prec_8": "Laut SWP Studie zählten die fünf Staatsfonds PIF, QIA, ADIA, Mubadala und ADQ 2024 zum dritten Mal in Folge zu den zehn aktivsten Staatsfonds weltweit. Europa gilt als zunehmend attraktiver Zielmarkt.",
+    "prec_src": "Quelle:",
+    "prec_note": "Quellen am 25.10.2026 abgerufen. Angaben nach den Quellen, ohne eigene Berechnung.",
     "about_eyebrow": "Über mich",
     "about_h2": "Nadin Okil",
     "about_role": "Builder · Cross Border Market Entry",
@@ -1189,7 +1198,7 @@ const I18N = {
     "m2_h": "Scoring",
     "m2_p": "Five criteria: market, competition, regulation, partners, investment. Default is equal weighting (20% each) as a neutral starting point. Weights can be changed with sliders in the tool.",
     "m3_h": "Robustness",
-    "m3_p": "The ranking is tested with 10 weighting scenarios and 1,000 random weightings (Monte Carlo, reproducible), showing whether a recommendation is stable or depends on the weights.",
+    "m3_p": "The ranking is tested with 10 weighting scenarios and 1,000 random weightings (Monte Carlo, fixed seed 20261016, reproducible), showing whether a recommendation is stable or depends on the weights.",
     "m4_h": "Limits",
     "m4_p": "Country values are an analyst rubric (estimate) and not validated against real market entries. The financial model is illustrative. Next steps: live data sources and validation with practice cases.",
     "case_eyebrow": "Case study",
@@ -1301,15 +1310,16 @@ const I18N = {
     "re_3": "In the first seven months of 2024 alone, Germany exported vehicles worth €4.8 billion to Saudi Arabia.",
     "prec_eyebrow": "Real World Precedents",
     "prec_h2": "It is already happening, in both directions.",
-    "prec_p": "Eight genuinely researched examples, not a simulation, context for why the GCC \u2194 Europe connection is economically real and active.",
-    "prec_1": "Qatar Investment Authority has held about 17% of the voting rights in Volkswagen since 2009, one of the best known examples of Gulf capital in European industry.",
-    "prec_2": "Abu Dhabi\u2019s sovereign fund Aabar acquired around 9% of Daimler (Mercedes Benz) in 2009.",
-    "prec_3": "In the first seven months of 2024 alone, Germany exported vehicles worth €4.8 billion to Saudi Arabia.",
-    "prec_4": "Siemens has been active in Saudi Arabia for over 80 years and opened its own turbine plant in Dammam in 2013 together with local partner E.A. Juffali & Brothers.",
-    "prec_5": "BASF has its Middle East headquarters in Dubai and holds a stake, via a joint venture with the National Industrialisation Company, in a propane dehydrogenation plant in Jubail, Saudi Arabia.",
-    "prec_6": "Adidas plans to open more than 100 of its own stores in Saudi Arabia by 2025 and has opened its own office in Riyadh for this purpose.",
-    "prec_7": "Abu Dhabi\u2019s sovereign fund Mubadala announced a $400 million fund targeting investments in European and UK technology companies.",
-    "prec_8": "The five largest Gulf sovereign wealth funds (PIF, QIA, ADIA, Mubadala, ADQ) have ranked among the world\u2019s ten most active sovereign wealth funds for three consecutive years since 2024, according to a study by the German Institute for International and Security Affairs (SWP), with Europe seen as a particularly attractive target market.",
+    "prec_p": "Seven researched examples, not a simulation, context for why the GCC and Europe link is economically real and active. Each example links to its source.",
+    "prec_1": "In 2009 the Qatar Investment Authority, through Qatar Holding, acquired about 17% of Volkswagen’s ordinary shares, one of the best known examples of Gulf capital in European industry.",
+    "prec_2": "Abu Dhabi’s sovereign fund Aabar acquired just over 9% of Daimler (Mercedes Benz) in 2009 and became its largest single shareholder.",
+    "prec_4": "From 2012 Siemens built a gas turbine and compressor plant in Dammam (Saudi Arabia) together with its local partner E.A. Juffali & Brothers, planned for completion in late 2013.",
+    "prec_5": "BASF runs its business for the Middle East and Egypt from Dubai (Jebel Ali), where its regional headquarters is located.",
+    "prec_6": "Adidas aims to open more than 100 of its own stores in Saudi Arabia by 2025 and has opened its first office in Riyadh for this.",
+    "prec_7": "Abu Dhabi’s sovereign fund Mubadala announced a $400 million fund in 2018 that invests in European technology companies.",
+    "prec_8": "According to an SWP study, the five funds PIF, QIA, ADIA, Mubadala and ADQ ranked among the ten most active sovereign wealth funds worldwide for the third time in a row in 2024. Europe is seen as an increasingly attractive target market.",
+    "prec_src": "Source:",
+    "prec_note": "Sources retrieved on 25 Oct 2026. Figures as stated in the sources, no own calculation.",
     "about_eyebrow": "About Me",
     "about_h2": "Nadin Okil",
     "about_role": "Builder · Cross Border Market Entry",
@@ -1336,7 +1346,7 @@ const I18N = {
     "m2_h": "التقييم",
     "m2_p": "خمسة معايير: السوق والمنافسة والتنظيم والشركاء والاستثمار. الافتراضي أوزان متساوية (20% لكل معيار) كنقطة انطلاق محايدة. ويمكن تغيير الأوزان بالمنزلقات في الأداة.",
     "m3_h": "الثبات",
-    "m3_p": "يُختبر الترتيب بعشرة سيناريوهات للأوزان وألف وزن عشوائي (مونت كارلو، قابل للتكرار)، ليظهر هل التوصية ثابتة أم تعتمد على الأوزان.",
+    "m3_p": "يُختبر الترتيب بعشرة سيناريوهات للأوزان وألف وزن عشوائي (مونت كارلو، نقطة بداية ثابتة 20261016، قابل للتكرار)، ليظهر هل التوصية ثابتة أم تعتمد على الأوزان.",
     "m4_h": "الحدود",
     "m4_p": "قيم الدول تقديرية من منهج المحلل ولم يُتحقق منها بحالات دخول سوق فعلية. والنموذج المالي توضيحي. الخطوات القادمة: مصادر بيانات مباشرة وتحقق بحالات عملية.",
     "case_eyebrow": "دراسة حالة",
@@ -1448,15 +1458,16 @@ const I18N = {
     "re_3": "في الأشهر السبعة الأولى من عام 2024 وحدها، صدّرت ألمانيا سيارات بقيمة 4.8 مليار يورو إلى السعودية.",
     "prec_eyebrow": "سوابق واقعية",
     "prec_h2": "الأمر يحدث بالفعل، في كلا الاتجاهين.",
-    "prec_p": "ثمانية أمثلة تم بحثها فعلياً، وليست محاكاة، لتوضيح أن الرابط بين الخليج وأوروبا حقيقي اقتصادياً وفعّال.",
-    "prec_1": "تمتلك هيئة الاستثمار القطرية نحو 17% من حقوق التصويت في فولكس فاجن منذ عام 2009, أحد أشهر الأمثلة على رأس المال الخليجي في الصناعة الأوروبية.",
-    "prec_2": "استحوذ صندوق أبوظبي السيادي أبار على نحو 9% من دايملر (مرسيدس بنز) عام 2009.",
-    "prec_3": "في الأشهر السبعة الأولى من عام 2024 وحدها، صدّرت ألمانيا سيارات بقيمة 4.8 مليار يورو إلى السعودية.",
-    "prec_4": "تعمل سيمنس في السعودية منذ أكثر من 80 عاماً، وافتتحت عام 2013 مصنعاً خاصاً للتوربينات في الدمام بالشراكة مع الشريك المحلي الجفالي وإخوانه.",
-    "prec_5": "يقع المقر الإقليمي لشركة BASF في دبي، وتمتلك حصة عبر مشروع مشترك مع الشركة السعودية للصناعات الأساسية (نيك) في منشأة لنزع الهيدروجين من البروبان في الجبيل.",
-    "prec_6": "تخطط أديداس لافتتاح أكثر من 100 متجر خاص بها في السعودية بحلول عام 2025، وافتتحت لهذا الغرض مكتباً خاصاً في الرياض.",
-    "prec_7": "أعلن صندوق مبادلة في أبوظبي عن صندوق بقيمة 400 مليون دولار يستهدف الاستثمار في شركات التكنولوجيا الأوروبية والبريطانية.",
-    "prec_8": "تصدرت أكبر خمسة صناديق ثروة سيادية خليجية (صندوق الاستثمارات العامة، جهاز قطر للاستثمار، جهاز أبوظبي للاستثمار، مبادلة، ADQ) قائمة أنشط عشرة صناديق سيادية في العالم لثلاث سنوات متتالية منذ 2024 وفق دراسة لمعهد العلوم والسياسة الألماني، وتُعد أوروبا سوقاً مستهدفة جذابة بشكل خاص.",
+    "prec_p": "سبعة أمثلة تم بحثها، وليست محاكاة، لتوضيح أن الرابط بين دول الخليج وأوروبا حقيقي ونشط اقتصادياً. لكل مثال رابط إلى مصدره.",
+    "prec_1": "استحوذت هيئة الاستثمار القطرية عام 2009 عبر قطر القابضة على نحو 17% من الأسهم العادية لشركة فولكسفاغن، وهو من أشهر الأمثلة على رأس المال الخليجي في الصناعة الأوروبية.",
+    "prec_2": "استحوذ صندوق أبوظبي السيادي أبار عام 2009 على أكثر من 9% من دايملر (مرسيدس بنز) وأصبح أكبر مساهم منفرد فيها.",
+    "prec_4": "بنت سيمنس منذ عام 2012 مصنعاً للتوربينات الغازية والضواغط في الدمام بالسعودية بالشراكة مع شريكها المحلي «إي إيه جفالي وإخوانه»، وكان الإنجاز مخططاً له في أواخر 2013.",
+    "prec_5": "تدير BASF أعمالها في الشرق الأوسط ومصر من دبي (جبل علي) حيث يقع مقرها الإقليمي.",
+    "prec_6": "تستهدف أديداس افتتاح أكثر من 100 متجر خاص بها في السعودية بحلول 2025، وقد افتتحت لذلك أول مكتب لها في الرياض.",
+    "prec_7": "أعلن صندوق مبادلة السيادي في أبوظبي عام 2018 عن صندوق بقيمة 400 مليون دولار يستثمر في شركات التكنولوجيا الأوروبية.",
+    "prec_8": "وفق دراسة لمعهد SWP، كانت صناديق PIF وQIA وADIA ومبادلة وADQ الخمسة ضمن أنشط عشرة صناديق ثروة سيادية في العالم للمرة الثالثة على التوالي في 2024. وتُعد أوروبا سوقاً مستهدفة متزايدة الجاذبية.",
+    "prec_src": "المصدر:",
+    "prec_note": "تم الاطلاع على المصادر في 25.10.2026. الأرقام كما وردت في المصادر دون حساب خاص.",
     "about_eyebrow": "نبذة عني",
     "about_h2": "ندى عقيل",
     "about_role": "مطوّرة · دخول الأسواق العابر للحدود",

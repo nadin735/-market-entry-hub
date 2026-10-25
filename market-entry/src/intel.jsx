@@ -287,7 +287,7 @@ export function analyze(rec, t, lang, data, factorLabels) {
 
 /* ---------- source links ---------- */
 const PUB = [
-  [/Fortune 500 Europe/i, "Fortune", "fortune.com/europe/ranking/fortune500-europe"], [/KFH Pressemitteilung|KFH press release/i, "KFH", "kfh.com"],
+  [/Fortune 500 Europe/i, "Fortune", "fortune.com/europe/ranking/fortune500-europe"], [/KFH Pressemitteilung|KFH press release/i, "KFH", "kfh.com"], [/Al Rajhi Geschäftsbericht/i, "Al Rajhi Bank", "alrajhibank.com.sa"], [/The Banker/i, "The Banker", "thebanker.com"], [/WorldAtlas/i, "WorldAtlas", "worldatlas.com"], [/Anadolu/i, "Anadolu Agency", "aa.com.tr"],
   [/World Bank/i, "World Bank", "worldbank.org"], [/Trading Economics/i, "Trading Economics", "tradingeconomics.com"], [/Deloitte/i, "Deloitte", "deloitte.com"],
   [/Dubai Chamber/i, "Dubai Chamber of Commerce", "dubaichamber.com"], [/Euromonitor/i, "Euromonitor", "euromonitor.com"], [/ResearchAndMarkets/i, "ResearchAndMarkets", "researchandmarkets.com"],
   [/MISA/i, "MISA", "misa.gov.sa"], [/Vision 2030/i, "Vision 2030", "vision2030.gov.sa"], [/FCSC/i, "FCSC", "fcsc.gov.ae"], [/GASTAT/i, "GASTAT", "stats.gov.sa"], [/PSA\b/, "PSA", "psa.gov.qa"],
@@ -443,7 +443,7 @@ export function ScoringPanel({ rec, A, th, lang, factorLabels, parts, w, setW })
 
 /* ---------- competitor structure ---------- */
 const OVERLAP = { medtech: /health|med|pharma|hospital/i, manufacturing: /industr|chem|manufact|auto/i, software: /software|digital|telecom|it\b|tech/i, consumer: /retail|consumer|food|e-?commerce|duty/i, energy: /energy|oil|power|aramco/i, finance: /bank|financ|insur|islamic/i, logistics: /logist|port|freight|dp world|aviation/i, realEstate: /real estate|immobil|property|emaar/i, sovereignInvestment: /invest|sovereign|fund/i, halalFood: /food|halal|retail/i, islamicFinance: /bank|financ|islamic/i, renewableEnergy: /energy|power|renew/i, luxuryRetail: /retail|luxur|fashion/i };
-const COMP_SRC = { Germany: "Fortune 500 Europe 2025 (Umsatzrangfolge)", UK: "Fortune 500 Europe 2025 (Umsatzrangfolge)", Kuwait: "KFH Pressemitteilung 2024 (Fusion mit Ahli United Bank Kuwait)", Bahrain: "KFH Pressemitteilung 2022 bis 2024 (Übernahme Ahli United Bank)" };
+const COMP_SRC = { Germany: "Fortune 500 Europe 2025 (Umsatzrangfolge)", UK: "Fortune 500 Europe 2025 (Umsatzrangfolge)", Kuwait: "KFH Pressemitteilung 2024 (Fusion mit Ahli United Bank Kuwait)", Bahrain: "KFH Pressemitteilung 2022 bis 2024 (Übernahme Ahli United Bank)", Saudi: "Al Rajhi Geschäftsbericht 2023 (Eigenangabe: größte Islamic Bank der Welt)", Qatar: "The Banker, Top 1000 World Banks, Ausgabe 2021 (QNB, laut Qatar Tribune)", Italy: "WorldAtlas (Generali, Prämienvolumen ohne Jahresangabe)", Netherlands: "Anadolu Agency 2025 (ASML wertvollstes Unternehmen Europas)" };
 export function CompetitorBlock({ rec, A, th, lang, data, t }) {
   const L = A.L, ca = (data.COMPETITOR_ANALYSIS || {})[A.target]; if (!ca) return null;
   const re = OVERLAP[rec.rec.prioritySector] || OVERLAP[rec.input.industry];
